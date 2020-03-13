@@ -1,6 +1,7 @@
 package de.gravitex.bpm.traindepartment.logic;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import lombok.Data;
 
 @Data
 public class StationData {
-	
+
 	// key --> business key (also from referring business process)
 	private HashMap<String, DepartmentOrder> departmentOrders = new HashMap<String, DepartmentOrder>();
 
@@ -22,7 +23,7 @@ public class StationData {
 		HashMap<String, Waggon> allWaggons = RailTestUtil.hashWaggons(getAllWaggons());
 		for (String waggonNumber : waggonNumbers) {
 			if (allWaggons.get(waggonNumber) == null) {
-				return false;		
+				return false;
 			}
 		}
 		return true;
@@ -32,7 +33,7 @@ public class StationData {
 		List<Waggon> result = new ArrayList<Waggon>();
 		for (Track track : tracks) {
 			if (track.getWaggons() != null) {
-				result.addAll(track.getWaggons());				
+				result.addAll(track.getWaggons());
 			}
 		}
 		return result;
@@ -84,7 +85,7 @@ public class StationData {
 		tracks = new ArrayList<Track>();
 		departmentOrders = new HashMap<String, DepartmentOrder>();
 	}
-	
+
 	public void print(boolean showWaggonDefects) {
 		System.out.println("---------------------------------------------");
 		if (departmentOrders != null) {
@@ -110,9 +111,13 @@ public class StationData {
 	public void addWaggonsToTrack(String trackNumber, List<String> waggonNumbers) {
 		List<Waggon> newWaggons = new ArrayList<Waggon>();
 		for (String waggonNumber : waggonNumbers) {
-			newWaggons.add(new Waggon().fromString(waggonNumber));			
+			newWaggons.add(new Waggon().fromString(waggonNumber));
 		}
 		Track track = findTrack(trackNumber);
 		track.getWaggons().addAll(newWaggons);
+	}
+
+	public boolean checkTrackWaggons(String trackNumber, String... waggonNumbers) {
+		return RailTestUtil.areListsEqual(findTrack(trackNumber).getWaggonNumbers(false), Arrays.asList(waggonNumbers));
 	}
 }

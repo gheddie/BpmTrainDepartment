@@ -2,6 +2,7 @@ package de.gravitex.bpm.traindepartment;
 
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -47,7 +48,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		RailwayStationBusinessLogic.getInstance().reset();
 
 		// prepare test data
-		RailwayStationBusinessLogic.getInstance().withTracks("Track1@true", "TrackExit", "TrackReplacement")
+		RailwayStationBusinessLogic.getInstance().withTracks("Track1@true", "TrackExit@true", "TrackReplacement")
 				.withWaggons("Track1", "W1@C1#N1", "W2@C1", "W3@C1", "W4@C1", "W5")
 				.withRoles(DepartTrainProcessConstants.ROLE_DISPONENT, DepartTrainProcessConstants.ROLE_SHUNTER,
 						DepartTrainProcessConstants.ROLE_REPAIR_DUDE, DepartTrainProcessConstants.ROLE_WAGGON_MASTER);
@@ -130,13 +131,25 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 		// we must have 2 more waggons (now 5+2=7) in the system...
 		assertEquals(7, RailwayStationBusinessLogic.getInstance().countWaggons());
+		
+		// check replacement track...
+		assertTrue(RailwayStationBusinessLogic.getInstance().checkTrackWaggons("TrackReplacement", "W888", "W999"));
 
 		// all prompted --> choose exit track
 		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.TASK_CHOOSE_EXIT_TRACK);
+		
+		processExitTrack(processInstance, "TrackExit");
+		
+		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.TASK_CONFIRM_ROLLOUT);
+		
+		// confirm roll out
+		processRollout(processInstance, true);
+		
+		// 4 waggons ware gone...
+		assertEquals(3, RailwayStationBusinessLogic.getInstance().countWaggons());
 
 		// TODO ALL processes must be gone in the end
-		// assertEquals(0,
-		// processEngine.getRuntimeService().createProcessInstanceQuery().list().size());
+		// assertEquals(0, processEngine.getRuntimeService().createProcessInstanceQuery().list().size());
 	}
 
 	@Test
@@ -317,7 +330,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 	private void processRollout(ProcessInstance processInstance, boolean doRollOut) {
 		processEngine.getTaskService().complete(
-				ensureSingleTaskPresent(DepartTrainProcessConstants.TASK_CONFIRM_ROLLOUT, processInstance.getBusinessKey(), false)
+				ensureSingleTaskPresent(DepartTrainProcessConstants.TASK_CONFIRM_ROLLOUT, DepartTrainProcessConstants.ROLE_DISPONENT, false)
 						.getId(),
 				HashBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_ROLLOUT_CONFIRMED, doRollOut).build());
 	}

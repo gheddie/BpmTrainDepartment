@@ -114,7 +114,7 @@
       <bpmn:incoming>SequenceFlow_134eiha</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1vu95o9</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="TaskRemoveWaggons" name="Remove waggons" camunda:class="de.gravitex.bpm.traindepartment.delegateRemoveWaggonsDelegate">
+    <bpmn:serviceTask id="TaskRemoveWaggons" name="Remove waggons" camunda:class="de.gravitex.bpm.traindepartment.delegate.RemoveWaggonsDelegate">
       <bpmn:incoming>SequenceFlow_04qyvr6</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0rbvy8h</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -145,7 +145,7 @@
       <bpmn:outgoing>SequenceFlow_0qc5j30</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_1x3nblr</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:serviceTask id="TaskCheckWaggonPositions" name="Check waggon positions" camunda:class="de.gravitex.bpm.traindepartment.delegateCheckWaggonPositionsDelegate">
+    <bpmn:serviceTask id="TaskCheckWaggonPositions" name="Check waggon positions" camunda:class="de.gravitex.bpm.traindepartment.delegate.CheckWaggonPositionsDelegate">
       <bpmn:incoming>SequenceFlow_0iv6lm4</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_13gkobw</bpmn:outgoing>
     </bpmn:serviceTask>

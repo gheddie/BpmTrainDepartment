@@ -127,4 +127,8 @@ public class RailwayStationBusinessLogic implements IRailwayStationBusinessLogic
 	public void addWaggonsToTrack(String trackNumber, List<String> waggonNumbers) {
 		stationData.addWaggonsToTrack(trackNumber, waggonNumbers);
 	}
+
+	public boolean checkTrackWaggons(String trackNumber, String... waggonNumbers) {
+		return stationData.checkTrackWaggons(trackNumber, waggonNumbers);
+	}
 }
