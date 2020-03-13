@@ -360,7 +360,7 @@
   <bpmn:process id="PROCESS_SHUNTER" isExecutable="true">
     <bpmn:userTask id="TASK_SHUNT_WAGGONS" name="Shunt waggons" camunda:assignee="ROLE_SHUNTER">
       <bpmn:extensionElements>
-        <camunda:taskListener class="org.camunda.bpm.unittest.listener.departtrain.complete.ShuntWaggonsComplementListener" event="complete" />
+        <camunda:taskListener class="de.gravitex.bpm.traindepartment.listener.complete.ShuntWaggonsComplementListener" event="complete" />
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1llmj3e</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1lz38ap</bpmn:outgoing>
