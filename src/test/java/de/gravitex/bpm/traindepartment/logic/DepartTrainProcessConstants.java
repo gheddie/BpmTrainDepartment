@@ -159,5 +159,7 @@ public class DepartTrainProcessConstants {
 	// ####################################### process definitions
 	// ##############################################################################
 	
+	public static final String PROCESS_DEPART_TRAIN = "PROCESS_DEPART_TRAIN";
 	public static final String PROCESS_REPAIR_FACILITY = "PROCESS_REPAIR_FACILITY";
+	public static final String PROCESS_SHUNTER = "PROCESS_SHUNTER";
 }

@@ -8,7 +8,8 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
-import de.gravitex.bpm.traindepartment.util.HashBuilder;
+import de.gravitex.bpm.traindepartment.logic.businesskey.RepairFacilityBusinessKeyCreator;
+import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
 
 public class ProcessCriticalErrorsDelegate implements JavaDelegate {
 
@@ -21,11 +22,12 @@ public class ProcessCriticalErrorsDelegate implements JavaDelegate {
 		for (String plannedWaggon : plannedWaggons) {
 			if (RailwayStationBusinessLogic.getInstance().isWaggonCritical(plannedWaggon)) {
 				subProcessBusinessKey = RailwayStationBusinessLogic.getInstance()
-						.generateBusinessKey(execution.getProcessInstance().getProcessDefinitionId());
+						.generateBusinessKey(DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY, HashMapBuilder.create()
+								.withValuePair(RepairFacilityBusinessKeyCreator.AV_WAGGON_NUMBER, plannedWaggon).build());
 				// pass master process business key to call back...
 				execution.getProcessEngine().getRuntimeService().startProcessInstanceByMessage(
 						DepartTrainProcessConstants.MSG_INVOKE_WAG_ASSUMEMENT, subProcessBusinessKey,
-						HashBuilder.create()
+						HashMapBuilder.create()
 								.withValuePair(DepartTrainProcessConstants.VAR_DEP_PROC_BK, execution.getBusinessKey())
 								.withValuePair(DepartTrainProcessConstants.VAR_SINGLE_WAGGON_TO_ASSUME, plannedWaggon).build());
 				// store waggons to repair in 'VAR_WAGGONS_TO_REPAIR'

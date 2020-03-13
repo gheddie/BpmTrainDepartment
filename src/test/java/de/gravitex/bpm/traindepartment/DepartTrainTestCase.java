@@ -19,7 +19,7 @@ import de.gravitex.bpm.traindepartment.enumeration.RepairEvaluationResult;
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogicException;
-import de.gravitex.bpm.traindepartment.util.HashBuilder;
+import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
 
 public class DepartTrainTestCase extends BpmTestCase {
 
@@ -331,14 +331,14 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 	private void processWaggonRepairAssumement(ProcessInstance processInstance, Task assumementTask, int hours) {
 		processEngine.getTaskService().complete(assumementTask.getId(),
-				HashBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_ASSUMED_TIME, hours).build());
+				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_ASSUMED_TIME, hours).build());
 	}
 
 	private void processExitTrack(ProcessInstance processInstance, String trackNumber) {
 		processEngine.getTaskService().complete(
 				processEngine.getTaskService().createTaskQuery().processInstanceBusinessKey(processInstance.getBusinessKey())
 						.taskDefinitionKey(DepartTrainProcessConstants.TASK_CHOOSE_EXIT_TRACK).list().get(0).getId(),
-				HashBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_EXIT_TRACK, trackNumber).build());
+				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_EXIT_TRACK, trackNumber).build());
 	}
 
 	private void processShunting(ProcessInstance processInstance) {
@@ -349,11 +349,11 @@ public class DepartTrainTestCase extends BpmTestCase {
 		processEngine.getTaskService().complete(
 				ensureSingleTaskPresent(DepartTrainProcessConstants.TASK_CONFIRM_ROLLOUT,
 						DepartTrainProcessConstants.ROLE_DISPONENT, false).getId(),
-				HashBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_ROLLOUT_CONFIRMED, doRollOut).build());
+				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_ROLLOUT_CONFIRMED, doRollOut).build());
 	}
 
 	private void processStartWaggonEvaluation(Task startWaggonRepairTask, RepairEvaluationResult repairEvaluationResult) {
-		processEngine.getTaskService().complete(startWaggonRepairTask.getId(), HashBuilder.create()
+		processEngine.getTaskService().complete(startWaggonRepairTask.getId(), HashMapBuilder.create()
 				.withValuePair(DepartTrainProcessConstants.VAR_WAGGON_EVALUATION_RESULT, repairEvaluationResult).build());
 	}
 
@@ -367,18 +367,18 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 	private void processDeliverReplacement(String businessKey, String... waggonNumbers) {
 		processEngine.getRuntimeService().correlateMessage(DepartTrainProcessConstants.MSG_REPL_WAGG_ARRIVED, businessKey,
-				HashBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_DELIVERED_REPLACMENT_WAGGONS, waggonNumbers)
+				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_DELIVERED_REPLACMENT_WAGGONS, waggonNumbers)
 						.build());
 	}
 
 	private void processChooseReplacementTrack(Task task, String replacementTrack) {
-		processEngine.getTaskService().complete(task.getId(), HashBuilder.create()
+		processEngine.getTaskService().complete(task.getId(), HashMapBuilder.create()
 				.withValuePair(DepartTrainProcessConstants.VAR_REPLACE_WAGGON_TARGET_TRACK, replacementTrack).build());
 	}
 
 	private void processRunnabilityCheck(Task task, boolean runnable) {
 		processEngine.getTaskService().complete(task.getId(),
-				HashBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_SINGLE_WAGGON_RUNNABLE, runnable).build());
+				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_SINGLE_WAGGON_RUNNABLE, runnable).build());
 	}
 
 	private LocalDateTime getDefaultPlannedDepartureTime() {
@@ -390,8 +390,8 @@ public class DepartTrainTestCase extends BpmTestCase {
 		ProcessInstance instance = processEngine.getRuntimeService().startProcessInstanceByMessage(
 				DepartTrainProcessConstants.MSG_DEPARTURE_PLANNED,
 				RailwayStationBusinessLogic.getInstance()
-						.generateBusinessKey(DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY),
-				HashBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_PLANNED_WAGGONS, extractedWaggonNumbers)
+						.generateBusinessKey(DepartTrainProcessConstants.PROCESS_DEPART_TRAIN, HashMapBuilder.create().build()),
+				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_PLANNED_WAGGONS, extractedWaggonNumbers)
 						.withValuePair(DepartTrainProcessConstants.VAR_PLANNED_DEPARTMENT_DATE, plannedDepartureTime).build());
 		return instance;
 	}

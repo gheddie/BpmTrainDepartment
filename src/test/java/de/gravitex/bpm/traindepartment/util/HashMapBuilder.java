@@ -2,19 +2,19 @@ package de.gravitex.bpm.traindepartment.util;
 
 import java.util.HashMap;
 
-public class HashBuilder {
+public class HashMapBuilder {
 	
 	private HashMap<String, Object> values = new HashMap<String, Object>();
 
-	private HashBuilder() {
+	private HashMapBuilder() {
 		// ...
 	}
 
-	public static HashBuilder create() {
-		return new HashBuilder();
+	public static HashMapBuilder create() {
+		return new HashMapBuilder();
 	}
 
-	public HashBuilder withValuePair(String key, Object value) {
+	public HashMapBuilder withValuePair(String key, Object value) {
 		values.put(key, value);
 		return this;
 	}

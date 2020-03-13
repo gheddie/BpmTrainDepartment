@@ -1,13 +1,17 @@
 package de.gravitex.bpm.traindepartment.logic;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 import de.gravitex.bpm.traindepartment.entity.DepartmentOrder;
 import de.gravitex.bpm.traindepartment.entity.Track;
 import de.gravitex.bpm.traindepartment.enumeration.DepartmentOrderState;
 import de.gravitex.bpm.traindepartment.exception.RailWayException;
+import de.gravitex.bpm.traindepartment.logic.businesskey.BusinessKeyCreator;
+import de.gravitex.bpm.traindepartment.logic.businesskey.DepartTrainBusinessKeyCreator;
+import de.gravitex.bpm.traindepartment.logic.businesskey.RepairFacilityBusinessKeyCreator;
+import de.gravitex.bpm.traindepartment.logic.businesskey.ShunterBusinessKeyCreator;
 
 public class RailwayStationBusinessLogic implements IRailwayStationBusinessLogic {
 
@@ -15,7 +19,12 @@ public class RailwayStationBusinessLogic implements IRailwayStationBusinessLogic
 
 	private StationData stationData = new StationData();
 
-	private static final Random random = new Random();
+	private static final HashMap<String, BusinessKeyCreator> businessKeyCreators = new HashMap<String, BusinessKeyCreator>();
+	static {
+		businessKeyCreators.put(DepartTrainProcessConstants.PROCESS_DEPART_TRAIN, new DepartTrainBusinessKeyCreator(DepartTrainProcessConstants.PROCESS_DEPART_TRAIN));
+		businessKeyCreators.put(DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY, new RepairFacilityBusinessKeyCreator(DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY));
+		businessKeyCreators.put(DepartTrainProcessConstants.PROCESS_SHUNTER, new ShunterBusinessKeyCreator(DepartTrainProcessConstants.PROCESS_SHUNTER));
+	}
 
 	private RailwayStationBusinessLogic() {
 		// ...
@@ -56,9 +65,8 @@ public class RailwayStationBusinessLogic implements IRailwayStationBusinessLogic
 		return activeOrders;
 	}
 
-	public String generateBusinessKey(String processDefinitionKey) {
-		String result = processDefinitionKey + "_" + String.valueOf(System.currentTimeMillis()) + "_" + String.valueOf(random.nextInt(1000));
-		return result;
+	public String generateBusinessKey(String processDefinitionKey, HashMap<String, Object> additionalValues) {
+		return businessKeyCreators.get(processDefinitionKey).generate(additionalValues);
 	}
 	
 	@Override

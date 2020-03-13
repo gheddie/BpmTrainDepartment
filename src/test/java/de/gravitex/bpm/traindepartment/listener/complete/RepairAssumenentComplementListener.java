@@ -5,7 +5,7 @@ import org.camunda.bpm.engine.delegate.TaskListener;
 
 import de.gravitex.bpm.traindepartment.delegate.WaggonRepairInfo;
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
-import de.gravitex.bpm.traindepartment.util.HashBuilder;
+import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
 
 public class RepairAssumenentComplementListener implements TaskListener {
 
@@ -20,7 +20,7 @@ public class RepairAssumenentComplementListener implements TaskListener {
 				.correlateMessage(DepartTrainProcessConstants.MSG_REPAIR_ASSUMED,
 						(String) delegateTask.getProcessEngine().getRuntimeService().getVariable(delegateTask.getExecutionId(),
 								DepartTrainProcessConstants.VAR_DEP_PROC_BK),
-						HashBuilder.create()
+						HashMapBuilder.create()
 								.withValuePair(DepartTrainProcessConstants.VAR_SINGLE_WAGGON_TO_ASSUME,
 										WaggonRepairInfo.fromValues(assumedWaggon, singleAssumedTime,
 												delegateTask.getExecution().getBusinessKey()))
