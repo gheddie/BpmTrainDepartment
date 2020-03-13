@@ -32,7 +32,8 @@ public class DepartTrainProcessConstants {
 	public static final String TASK_EVALUATE_WAGGON = "TASK_EVALUATE_WAGGON";
 	public static final String TASK_PROMPT_WAGGON_REPLACEMENT = "TASK_PROMPT_WAGGON_REPLACEMENT";
 	public static final String TASK_PROMPT_WAGGON_REPAIR = "TASK_PROMPT_WAGGON_REPAIR";
-	public static final String TASK_CHOOSE_REPLACEMENT_TRACK = "TASK_CHOOSE_REPLACEMENT_TRACK";
+	public static final String TASK_CHOOSE_REPLACEMENT_TRACK = "TASK_CHOOSE_REPLACEMENT_TRACK";	
+	public static final String TASK_CHECK_WAGGON_RUNNABILITY = "TASK_CHECK_WAGGON_RUNNABILITY";
 
 	// ##############################################################################
 	// ####################################### signals
@@ -107,6 +108,8 @@ public class DepartTrainProcessConstants {
 	
 	public static final String VAR_DELIVERED_REPLACMENT_WAGGONS = "VAR_DELIVERED_REPLACMENT_WAGGONS";
 	
+	public static final String VAR_SINGLE_WAGGON_RUNNABLE = "VAR_SINGLE_WAGGON_RUNNABLE";
+	
 	// business key of the 'master' process --> passed to repair 
 	// process to able to call back to master
 	public static final String VAR_DEP_PROC_BK = "VAR_DEP_PROC_BK";
@@ -129,6 +132,7 @@ public class DepartTrainProcessConstants {
 	
 	public static final String ERR_NO_EXIT_TR = "ERR_NO_EXIT_TR";
 	public static final String ERR_CREATE_DO = "ERR_CREATE_DO";
+	public static final String ERR_WG_NOT_RUNNABLE = "ERR_WG_NOT_RUNNABLE";
 	
 	// ##############################################################################
 	// ####################################### message catchers

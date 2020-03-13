@@ -131,25 +131,36 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 		// we must have 2 more waggons (now 5+2=7) in the system...
 		assertEquals(7, RailwayStationBusinessLogic.getInstance().countWaggons());
-		
+
 		// check replacement track...
 		assertTrue(RailwayStationBusinessLogic.getInstance().checkTrackWaggons("TrackReplacement", "W888", "W999"));
 
 		// all prompted --> choose exit track
 		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.TASK_CHOOSE_EXIT_TRACK);
-		
+
 		processExitTrack(processInstance, "TrackExit");
-		
+
+		// we have waggon runnabilities to check...
+		List<Task> checkRunnabilityTasks = processEngine.getTaskService().createTaskQuery()
+				.taskDefinitionKey(DepartTrainProcessConstants.TASK_CHECK_WAGGON_RUNNABILITY).list();
+		assertEquals(4, checkRunnabilityTasks.size());
+
+		processRunnabilityCheck(checkRunnabilityTasks.get(0), true);
+		processRunnabilityCheck(checkRunnabilityTasks.get(1), true);
+		processRunnabilityCheck(checkRunnabilityTasks.get(2), true);
+		processRunnabilityCheck(checkRunnabilityTasks.get(3), true);
+
 		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.TASK_CONFIRM_ROLLOUT);
-		
+
 		// confirm roll out
 		processRollout(processInstance, true);
-		
+
 		// 4 waggons ware gone...
 		assertEquals(3, RailwayStationBusinessLogic.getInstance().countWaggons());
 
 		// TODO ALL processes must be gone in the end
-		// assertEquals(0, processEngine.getRuntimeService().createProcessInstanceQuery().list().size());
+		// assertEquals(0,
+		// processEngine.getRuntimeService().createProcessInstanceQuery().list().size());
 	}
 
 	@Test
@@ -330,8 +341,8 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 	private void processRollout(ProcessInstance processInstance, boolean doRollOut) {
 		processEngine.getTaskService().complete(
-				ensureSingleTaskPresent(DepartTrainProcessConstants.TASK_CONFIRM_ROLLOUT, DepartTrainProcessConstants.ROLE_DISPONENT, false)
-						.getId(),
+				ensureSingleTaskPresent(DepartTrainProcessConstants.TASK_CONFIRM_ROLLOUT,
+						DepartTrainProcessConstants.ROLE_DISPONENT, false).getId(),
 				HashBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_ROLLOUT_CONFIRMED, doRollOut).build());
 	}
 
@@ -357,6 +368,11 @@ public class DepartTrainTestCase extends BpmTestCase {
 	private void processChooseReplacementTrack(Task task, String replacementTrack) {
 		processEngine.getTaskService().complete(task.getId(), HashBuilder.create()
 				.withValuePair(DepartTrainProcessConstants.VAR_REPLACE_WAGGON_TARGET_TRACK, replacementTrack).build());
+	}
+
+	private void processRunnabilityCheck(Task task, boolean runnable) {
+		processEngine.getTaskService().complete(task.getId(),
+				HashBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_SINGLE_WAGGON_RUNNABLE, runnable).build());
 	}
 
 	private LocalDateTime getDefaultPlannedDepartureTime() {
