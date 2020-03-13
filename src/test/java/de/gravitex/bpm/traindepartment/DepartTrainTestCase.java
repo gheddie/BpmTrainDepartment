@@ -113,7 +113,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		ensureTaskCountPresent(DepartTrainProcessConstants.TASK_REPAIR_WAGGON, null, DepartTrainProcessConstants.ROLE_REPAIR_DUDE,
 				2);
 
-		// we prompt 2 new waggons...
+		// we prompt 2 new waggons..
 		List<Task> promptReplacementTasks = ensureTaskCountPresent(DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPLACEMENT,
 				processInstance.getId(), DepartTrainProcessConstants.ROLE_DISPONENT, 2);
 		processPromptReplacement(promptReplacementTasks.get(0));
