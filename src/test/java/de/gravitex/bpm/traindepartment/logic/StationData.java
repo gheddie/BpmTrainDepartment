@@ -86,8 +86,12 @@ public class StationData {
 		departmentOrders = new HashMap<String, DepartmentOrder>();
 	}
 
-	public void print(boolean showWaggonDefects) {
+	public void print(String header, boolean showWaggonDefects) {
+		
 		System.out.println("---------------------------------------------");
+		System.out.println("--------- " + header);
+		System.out.println("---------------------------------------------");
+		
 		if (departmentOrders != null) {
 			System.out.println(departmentOrders.size() + " department orders:");
 			for (DepartmentOrder departmentOrder : departmentOrders.values()) {

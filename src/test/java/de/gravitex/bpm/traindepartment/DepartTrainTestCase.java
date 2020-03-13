@@ -52,6 +52,8 @@ public class DepartTrainTestCase extends BpmTestCase {
 				.withWaggons("Track1", "W1@C1#N1", "W2@C1", "W3@C1", "W4@C1", "W5")
 				.withRoles(DepartTrainProcessConstants.ROLE_DISPONENT, DepartTrainProcessConstants.ROLE_SHUNTER,
 						DepartTrainProcessConstants.ROLE_REPAIR_DUDE, DepartTrainProcessConstants.ROLE_WAGGON_MASTER);
+		
+		RailwayStationBusinessLogic.getInstance().print("In the beginning", false);
 
 		ProcessInstance processInstance = startDepartureProcess(getDefaultPlannedDepartureTime(), "W1", "W2", "W3", "W4");
 
@@ -151,9 +153,13 @@ public class DepartTrainTestCase extends BpmTestCase {
 		processRunnabilityCheck(checkRunnabilityTasks.get(3), true);
 
 		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.TASK_CONFIRM_ROLLOUT);
+		
+		RailwayStationBusinessLogic.getInstance().print("Before rollout", false);
 
 		// confirm roll out
 		processRollout(processInstance, true);
+		
+		RailwayStationBusinessLogic.getInstance().print("After rollout", false);
 
 		// 4 waggons ware gone...
 		assertEquals(3, RailwayStationBusinessLogic.getInstance().countWaggons());
@@ -190,7 +196,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		RailwayStationBusinessLogic.getInstance().withTracks("Track1@true", "TrackExit@true").withWaggons("Track1", "W1@C1",
 				"W2@C1#N1", "W3@C1", "W4", "W5@C1");
 
-		RailwayStationBusinessLogic.getInstance().print(true);
+		RailwayStationBusinessLogic.getInstance().print(null, true);
 
 		assertEquals(5, RailwayStationBusinessLogic.getInstance().countWaggons());
 
@@ -262,7 +268,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		// prepare test data
 		RailwayStationBusinessLogic.getInstance().withTracks("Track1@true", "TrackExit").withWaggons("Track1", "W1@C1", "W2");
 
-		RailwayStationBusinessLogic.getInstance().print(true);
+		RailwayStationBusinessLogic.getInstance().print(null, true);
 
 		assertEquals(2, RailwayStationBusinessLogic.getInstance().countWaggons());
 

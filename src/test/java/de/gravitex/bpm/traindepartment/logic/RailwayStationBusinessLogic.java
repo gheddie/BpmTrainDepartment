@@ -120,8 +120,8 @@ public class RailwayStationBusinessLogic implements IRailwayStationBusinessLogic
 		stationData.reset();
 	}
 
-	public void print(boolean showWaggonDefects) {
-		stationData.print(showWaggonDefects);
+	public void print(String header, boolean showWaggonDefects) {
+		stationData.print(header, showWaggonDefects);
 	}
 
 	public void addWaggonsToTrack(String trackNumber, List<String> waggonNumbers) {
