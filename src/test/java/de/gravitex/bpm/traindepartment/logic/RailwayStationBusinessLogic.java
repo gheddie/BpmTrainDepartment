@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.camunda.bpm.engine.runtime.ProcessInstance;
+
 import de.gravitex.bpm.traindepartment.entity.DepartmentOrder;
 import de.gravitex.bpm.traindepartment.entity.Track;
 import de.gravitex.bpm.traindepartment.enumeration.DepartmentOrderState;
@@ -21,9 +23,12 @@ public class RailwayStationBusinessLogic implements IRailwayStationBusinessLogic
 
 	private static final HashMap<String, BusinessKeyCreator> businessKeyCreators = new HashMap<String, BusinessKeyCreator>();
 	static {
-		businessKeyCreators.put(DepartTrainProcessConstants.PROCESS_DEPART_TRAIN, new DepartTrainBusinessKeyCreator(DepartTrainProcessConstants.PROCESS_DEPART_TRAIN));
-		businessKeyCreators.put(DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY, new RepairFacilityBusinessKeyCreator(DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY));
-		businessKeyCreators.put(DepartTrainProcessConstants.PROCESS_SHUNTER, new ShunterBusinessKeyCreator(DepartTrainProcessConstants.PROCESS_SHUNTER));
+		businessKeyCreators.put(DepartTrainProcessConstants.PROCESS_DEPART_TRAIN,
+				new DepartTrainBusinessKeyCreator(DepartTrainProcessConstants.PROCESS_DEPART_TRAIN));
+		businessKeyCreators.put(DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY,
+				new RepairFacilityBusinessKeyCreator(DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY));
+		businessKeyCreators.put(DepartTrainProcessConstants.PROCESS_SHUNTER,
+				new ShunterBusinessKeyCreator(DepartTrainProcessConstants.PROCESS_SHUNTER));
 	}
 
 	private RailwayStationBusinessLogic() {
@@ -32,25 +37,25 @@ public class RailwayStationBusinessLogic implements IRailwayStationBusinessLogic
 
 	@Override
 	public void createDepartureOrder(List<String> waggonNumbers, String businessKey) throws RailWayException {
-		
+
 		// no active order --> OK
 		List<DepartmentOrder> activeDepartureOrders = findActiveDepartureOrders();
 		if ((activeDepartureOrders != null) && (activeDepartureOrders.size() > 0)) {
 			throw new RailWayException("");
 		}
-		
+
 		// all waggons must be present in station
 		if (!(stationData.allWaggonsPresent(waggonNumbers))) {
 			throw new RailWayException("");
 		}
-		
+
 		// none of the waggons must be planned in active departure order!!
 		for (DepartmentOrder activeDepartureOrder : activeDepartureOrders) {
 			if (activeDepartureOrder.containsAnyWaggon(waggonNumbers)) {
-				throw new RailWayException("");		
+				throw new RailWayException("");
 			}
 		}
-		
+
 		// now, create a department order of state 'ACTIVE'...
 		stationData.createDepartmentOrder(businessKey);
 	}
@@ -65,32 +70,33 @@ public class RailwayStationBusinessLogic implements IRailwayStationBusinessLogic
 		return activeOrders;
 	}
 
-	public String generateBusinessKey(String processDefinitionKey, HashMap<String, Object> additionalValues) {
-		return businessKeyCreators.get(processDefinitionKey).generate(additionalValues);
+	public String generateBusinessKey(String processDefinitionKey, HashMap<String, Object> additionalValues,
+			String parentBusinessKey) {
+		return businessKeyCreators.get(processDefinitionKey).generate(additionalValues, parentBusinessKey);
 	}
-	
+
 	@Override
 	public void cancelDepartureOrder(String businessKey) {
 		stationData.getDepartmentOrders().get(businessKey).setDepartmentOrderState(DepartmentOrderState.CANCELLED);
 	}
-	
+
 	public int countWaggons() {
 		return stationData.getAllWaggons().size();
 	}
-	
+
 	@Override
 	public void removeWaggons(List<String> waggonNumbers) {
 		for (String waggonNumber : waggonNumbers) {
 			stationData.removeWaggon(waggonNumber);
 		}
 	}
-	
+
 	@Override
 	public boolean isWaggonCritical(String waggonNumber) {
 		boolean critical = stationData.isWaggonCritical(waggonNumber);
 		return critical;
 	}
-	
+
 	public boolean isExitTrack(String trackNumber) {
 		Track track = stationData.findTrack(trackNumber);
 		if (track == null) {
@@ -114,12 +120,12 @@ public class RailwayStationBusinessLogic implements IRailwayStationBusinessLogic
 		}
 		return this;
 	}
-	
+
 	public RailwayStationBusinessLogic withWaggons(String trackNumber, String... waggonNumbers) {
 		stationData.addWaggons(trackNumber, waggonNumbers);
 		return this;
 	}
-	
+
 	public RailwayStationBusinessLogic withRoles(String... roles) {
 		return this;
 	}
@@ -138,5 +144,10 @@ public class RailwayStationBusinessLogic implements IRailwayStationBusinessLogic
 
 	public boolean checkTrackWaggons(String trackNumber, String... waggonNumbers) {
 		return stationData.checkTrackWaggons(trackNumber, waggonNumbers);
+	}
+
+	public ProcessInstance resolveProcessInstance(List<ProcessInstance> processInstances, String aProcessDefinitionKey,
+			String value, ProcessInstance parentInstance) {
+		return BusinessKeyCreator.resolveProcessInstance(processInstances, aProcessDefinitionKey, value, parentInstance);
 	}
 }

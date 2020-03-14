@@ -52,7 +52,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 				.withWaggons("Track1", "W1@C1#N1", "W2@C1", "W3@C1", "W4@C1", "W5")
 				.withRoles(DepartTrainProcessConstants.ROLE_DISPONENT, DepartTrainProcessConstants.ROLE_SHUNTER,
 						DepartTrainProcessConstants.ROLE_REPAIR_DUDE, DepartTrainProcessConstants.ROLE_WAGGON_MASTER);
-		
+
 		RailwayStationBusinessLogic.getInstance().print("In the beginning", false);
 
 		ProcessInstance processInstance = startDepartureProcess(getDefaultPlannedDepartureTime(), "W1", "W2", "W3", "W4");
@@ -63,10 +63,17 @@ public class DepartTrainTestCase extends BpmTestCase {
 				DepartTrainProcessConstants.ROLE_REPAIR_DUDE, 4);
 
 		// assume a waggon (for all 2 waggons)
-		processWaggonRepairAssumement(processInstance, assumementTasks.get(0), 11);
-		processWaggonRepairAssumement(processInstance, assumementTasks.get(1), 4);
-		processWaggonRepairAssumement(processInstance, assumementTasks.get(2), 3);
-		processWaggonRepairAssumement(processInstance, assumementTasks.get(3), 3);
+		/*
+		 * processWaggonRepairAssumement(processInstance, assumementTasks.get(0), 11);
+		 * processWaggonRepairAssumement(processInstance, assumementTasks.get(1), 4);
+		 * processWaggonRepairAssumement(processInstance, assumementTasks.get(2), 3);
+		 * processWaggonRepairAssumement(processInstance, assumementTasks.get(3), 3);
+		 */
+
+		processWaggonRepairAssumement("W1", 11, processInstance);
+		processWaggonRepairAssumement("W2", 4, processInstance);
+		processWaggonRepairAssumement("W3", 3, processInstance);
+		processWaggonRepairAssumement("W4", 3, processInstance);
 
 		// 4 evaluations to be done...
 		List<Task> evaluationTasks = ensureTaskCountPresent(DepartTrainProcessConstants.TASK_EVALUATE_WAGGON,
@@ -153,12 +160,12 @@ public class DepartTrainTestCase extends BpmTestCase {
 		processRunnabilityCheck(checkRunnabilityTasks.get(3), true);
 
 		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.TASK_CONFIRM_ROLLOUT);
-		
+
 		RailwayStationBusinessLogic.getInstance().print("Before rollout", false);
 
 		// confirm roll out
 		processRollout(processInstance, true);
-		
+
 		RailwayStationBusinessLogic.getInstance().print("After rollout", false);
 
 		// 4 waggons ware gone...
@@ -223,19 +230,22 @@ public class DepartTrainTestCase extends BpmTestCase {
 		// assume waggon 1 of 3 --> not done (back to message catch)
 		assertEquals(1, processEngine.getRuntimeService().createEventSubscriptionQuery()
 				.eventName(DepartTrainProcessConstants.MSG_REPAIR_ASSUMED).list().size());
-		processWaggonRepairAssumement(processInstance, repairTasks.get(0), 2);
+		// processWaggonRepairAssumement(processInstance, repairTasks.get(0), 2);
+		processWaggonRepairAssumement("W1", 2, processInstance);
 		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_WG_REPAIRED);
 
 		// assume waggon 2 of 3 --> not done (back to message catch)
 		assertEquals(1, processEngine.getRuntimeService().createEventSubscriptionQuery()
 				.eventName(DepartTrainProcessConstants.MSG_REPAIR_ASSUMED).list().size());
-		processWaggonRepairAssumement(processInstance, repairTasks.get(1), 2);
+		// processWaggonRepairAssumement(processInstance, repairTasks.get(1), 2);
+		processWaggonRepairAssumement("W2", 2, processInstance);
 		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_WG_REPAIRED);
 
 		// assume waggon 3 of 3 --> done!!!
 		assertEquals(1, processEngine.getRuntimeService().createEventSubscriptionQuery()
 				.eventName(DepartTrainProcessConstants.MSG_REPAIR_ASSUMED).list().size());
-		processWaggonRepairAssumement(processInstance, repairTasks.get(2), 2);
+		// processWaggonRepairAssumement(processInstance, repairTasks.get(1), 2);
+		processWaggonRepairAssumement("W3", 2, processInstance);
 
 		// ...
 		// assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.TASK_EVALUATE_REPAIR);
@@ -289,7 +299,8 @@ public class DepartTrainTestCase extends BpmTestCase {
 				.taskDefinitionKey(DepartTrainProcessConstants.TASK_ASSUME_REPAIR_TIME).list();
 		assertEquals(1, assumeListA.size());
 
-		processWaggonRepairAssumement(instanceA, assumeListA.get(0), 12);
+		// processWaggonRepairAssumement(instanceA, assumeListA.get(0), 12);
+		processWaggonRepairAssumement("W1", 12, instanceA);
 
 		// ...
 		// assertThat(instanceA).isWaitingAt(DepartTrainProcessConstants.TASK_EVALUATE_REPAIR);
@@ -329,9 +340,15 @@ public class DepartTrainTestCase extends BpmTestCase {
 		 */
 	}
 
-	private void processWaggonRepairAssumement(ProcessInstance processInstance, Task assumementTask, int hours) {
-		processEngine.getTaskService().complete(assumementTask.getId(),
+	private void processWaggonRepairAssumement(String waggonNumber, int hours, ProcessInstance parentInstance) {
+		ProcessInstance instance = RailwayStationBusinessLogic.getInstance().resolveProcessInstance(getProcessInstances(),
+				DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY, waggonNumber, parentInstance);
+		List<Task> tasks = processEngine.getTaskService().createTaskQuery()
+				.taskDefinitionKey(DepartTrainProcessConstants.TASK_ASSUME_REPAIR_TIME)
+				.processInstanceBusinessKey(instance.getBusinessKey()).list();
+		processEngine.getTaskService().complete(tasks.get(0).getId(),
 				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_ASSUMED_TIME, hours).build());
+
 	}
 
 	private void processExitTrack(ProcessInstance processInstance, String trackNumber) {
@@ -387,12 +404,16 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 	private ProcessInstance startDepartureProcess(LocalDateTime plannedDepartureTime, String... waggonNumbers) {
 		List<String> extractedWaggonNumbers = Waggon.getWaggonNumbers(waggonNumbers);
+		String generatedBusinessKey = RailwayStationBusinessLogic.getInstance()
+				.generateBusinessKey(DepartTrainProcessConstants.PROCESS_DEPART_TRAIN, HashMapBuilder.create().build(), null);
 		ProcessInstance instance = processEngine.getRuntimeService().startProcessInstanceByMessage(
-				DepartTrainProcessConstants.MSG_DEPARTURE_PLANNED,
-				RailwayStationBusinessLogic.getInstance()
-						.generateBusinessKey(DepartTrainProcessConstants.PROCESS_DEPART_TRAIN, HashMapBuilder.create().build()),
+				DepartTrainProcessConstants.MSG_DEPARTURE_PLANNED, generatedBusinessKey,
 				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_PLANNED_WAGGONS, extractedWaggonNumbers)
 						.withValuePair(DepartTrainProcessConstants.VAR_PLANNED_DEPARTMENT_DATE, plannedDepartureTime).build());
 		return instance;
+	}
+
+	private List<ProcessInstance> getProcessInstances() {
+		return processEngine.getRuntimeService().createProcessInstanceQuery().list();
 	}
 }

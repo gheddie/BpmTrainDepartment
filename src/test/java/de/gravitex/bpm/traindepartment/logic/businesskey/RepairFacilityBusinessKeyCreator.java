@@ -11,7 +11,7 @@ public class RepairFacilityBusinessKeyCreator extends BusinessKeyCreator {
 	}
 	
 	@Override
-	public String generate(HashMap<String, Object> additionalValues) {
-		return super.generate(additionalValues) + "." + getAdditionalValue(AV_WAGGON_NUMBER);
+	public String generate(HashMap<String, Object> additionalValues, String parentBusinessKey) {
+		return super.generate(additionalValues, parentBusinessKey) + DIVIDER + getAdditionalValue(AV_WAGGON_NUMBER);
 	}
 }
