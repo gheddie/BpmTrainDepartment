@@ -330,17 +330,12 @@ public class DepartTrainTestCase extends BpmTestCase {
 	}
 
 	private void processWaggonRepairAssumement(String waggonNumber, int hours, ProcessInstance parentInstance) {
-		ProcessInstance instance = RailwayStationBusinessLogic.getInstance().resolveProcessInstance(getProcessInstances(),
-				DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY, waggonNumber, parentInstance);
-		List<Task> tasksAssumeRepairTime = processEngine.getTaskService().createTaskQuery()
-				.taskDefinitionKey(DepartTrainProcessConstants.TASK_ASSUME_REPAIR_TIME)
-				.processInstanceBusinessKey(instance.getBusinessKey()).list();
-		assertEquals(1, tasksAssumeRepairTime.size());
-		processEngine.getTaskService().complete(tasksAssumeRepairTime.get(0).getId(),
+		Task assumeRepairTimeTask = getRepairFacilityProcessTask(waggonNumber, DepartTrainProcessConstants.TASK_ASSUME_REPAIR_TIME, parentInstance);
+		processEngine.getTaskService().complete(assumeRepairTimeTask.getId(),
 				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_ASSUMED_TIME, hours).build());
 
 	}
-	
+
 	private void processStartWaggonEvaluation(Task startWaggonRepairTask, RepairEvaluationResult repairEvaluationResult) {
 		processEngine.getTaskService().complete(startWaggonRepairTask.getId(), HashMapBuilder.create()
 				.withValuePair(DepartTrainProcessConstants.VAR_WAGGON_EVALUATION_RESULT, repairEvaluationResult).build());
@@ -400,6 +395,21 @@ public class DepartTrainTestCase extends BpmTestCase {
 				DepartTrainProcessConstants.MSG_DEPARTURE_PLANNED, generatedBusinessKey,
 				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_PLANNED_WAGGONS, extractedWaggonNumbers)
 						.withValuePair(DepartTrainProcessConstants.VAR_PLANNED_DEPARTMENT_DATE, plannedDepartureTime).build());
+		return instance;
+	}
+	
+	private Task getRepairFacilityProcessTask(String waggonNumber, String taskDefinitionKey, ProcessInstance parentInstance) {
+		ProcessInstance instance = resolveRepairFacilityProcessForWaggonNumber(waggonNumber, parentInstance);
+		List<Task> tasksAssumeRepairTime = processEngine.getTaskService().createTaskQuery()
+				.taskDefinitionKey(taskDefinitionKey)
+				.processInstanceBusinessKey(instance.getBusinessKey()).list();
+		assertEquals(1, tasksAssumeRepairTime.size());
+		return tasksAssumeRepairTime.get(0);
+	}
+	
+	private ProcessInstance resolveRepairFacilityProcessForWaggonNumber(String waggonNumber, ProcessInstance parentInstance) {
+		ProcessInstance instance = RailwayStationBusinessLogic.getInstance().resolveProcessInstance(getProcessInstances(),
+				DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY, waggonNumber, parentInstance);
 		return instance;
 	}
 
