@@ -124,7 +124,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		// waiting for replacement
 		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_REP_WAGG_ARRIVED);
 
-		// 2 replacements tobe be processed...
+		// 2 replacements to be be processed...
 		processDeliverReplacement(processInstance.getBusinessKey(), "W888", "W999");
 
 		Task chooseReplacementTrackTask = ensureSingleTaskPresent(DepartTrainProcessConstants.TASK_CHOOSE_REPLACEMENT_TRACK,
@@ -137,9 +137,10 @@ public class DepartTrainTestCase extends BpmTestCase {
 		// check replacement track...
 		assertTrue(RailwayStationBusinessLogic.getInstance().checkTrackWaggons("TrackReplacement", "W888", "W999"));
 
-		// all prompted --> choose exit track
-		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.TASK_CHOOSE_EXIT_TRACK);
+		// all prompted --> wait for repairs...
+		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_WAGGON_REPAIRED);
 
+		/*
 		processExitTrack(processInstance, "TrackExit");
 
 		// we have waggon runnabilities to check...
@@ -155,14 +156,15 @@ public class DepartTrainTestCase extends BpmTestCase {
 		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.TASK_CONFIRM_ROLLOUT);
 
 		RailwayStationBusinessLogic.getInstance().print("Before rollout", false);
+		*/
 
 		// confirm roll out
-		processRollout(processInstance, true);
+		// processRollout(processInstance, true);
 
-		RailwayStationBusinessLogic.getInstance().print("After rollout", false);
+		// RailwayStationBusinessLogic.getInstance().print("After rollout", false);
 
 		// 4 waggons ware gone...
-		assertEquals(3, RailwayStationBusinessLogic.getInstance().countWaggons());
+		// assertEquals(3, RailwayStationBusinessLogic.getInstance().countWaggons());
 
 		// TODO ALL processes must be gone in the end
 		// assertEquals(0,

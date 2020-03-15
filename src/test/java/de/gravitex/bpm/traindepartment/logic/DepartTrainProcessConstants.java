@@ -66,8 +66,11 @@ public class DepartTrainProcessConstants {
 	// Gesamtliste, die in den Prozess eingegeben wird
 	public static final String VAR_PLANNED_WAGGONS = "VAR_PLANNED_WAGGONS";
 	
-	// Entscheidet, ob zu 'TaskChooseExitTrack' übergegangen wird ---> 'TaskAllRepairsDone'
+	// ... ---> 'TaskAllRepairsDone'
 	public static final String VAR_ALL_ASSUMEMENTS_DONE = "VAR_ALL_ASSUMEMENTS_DONE";
+
+	// Entscheidet, ob zu 'TaskChooseExitTrack' übergegangen wird
+	public static final String VAR_ALL_REPAIRS_DONE = "VAR_ALL_REPAIRS_DONE";
 	
 	// Hier werden in 'TaskAllRepairsDone' alle zurückgemeldeten Reparaturen gespeichert
 	// Es wird zu 'TaskChooseExitTrack' weitergegeben, wenn gilt: ('VAR_REPAIRED_WAGGONS' == 'VAR_WAGGONS_TO_REPAIR')
@@ -142,6 +145,7 @@ public class DepartTrainProcessConstants {
 	public static final String CATCH_MSG_SH_DONE = "CATCH_MSG_SH_DONE";
 	public static final String CATCH_MSG_START_REPAIR = "CATCH_MSG_START_REPAIR";
 	public static final String CATCH_MSG_REP_WAGG_ARRIVED = "CATCH_MSG_REP_WAGG_ARRIVED";
+	public static final String CATCH_MSG_WAGGON_REPAIRED = "CATCH_MSG_WAGGON_REPAIRED";
 	
 	// ##############################################################################
 	// ####################################### elements
