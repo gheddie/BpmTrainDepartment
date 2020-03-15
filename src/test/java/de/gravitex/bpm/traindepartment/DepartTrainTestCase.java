@@ -14,6 +14,7 @@ import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.junit.Rule;
 import org.junit.Test;
 
+import de.gravitex.bpm.traindepartment.delegate.WaggonRepairInfo;
 import de.gravitex.bpm.traindepartment.entity.Waggon;
 import de.gravitex.bpm.traindepartment.enumeration.RepairEvaluationResult;
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
@@ -139,6 +140,10 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 		// all prompted --> wait for repairs...
 		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_WAGGON_REPAIRED);
+		
+		// we ahve 2 waggons to repair
+		List<WaggonRepairInfo> repairInfos = (List<WaggonRepairInfo>) processEngine.getRuntimeService().getVariable(processInstance.getId(), DepartTrainProcessConstants.VAR_PROMPT_REPAIR_WAGGONS_LIST);
+		assertEquals(2, repairInfos.size());
 		
 		processWaggonRepair("W1", processInstance);
 
@@ -335,7 +340,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 	
 	private void processWaggonRepair(String waggonNumber, ProcessInstance parentInstance) {
 		Task processRepairTask = getRepairFacilityProcessTask(waggonNumber, DepartTrainProcessConstants.TASK_REPAIR_WAGGON, parentInstance);
-		int werner = 5;
+		processEngine.getTaskService().complete(processRepairTask.getId());
 	}
 
 	private void processWaggonRepairAssumement(String waggonNumber, int hours, ProcessInstance parentInstance) {

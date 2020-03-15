@@ -448,6 +448,9 @@
     <bpmn:sequenceFlow id="SequenceFlow_1l55lzh" sourceRef="TASK_ASSUME_REPAIR_TIME" targetRef="CATCH_MSG_START_REPAIR" />
     <bpmn:sequenceFlow id="SequenceFlow_1c5nymt" sourceRef="TASK_REPAIR_WAGGON" targetRef="EndEvent_0zbidy2" />
     <bpmn:userTask id="TASK_REPAIR_WAGGON" name="Repair waggon" camunda:assignee="ROLE_REPAIR_DUDE">
+      <bpmn:extensionElements>
+        <camunda:taskListener class="de.gravitex.bpm.traindepartment.listener.complete.WaggonRepairDoneComplementListener" event="complete" />
+      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0w7mrww</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1c5nymt</bpmn:outgoing>
     </bpmn:userTask>
