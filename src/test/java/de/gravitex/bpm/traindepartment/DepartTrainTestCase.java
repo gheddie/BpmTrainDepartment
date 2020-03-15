@@ -139,6 +139,8 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 		// all prompted --> wait for repairs...
 		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_WAGGON_REPAIRED);
+		
+		processWaggonRepair("W1", processInstance);
 
 		/*
 		processExitTrack(processInstance, "TrackExit");
@@ -329,6 +331,11 @@ public class DepartTrainTestCase extends BpmTestCase {
 		 * // waggons must have left the station... assertEquals(0,
 		 * RailwayStationBusinessLogic.getInstance().countWaggons());
 		 */
+	}
+	
+	private void processWaggonRepair(String waggonNumber, ProcessInstance parentInstance) {
+		Task processRepairTask = getRepairFacilityProcessTask(waggonNumber, DepartTrainProcessConstants.TASK_REPAIR_WAGGON, parentInstance);
+		int werner = 5;
 	}
 
 	private void processWaggonRepairAssumement(String waggonNumber, int hours, ProcessInstance parentInstance) {
