@@ -48,14 +48,8 @@ public class DepartTrainProcessConstants {
 	// planned departure time
 	public static final String VAR_PLANNED_DEPARTMENT_DATE = "VAR_PLANNED_DEPARTMENT_DATE";
 	
-	// Dauert die Reparatur aller Wagen so lnge, das Zug nicht geplant abfahren kann?
-	public static final String VAR_REPAIR_TIME_EXCEEDED = "VAR_REPAIR_TIME_EXCEEDED";
-	 
 	// Liste von Wagen, die an 'TASK_ASSUME_REPAIR_TIME' übergeben werden
 	public static final String VAR_WAGGONS_TO_ASSUME = "VAR_WAGGONS_TO_ASSUME";
-	
-	// times assumements to collect
-	public static final String VAR_COLLECTED_ASSUMEMENTS = "VAR_COLLECTED_ASSUMEMENTS";
 	
 	public static final String VAR_ROLLOUT_CONFIRMED = "VAR_ROLLOUT_CONFIRMED";
 	
@@ -76,14 +70,11 @@ public class DepartTrainProcessConstants {
 	// Es wird zu 'TaskChooseExitTrack' weitergegeben, wenn gilt: ('VAR_REPAIRED_WAGGONS' == 'VAR_WAGGONS_TO_REPAIR')
 	public static final String VAR_ASSUMED_WAGGONS = "VAR_ASSUMED_WAGGONS";
 	
-	// all waggons which have triggered 'MSG_REPAIR_DONE'...
-	public static final String VAR_REPAIRED_WAGGONS = "VAR_REPAIRED_WAGGONS";
-	
 	// a single assumed waggon
 	public static final String VAR_ASSUMED_WAGGON = "VAR_ASSUMED_WAGGON";
 	
 	// Wird durch den Reparatur-Prozess geschleift und auuch von diesem zurückgegeben
-	public static final String VAR_SINGLE_WAGGON_TO_ASSUME = "VAR_SINGLE_WAGGON_TO_ASSUME";
+	public static final String VAR_SINGLE_FACILITY_PROCESS_WAGGON = "VAR_SINGLE_FACILITY_PROCESS_WAGGON";
 	
 	// Die für einen Wagen abgeschätzte Reparatur-Zeit
 	public static final String VAR_ASSUMED_TIME = "VAR_ASSUMED_TIME";
@@ -103,9 +94,6 @@ public class DepartTrainProcessConstants {
 	// single waggon to prompt a repair... 
 	public static final String VAR_PROMPT_REPAIR_WAGGON = "VAR_PROMPT_REPAIR_WAGGON";
 
-	// single waggon to prompt a replacement...
-	public static final String VAR_PROMPT_REPLACE_WAGGON = "VAR_PROMPT_REPLACE_WAGGON";
-	
 	// target track for replaced waggons
 	public static final String VAR_REPLACE_WAGGON_TARGET_TRACK = "VAR_REPLACE_WAGGON_TARGET_TRACK";
 	
@@ -124,7 +112,6 @@ public class DepartTrainProcessConstants {
 	// ####################################### messages
 	// ##############################################################################
 	
-	public static final String MSG_INVOKE_WAG_REP = "MSG_INVOKE_WAG_REP";
 	public static final String MSG_DEPARTURE_PLANNED = "MSG_DEPARTURE_PLANNED";
 	public static final String MSG_REPAIR_ASSUMED = "MSG_REPAIR_ASSUMED";
 	public static final String MSG_SH_ORD = "MSG_SH_ORD";

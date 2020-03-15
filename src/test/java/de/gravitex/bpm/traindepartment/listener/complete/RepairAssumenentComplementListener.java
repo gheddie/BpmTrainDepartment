@@ -12,7 +12,7 @@ public class RepairAssumenentComplementListener implements TaskListener {
 	@Override
 	public void notify(DelegateTask delegateTask) {
 		String assumedWaggon = (String) delegateTask.getProcessEngine().getRuntimeService()
-				.getVariable(delegateTask.getExecutionId(), DepartTrainProcessConstants.VAR_SINGLE_WAGGON_TO_ASSUME);
+				.getVariable(delegateTask.getExecutionId(), DepartTrainProcessConstants.VAR_SINGLE_FACILITY_PROCESS_WAGGON);
 		System.out.println("calling back waggon assumement: " + assumedWaggon);
 		int singleAssumedTime = (int) delegateTask.getProcessEngine().getRuntimeService()
 				.getVariable(delegateTask.getExecutionId(), DepartTrainProcessConstants.VAR_ASSUMED_TIME);
@@ -21,7 +21,7 @@ public class RepairAssumenentComplementListener implements TaskListener {
 						(String) delegateTask.getProcessEngine().getRuntimeService().getVariable(delegateTask.getExecutionId(),
 								DepartTrainProcessConstants.VAR_DEP_PROC_BK),
 						HashMapBuilder.create()
-								.withValuePair(DepartTrainProcessConstants.VAR_SINGLE_WAGGON_TO_ASSUME,
+								.withValuePair(DepartTrainProcessConstants.VAR_SINGLE_FACILITY_PROCESS_WAGGON,
 										WaggonRepairInfo.fromValues(assumedWaggon, singleAssumedTime,
 												delegateTask.getExecution().getBusinessKey()))
 								.build());

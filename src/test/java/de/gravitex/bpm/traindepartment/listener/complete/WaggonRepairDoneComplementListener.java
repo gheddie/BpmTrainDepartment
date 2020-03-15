@@ -14,7 +14,7 @@ public class WaggonRepairDoneComplementListener implements TaskListener {
 
 		// the actually repaired waggon
 		String repairedWaggon = (String) delegateTask.getProcessEngine().getRuntimeService()
-				.getVariable(delegateTask.getExecution().getId(), DepartTrainProcessConstants.VAR_SINGLE_WAGGON_TO_ASSUME);
+				.getVariable(delegateTask.getExecution().getId(), DepartTrainProcessConstants.VAR_SINGLE_FACILITY_PROCESS_WAGGON);
 
 		int werner = 5;
 		

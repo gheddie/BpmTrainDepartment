@@ -29,7 +29,7 @@ public class ProcessCriticalErrorsDelegate implements JavaDelegate {
 						DepartTrainProcessConstants.MSG_INVOKE_WAG_ASSUMEMENT, subProcessBusinessKey,
 						HashMapBuilder.create()
 								.withValuePair(DepartTrainProcessConstants.VAR_DEP_PROC_BK, execution.getBusinessKey())
-								.withValuePair(DepartTrainProcessConstants.VAR_SINGLE_WAGGON_TO_ASSUME, plannedWaggon).build());
+								.withValuePair(DepartTrainProcessConstants.VAR_SINGLE_FACILITY_PROCESS_WAGGON, plannedWaggon).build());
 				// store waggons to repair in 'VAR_WAGGONS_TO_REPAIR'
 				waggonsToAssume.add(plannedWaggon);
 			}
