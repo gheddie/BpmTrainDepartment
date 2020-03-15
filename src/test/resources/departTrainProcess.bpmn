@@ -381,7 +381,7 @@
       <bpmn:outgoing>SequenceFlow_1rmhtdq</bpmn:outgoing>
       <bpmn:linkEventDefinition name="LNK_ALL_PROMPTED" />
     </bpmn:intermediateCatchEvent>
-    <bpmn:intermediateCatchEvent id="CATCH_MSG_WAGGON_REPAIRED">
+    <bpmn:intermediateCatchEvent id="CATCH_MSG_WAGGON_REPAIRED" name="MSG_REPAIR_DONE">
       <bpmn:incoming>SequenceFlow_1rmhtdq</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0zt6zu8</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_126g6j1</bpmn:outgoing>
@@ -1045,6 +1045,9 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="IntermediateCatchEvent_02op49j_di" bpmnElement="CATCH_MSG_WAGGON_REPAIRED">
         <dc:Bounds x="1057" y="721" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1092" y="673" width="79" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="MessageFlow_1ywzuv5_di" bpmnElement="MessageFlow_1ywzuv5">
         <di:waypoint x="1075" y="-144" />
