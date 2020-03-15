@@ -42,6 +42,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		// ...
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	@Deployment(resources = { "departTrainProcess.bpmn" })
 	public void testStraightAssumement() {
@@ -140,30 +141,36 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 		// all prompted --> wait for repairs...
 		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_WAGGON_REPAIRED);
-		
-		// we ahve 2 waggons to repair
-		List<WaggonRepairInfo> repairInfos = (List<WaggonRepairInfo>) processEngine.getRuntimeService().getVariable(processInstance.getId(), DepartTrainProcessConstants.VAR_PROMPT_REPAIR_WAGGONS_LIST);
+
+		// we have 2 waggons to repair (W1, W2)
+		List<WaggonRepairInfo> repairInfos = (List<WaggonRepairInfo>) processEngine.getRuntimeService()
+				.getVariable(processInstance.getId(), DepartTrainProcessConstants.VAR_PROMPT_REPAIR_WAGGONS_LIST);
 		assertEquals(2, repairInfos.size());
-		
+
 		processWaggonRepair("W1", processInstance);
+		processWaggonRepair("W2", processInstance);
+		
+		// all waggons repaired, so...
+		// assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.TASK_CHOOSE_EXIT_TRACK);
 
 		/*
-		processExitTrack(processInstance, "TrackExit");
-
-		// we have waggon runnabilities to check...
-		List<Task> checkRunnabilityTasks = processEngine.getTaskService().createTaskQuery()
-				.taskDefinitionKey(DepartTrainProcessConstants.TASK_CHECK_WAGGON_RUNNABILITY).list();
-		assertEquals(4, checkRunnabilityTasks.size());
-
-		processRunnabilityCheck(checkRunnabilityTasks.get(0), true);
-		processRunnabilityCheck(checkRunnabilityTasks.get(1), true);
-		processRunnabilityCheck(checkRunnabilityTasks.get(2), true);
-		processRunnabilityCheck(checkRunnabilityTasks.get(3), true);
-
-		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.TASK_CONFIRM_ROLLOUT);
-
-		RailwayStationBusinessLogic.getInstance().print("Before rollout", false);
-		*/
+		 * processExitTrack(processInstance, "TrackExit");
+		 * 
+		 * // we have waggon runnabilities to check... List<Task> checkRunnabilityTasks
+		 * = processEngine.getTaskService().createTaskQuery()
+		 * .taskDefinitionKey(DepartTrainProcessConstants.TASK_CHECK_WAGGON_RUNNABILITY)
+		 * .list(); assertEquals(4, checkRunnabilityTasks.size());
+		 * 
+		 * processRunnabilityCheck(checkRunnabilityTasks.get(0), true);
+		 * processRunnabilityCheck(checkRunnabilityTasks.get(1), true);
+		 * processRunnabilityCheck(checkRunnabilityTasks.get(2), true);
+		 * processRunnabilityCheck(checkRunnabilityTasks.get(3), true);
+		 * 
+		 * assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.
+		 * TASK_CONFIRM_ROLLOUT);
+		 * 
+		 * RailwayStationBusinessLogic.getInstance().print("Before rollout", false);
+		 */
 
 		// confirm roll out
 		// processRollout(processInstance, true);
@@ -337,14 +344,16 @@ public class DepartTrainTestCase extends BpmTestCase {
 		 * RailwayStationBusinessLogic.getInstance().countWaggons());
 		 */
 	}
-	
+
 	private void processWaggonRepair(String waggonNumber, ProcessInstance parentInstance) {
-		Task processRepairTask = getRepairFacilityProcessTask(waggonNumber, DepartTrainProcessConstants.TASK_REPAIR_WAGGON, parentInstance);
+		Task processRepairTask = getRepairFacilityProcessTask(waggonNumber, DepartTrainProcessConstants.TASK_REPAIR_WAGGON,
+				parentInstance);
 		processEngine.getTaskService().complete(processRepairTask.getId());
 	}
 
 	private void processWaggonRepairAssumement(String waggonNumber, int hours, ProcessInstance parentInstance) {
-		Task assumeRepairTimeTask = getRepairFacilityProcessTask(waggonNumber, DepartTrainProcessConstants.TASK_ASSUME_REPAIR_TIME, parentInstance);
+		Task assumeRepairTimeTask = getRepairFacilityProcessTask(waggonNumber,
+				DepartTrainProcessConstants.TASK_ASSUME_REPAIR_TIME, parentInstance);
 		processEngine.getTaskService().complete(assumeRepairTimeTask.getId(),
 				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_ASSUMED_TIME, hours).build());
 
@@ -411,16 +420,15 @@ public class DepartTrainTestCase extends BpmTestCase {
 						.withValuePair(DepartTrainProcessConstants.VAR_PLANNED_DEPARTMENT_DATE, plannedDepartureTime).build());
 		return instance;
 	}
-	
+
 	private Task getRepairFacilityProcessTask(String waggonNumber, String taskDefinitionKey, ProcessInstance parentInstance) {
 		ProcessInstance instance = resolveRepairFacilityProcessForWaggonNumber(waggonNumber, parentInstance);
-		List<Task> tasksAssumeRepairTime = processEngine.getTaskService().createTaskQuery()
-				.taskDefinitionKey(taskDefinitionKey)
+		List<Task> tasksAssumeRepairTime = processEngine.getTaskService().createTaskQuery().taskDefinitionKey(taskDefinitionKey)
 				.processInstanceBusinessKey(instance.getBusinessKey()).list();
 		assertEquals(1, tasksAssumeRepairTime.size());
 		return tasksAssumeRepairTime.get(0);
 	}
-	
+
 	private ProcessInstance resolveRepairFacilityProcessForWaggonNumber(String waggonNumber, ProcessInstance parentInstance) {
 		ProcessInstance instance = RailwayStationBusinessLogic.getInstance().resolveProcessInstance(getProcessInstances(),
 				DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY, waggonNumber, parentInstance);

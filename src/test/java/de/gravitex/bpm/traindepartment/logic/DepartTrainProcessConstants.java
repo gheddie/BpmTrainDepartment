@@ -76,6 +76,9 @@ public class DepartTrainProcessConstants {
 	// Es wird zu 'TaskChooseExitTrack' weitergegeben, wenn gilt: ('VAR_REPAIRED_WAGGONS' == 'VAR_WAGGONS_TO_REPAIR')
 	public static final String VAR_ASSUMED_WAGGONS = "VAR_ASSUMED_WAGGONS";
 	
+	// all waggons which have triggered 'MSG_REPAIR_DONE'...
+	public static final String VAR_REPAIRED_WAGGONS = "VAR_REPAIRED_WAGGONS";
+	
 	// a single assumed waggon
 	public static final String VAR_ASSUMED_WAGGON = "VAR_ASSUMED_WAGGON";
 	
@@ -128,6 +131,7 @@ public class DepartTrainProcessConstants {
 	public static final String MSG_INVOKE_WAG_ASSUMEMENT = "MSG_INVOKE_WAG_ASSUMEMENT";
 	public static final String MSG_START_REPAIR = "MSG_START_REPAIR";
 	public static final String MSG_REPL_WAGG_ARRIVED = "MSG_REPL_WAGG_ARRIVED";
+	public static final String MSG_REPAIR_DONE = "MSG_REPAIR_DONE";
 	
 	// ##############################################################################
 	// ####################################### errors
