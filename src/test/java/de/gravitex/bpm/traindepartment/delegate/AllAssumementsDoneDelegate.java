@@ -27,7 +27,8 @@ public class AllAssumementsDoneDelegate implements JavaDelegate {
 		
 		// assumedWaggons.add(actuallyAssumed);
 		
-		((WaggonList) execution.getVariable(DepartTrainProcessConstants.VAR_WAGGON_LIST)).processRepairAssumption(actuallyAssumed.getWaggonNumber(), actuallyAssumed.getRepairEvaluationResult());
+		WaggonList waggonList = (WaggonList) execution.getVariable(DepartTrainProcessConstants.VAR_WAGGON_LIST);
+		waggonList.processRepairAssumption(actuallyAssumed.getWaggonNumber(), actuallyAssumed.getAssumedRepairDuration());
 		
 		// all waggons assumed?
 		/*
@@ -37,7 +38,14 @@ public class AllAssumementsDoneDelegate implements JavaDelegate {
 				*/
 		
 		// alles abgeschätzt?
-		execution.setVariable(DepartTrainProcessConstants.VAR_ALL_ASSUMEMENTS_DONE, ((WaggonList) execution.getVariable(DepartTrainProcessConstants.VAR_WAGGON_LIST)).allWaggonsAssumed());
+		boolean allWaggonsAssumed = waggonList.allWaggonsAssumed();
+		execution.setVariable(DepartTrainProcessConstants.VAR_ALL_ASSUMEMENTS_DONE, allWaggonsAssumed);
+		
+		if (allWaggonsAssumed) {
+			List<WaggonRepairInfo> fakedAssumedWaggons = new ArrayList<WaggonRepairInfo>();
+			fakedAssumedWaggons.add(WaggonRepairInfo.fromWaggonNumber("PETER"));
+			execution.setVariable(DepartTrainProcessConstants.VAR_ASSUMED_WAGGONS, fakedAssumedWaggons);
+		}
 		
 		// update assumed hours...
 		int assumedUpToNow = (int) execution.getVariable(DepartTrainProcessConstants.VAR_SUMMED_UP_ASSUMED_HOURS);

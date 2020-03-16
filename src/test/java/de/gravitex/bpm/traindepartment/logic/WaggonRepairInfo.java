@@ -17,7 +17,7 @@ public class WaggonRepairInfo implements Serializable {
 	private String waggonNumber;
 	
 	// hours
-	private int assumedRepairDuration;
+	private Integer assumedRepairDuration = null;
 	
 	// the business key of the repair process
 	private String businessKey;
@@ -25,12 +25,12 @@ public class WaggonRepairInfo implements Serializable {
 	private RepairEvaluationResult repairEvaluationResult = RepairEvaluationResult.UNDEFINED;
 	
 	public static WaggonRepairInfo fromWaggonNumber(String waggonNumber) {
-		WaggonRepairInfo fromValues = fromValues(waggonNumber, 0, null);
+		WaggonRepairInfo fromValues = fromValues(waggonNumber, null, null);
 		fromValues.setRepairEvaluationResult(RepairEvaluationResult.UNDEFINED);
 		return fromValues;
 	}
 
-	public static WaggonRepairInfo fromValues(String waggonNumber, int assumedRepairDuration, String businessKey) {
+	public static WaggonRepairInfo fromValues(String waggonNumber, Integer assumedRepairDuration, String businessKey) {
 		WaggonRepairInfo waggonRepairInfo = new WaggonRepairInfo();
 		waggonRepairInfo.setWaggonNumber(waggonNumber);
 		waggonRepairInfo.setAssumedRepairDuration(assumedRepairDuration);

@@ -70,7 +70,7 @@ public class DepartTrainProcessConstants {
 	
 	// Hier werden in 'TaskAllRepairsDone' alle zurückgemeldeten Reparaturen gespeichert
 	// Es wird zu 'TaskChooseExitTrack' weitergegeben, wenn gilt: ('VAR_REPAIRED_WAGGONS' == 'VAR_WAGGONS_TO_REPAIR')
-	// public static final String VAR_ASSUMED_WAGGONS = "VAR_ASSUMED_WAGGONS";
+	public static final String VAR_ASSUMED_WAGGONS = "VAR_ASSUMED_WAGGONS";
 	
 	// a single assumed waggon
 	public static final String VAR_ASSUMED_WAGGON = "VAR_ASSUMED_WAGGON";

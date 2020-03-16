@@ -34,13 +34,13 @@ public class WaggonList {
 		return result;
 	}
 
-	public void processRepairAssumption(String waggonNumber, RepairEvaluationResult repairEvaluationResult) {
-		waggonRepairInfoHash.get(waggonNumber).setRepairEvaluationResult(repairEvaluationResult);
+	public void processRepairAssumption(String waggonNumber, Integer assumedRepairDuration) {
+		waggonRepairInfoHash.get(waggonNumber).setAssumedRepairDuration(assumedRepairDuration);
 	}
 
 	public boolean allWaggonsAssumed() {
 		for (WaggonRepairInfo waggonRepairInfo : waggonRepairInfoHash.values()) {
-			if (waggonRepairInfo.getRepairEvaluationResult().equals(RepairEvaluationResult.UNDEFINED)) {
+			if (waggonRepairInfo.getAssumedRepairDuration() == null) {
 				return false;
 			}
 		}
