@@ -61,7 +61,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 		ProcessInstance processInstance = startDepartureProcess(getDefaultPlannedDepartureTime(), "W1", "W2", "W3", "W4");
 
-		// we have 4 facility processes, so 4 assumement tasks...
+		// we have 4 facility processes, so 4 assumement tasks..
 		assertEquals(4, ensureProcessInstanceCount(DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY));
 		ensureTaskCountPresent(DepartTrainProcessConstants.TASK_ASSUME_REPAIR_TIME, null,
 				DepartTrainProcessConstants.ROLE_REPAIR_DUDE, 4);
