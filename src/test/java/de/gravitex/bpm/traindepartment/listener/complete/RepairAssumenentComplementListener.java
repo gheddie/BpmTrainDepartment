@@ -3,8 +3,8 @@ package de.gravitex.bpm.traindepartment.listener.complete;
 import org.camunda.bpm.engine.delegate.DelegateTask;
 import org.camunda.bpm.engine.delegate.TaskListener;
 
-import de.gravitex.bpm.traindepartment.delegate.WaggonRepairInfo;
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
+import de.gravitex.bpm.traindepartment.logic.WaggonRepairInfo;
 import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
 
 public class RepairAssumenentComplementListener implements TaskListener {

@@ -45,6 +45,8 @@ public class DepartTrainProcessConstants {
 	// ####################################### variables
 	// ##############################################################################
 	
+	public static final String VAR_WAGGON_LIST = "VAR_WAGGON_LIST";
+	
 	// planned departure time
 	public static final String VAR_PLANNED_DEPARTMENT_DATE = "VAR_PLANNED_DEPARTMENT_DATE";
 	

@@ -6,6 +6,7 @@ import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
+import de.gravitex.bpm.traindepartment.logic.WaggonRepairInfo;
 
 public class StartRepairDelegate implements JavaDelegate {
 

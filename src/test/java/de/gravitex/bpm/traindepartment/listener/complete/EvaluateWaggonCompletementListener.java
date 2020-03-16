@@ -7,9 +7,9 @@ import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.delegate.DelegateTask;
 import org.camunda.bpm.engine.delegate.TaskListener;
 
-import de.gravitex.bpm.traindepartment.delegate.WaggonRepairInfo;
 import de.gravitex.bpm.traindepartment.enumeration.RepairEvaluationResult;
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
+import de.gravitex.bpm.traindepartment.logic.WaggonRepairInfo;
 
 public class EvaluateWaggonCompletementListener implements TaskListener {
 

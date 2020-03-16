@@ -1,4 +1,4 @@
-package de.gravitex.bpm.traindepartment.delegate;
+package de.gravitex.bpm.traindepartment.logic;
 
 import java.io.Serializable;
 
@@ -23,6 +23,10 @@ public class WaggonRepairInfo implements Serializable {
 	private String businessKey;
 	
 	private RepairEvaluationResult repairEvaluationResult;
+	
+	public static WaggonRepairInfo fromWaggonNumber(String waggonNumber) {
+		return fromValues(waggonNumber, 0, null);
+	}
 
 	public static WaggonRepairInfo fromValues(String waggonNumber, int assumedRepairDuration, String businessKey) {
 		WaggonRepairInfo waggonRepairInfo = new WaggonRepairInfo();

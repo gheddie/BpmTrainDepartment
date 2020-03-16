@@ -16,12 +16,13 @@ import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.junit.Rule;
 import org.junit.Test;
 
-import de.gravitex.bpm.traindepartment.delegate.WaggonRepairInfo;
 import de.gravitex.bpm.traindepartment.entity.Waggon;
 import de.gravitex.bpm.traindepartment.enumeration.RepairEvaluationResult;
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogicException;
+import de.gravitex.bpm.traindepartment.logic.WaggonList;
+import de.gravitex.bpm.traindepartment.logic.WaggonRepairInfo;
 import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
 
 public class DepartTrainTestCase extends BpmTestCase {
@@ -433,9 +434,10 @@ public class DepartTrainTestCase extends BpmTestCase {
 		List<String> extractedWaggonNumbers = Waggon.getWaggonNumbers(waggonNumbers);
 		String generatedBusinessKey = RailwayStationBusinessLogic.getInstance()
 				.generateBusinessKey(DepartTrainProcessConstants.PROCESS_DEPART_TRAIN, HashMapBuilder.create().build(), null);
+		WaggonList waggonList = WaggonList.fromWaggonNumbers(extractedWaggonNumbers);
 		ProcessInstance instance = processEngine.getRuntimeService().startProcessInstanceByMessage(
 				DepartTrainProcessConstants.MSG_DEPARTURE_PLANNED, generatedBusinessKey,
-				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_PLANNED_WAGGONS, extractedWaggonNumbers)
+				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_WAGGON_LIST, waggonList)
 						.withValuePair(DepartTrainProcessConstants.VAR_PLANNED_DEPARTMENT_DATE, plannedDepartureTime).build());
 		return instance;
 	}

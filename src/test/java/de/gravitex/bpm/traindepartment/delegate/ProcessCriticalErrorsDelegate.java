@@ -6,20 +6,20 @@ import java.util.List;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 
+import de.gravitex.bpm.traindepartment.delegate.base.DepartmentJavaDelegate;
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
 import de.gravitex.bpm.traindepartment.logic.businesskey.RepairFacilityBusinessKeyCreator;
 import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
 
-public class ProcessCriticalErrorsDelegate implements JavaDelegate {
+public class ProcessCriticalErrorsDelegate extends DepartmentJavaDelegate {
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
-		List<String> plannedWaggons = (List<String>) execution.getVariable(DepartTrainProcessConstants.VAR_PLANNED_WAGGONS);
 		List<String> waggonsToAssume = new ArrayList<String>();
 		String subProcessBusinessKey = null;
-		for (String plannedWaggon : plannedWaggons) {
+		for (String plannedWaggon : getWaggonNumbers(execution)) {
 			if (RailwayStationBusinessLogic.getInstance().isWaggonCritical(plannedWaggon)) {
 				subProcessBusinessKey = RailwayStationBusinessLogic.getInstance()
 						.generateBusinessKey(DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY, HashMapBuilder.create()
