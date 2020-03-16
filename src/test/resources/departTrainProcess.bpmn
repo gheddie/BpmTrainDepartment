@@ -388,7 +388,7 @@
       <bpmn:messageEventDefinition messageRef="Message_1jekl17" />
     </bpmn:intermediateCatchEvent>
     <bpmn:sequenceFlow id="SequenceFlow_0zt6zu8" sourceRef="ExGwAllRepairsDone" targetRef="CATCH_MSG_WAGGON_REPAIRED">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${VAR_ALL_REPAIRS_DONE == false}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${dollesDing.standardOrder()}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:serviceTask id="TASK_ALL_REPAIRS_DONE" name="All repairs done" camunda:class="de.gravitex.bpm.traindepartment.delegate.AllRepairsDoneDelegate">
       <bpmn:incoming>SequenceFlow_126g6j1</bpmn:incoming>

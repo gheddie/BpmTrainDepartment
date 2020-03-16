@@ -152,10 +152,10 @@ public class DepartTrainTestCase extends BpmTestCase {
 		assertEquals(2, repairInfos.size());
 
 		processWaggonRepair("W1", processInstance);
-		processWaggonRepair("W2", processInstance);
+		// processWaggonRepair("W2", processInstance);
 
 		// all waggons repaired, so...
-		// assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.TASK_CHOOSE_EXIT_TRACK);
+		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.TASK_CHOOSE_EXIT_TRACK);
 
 		/*
 		 * processExitTrack(processInstance, "TrackExit");

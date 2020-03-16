@@ -1,8 +1,15 @@
 package de.gravitex.bpm.traindepartment.logic;
 
-public class DollesDing {
+import java.io.Serializable;
 
-	public boolean isStandardOrder() {
-		return false;
+import lombok.Data;
+
+@Data
+public class DollesDing implements Serializable {
+
+	private static final long serialVersionUID = -6510441131732584389L;
+
+	public Boolean standardOrder() {
+		return new Boolean(false);
 	}
 }
