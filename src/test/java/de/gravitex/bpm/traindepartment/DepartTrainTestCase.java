@@ -11,7 +11,6 @@ import java.util.List;
 import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
-import org.camunda.bpm.engine.task.TaskQuery;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.junit.Rule;
@@ -156,7 +155,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		processWaggonRepair("W2", processInstance);
 
 		// all waggons repaired, so...
-		// assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.TASK_CHOOSE_EXIT_TRACK);
+		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.TASK_CHOOSE_EXIT_TRACK);
 
 		/*
 		 * processExitTrack(processInstance, "TrackExit");
@@ -190,14 +189,16 @@ public class DepartTrainTestCase extends BpmTestCase {
 		// processEngine.getRuntimeService().createProcessInstanceQuery().list().size());
 	}
 
+	@SuppressWarnings("unchecked")
 	private HashMap<String, String> getWaggonNumberToEvaluationTaskMapping(List<Task> evaluationTasks) {
-		HashMap<String, String> waggonNumberToEvaluationTaskMapping = new HashMap<String, String>();
+		String waggonNumber = null;
+		HashMapBuilder<String, String> builder = HashMapBuilder.create();
 		for (Task task : evaluationTasks) {
-			waggonNumberToEvaluationTaskMapping
-					.put(((WaggonRepairInfo) processEngine.getTaskService().getVariable(task.getId(), "VAR_ASSUMED_WAGGON"))
-							.getWaggonNumber(), task.getId());
+			waggonNumber = ((WaggonRepairInfo) processEngine.getTaskService().getVariable(task.getId(),
+					DepartTrainProcessConstants.VAR_ASSUMED_WAGGON)).getWaggonNumber();
+			builder.withValuePair(waggonNumber, task.getId());
 		}
-		return waggonNumberToEvaluationTaskMapping;
+		return builder.build();
 	}
 
 	@Test
