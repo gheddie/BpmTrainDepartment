@@ -192,7 +192,7 @@
       <bpmn:incoming>SequenceFlow_0jlyfnl</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_12ql7ne</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:exclusiveGateway id="ExGwSwitchbackToMsgAwaitAssumement" name="all assumements done?">
+    <bpmn:exclusiveGateway id="ExGwSwitchbackToMsgAwaitAssumement" name="all assumements done?" default="SequenceFlow_150gc27">
       <bpmn:incoming>SequenceFlow_1gxtmn8</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0r593fk</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_150gc27</bpmn:outgoing>
@@ -750,7 +750,7 @@
       <bpmndi:BPMNShape id="ExclusiveGateway_1bfkdvy_di" bpmnElement="ExGwSwitchbackToMsgAwaitAssumement" isMarkerVisible="true">
         <dc:Bounds x="826" y="641" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="898" y="652" width="84" height="27" />
+          <dc:Bounds x="899" y="652" width="83" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0r593fk_di" bpmnElement="SequenceFlow_0r593fk">
