@@ -5,10 +5,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
+import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
+import org.camunda.bpm.engine.task.TaskQuery;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.junit.Rule;
@@ -83,10 +86,12 @@ public class DepartTrainTestCase extends BpmTestCase {
 		assertThat(facilityProcessesInstances.get(2)).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_START_REPAIR);
 		assertThat(facilityProcessesInstances.get(3)).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_START_REPAIR);
 
-		processStartWaggonEvaluation(evaluationTasks.get(0), RepairEvaluationResult.REPAIR_WAGGON);
-		processStartWaggonEvaluation(evaluationTasks.get(1), RepairEvaluationResult.REPAIR_WAGGON);
-		processStartWaggonEvaluation(evaluationTasks.get(2), RepairEvaluationResult.REPLACE_WAGGON);
-		processStartWaggonEvaluation(evaluationTasks.get(3), RepairEvaluationResult.REPLACE_WAGGON);
+		HashMap<String, String> mappping = getWaggonNumberToEvaluationTaskMapping(evaluationTasks);
+
+		processWaggonEvaluation("W1", mappping, RepairEvaluationResult.REPAIR_WAGGON);
+		processWaggonEvaluation("W2", mappping, RepairEvaluationResult.REPAIR_WAGGON);
+		processWaggonEvaluation("W3", mappping, RepairEvaluationResult.REPLACE_WAGGON);
+		processWaggonEvaluation("W4", mappping, RepairEvaluationResult.REPLACE_WAGGON);
 
 		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPAIR,
 				DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPLACEMENT);
@@ -149,7 +154,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 		processWaggonRepair("W1", processInstance);
 		processWaggonRepair("W2", processInstance);
-		
+
 		// all waggons repaired, so...
 		// assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.TASK_CHOOSE_EXIT_TRACK);
 
@@ -183,6 +188,16 @@ public class DepartTrainTestCase extends BpmTestCase {
 		// TODO ALL processes must be gone in the end
 		// assertEquals(0,
 		// processEngine.getRuntimeService().createProcessInstanceQuery().list().size());
+	}
+
+	private HashMap<String, String> getWaggonNumberToEvaluationTaskMapping(List<Task> evaluationTasks) {
+		HashMap<String, String> waggonNumberToEvaluationTaskMapping = new HashMap<String, String>();
+		for (Task task : evaluationTasks) {
+			waggonNumberToEvaluationTaskMapping
+					.put(((WaggonRepairInfo) processEngine.getTaskService().getVariable(task.getId(), "VAR_ASSUMED_WAGGON"))
+							.getWaggonNumber(), task.getId());
+		}
+		return waggonNumberToEvaluationTaskMapping;
 	}
 
 	@Test
@@ -359,8 +374,11 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 	}
 
-	private void processStartWaggonEvaluation(Task startWaggonRepairTask, RepairEvaluationResult repairEvaluationResult) {
-		processEngine.getTaskService().complete(startWaggonRepairTask.getId(), HashMapBuilder.create()
+	private void processWaggonEvaluation(String waggonNumber, HashMap<String, String> mapping,
+			RepairEvaluationResult repairEvaluationResult) {
+		TaskService taskService = processEngine.getTaskService();
+		String taskId = mapping.get(waggonNumber);
+		taskService.complete(taskId, HashMapBuilder.create()
 				.withValuePair(DepartTrainProcessConstants.VAR_WAGGON_EVALUATION_RESULT, repairEvaluationResult).build());
 	}
 
