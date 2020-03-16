@@ -22,10 +22,12 @@ public class WaggonRepairInfo implements Serializable {
 	// the business key of the repair process
 	private String businessKey;
 	
-	private RepairEvaluationResult repairEvaluationResult;
+	private RepairEvaluationResult repairEvaluationResult = RepairEvaluationResult.UNDEFINED;
 	
 	public static WaggonRepairInfo fromWaggonNumber(String waggonNumber) {
-		return fromValues(waggonNumber, 0, null);
+		WaggonRepairInfo fromValues = fromValues(waggonNumber, 0, null);
+		fromValues.setRepairEvaluationResult(RepairEvaluationResult.UNDEFINED);
+		return fromValues;
 	}
 
 	public static WaggonRepairInfo fromValues(String waggonNumber, int assumedRepairDuration, String businessKey) {
