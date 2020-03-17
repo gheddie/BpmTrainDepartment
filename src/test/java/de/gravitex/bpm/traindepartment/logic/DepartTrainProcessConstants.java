@@ -51,8 +51,8 @@ public class DepartTrainProcessConstants {
 	// Kann nicht ersetzt werden, weil es das Collection-Attribut des Unterprozesses ist 
 	public static final String VAR_ASSUMED_WAGGONS = "VAR_ASSUMED_WAGGONS";
 	
-	// public static final String VAR_PLANNED_WAGGONS = "VAR_PLANNED_WAGGONS";
-
+	public static final String VAR_PLANNED_WAGGON = "VAR_PLANNED_WAGGON";
+	
 	// ##############################################################################
 	// ####################################### variables
 	// ##############################################################################

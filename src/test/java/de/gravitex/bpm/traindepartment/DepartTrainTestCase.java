@@ -182,7 +182,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 		// TODO
 		HashMap<String, String> checkRunnabilityTaskMapppings = getWaggonNumberToTaskIdMapping(checkRunnabilityTasks,
-				"VAR_PLANNED_WAGGON", processEngine);
+				DepartTrainProcessConstants.VAR_PLANNED_WAGGON, processEngine);
 
 		processRunnabilityCheck("W1", checkRunnabilityTaskMapppings, true);
 		processRunnabilityCheck("W2", checkRunnabilityTaskMapppings, true);
