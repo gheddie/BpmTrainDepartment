@@ -22,8 +22,10 @@ public class AllAssumementsDoneDelegate implements JavaDelegate {
 		waggonList.processRepairAssumption(actuallyAssumed.getWaggonNumber(), actuallyAssumed.getAssumedRepairDuration(), actuallyAssumed.getFacilityProcessBusinessKey());
 		// alles abgeschätzt --> put them to 'VAR_ASSUMED_WAGGONS' ?
 		// TODO make sub process talk to 'WaggonList' instance...
+		/*
 		boolean allWaggonsAssumed = waggonList.allWaggonsAssumed();
 		execution.setVariable(DepartTrainProcessConstants.VAR_ALL_ASSUMEMENTS_DONE, allWaggonsAssumed);
+		*/
 		
 		/*
 		// update assumed hours...

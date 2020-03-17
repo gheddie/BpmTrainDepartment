@@ -62,7 +62,7 @@ public class DepartTrainProcessConstants {
 	public static final String VAR_EXIT_TRACK = "VAR_EXIT_TRACK";
 	
 	// ... ---> 'TaskAllRepairsDone'
-	public static final String VAR_ALL_ASSUMEMENTS_DONE = "VAR_ALL_ASSUMEMENTS_DONE";
+	// public static final String VAR_ALL_ASSUMEMENTS_DONE = "VAR_ALL_ASSUMEMENTS_DONE";
 	
 	// a single assumed waggon
 	public static final String VAR_ASSUMED_WAGGON = "VAR_ASSUMED_WAGGON";
