@@ -39,6 +39,10 @@ public class WaggonList {
 		waggonRepairInfo.setAssumedRepairDuration(assumedRepairDuration);
 		waggonRepairInfo.setFacilityProcessBusinessKey(facilityProcessBusinessKey);
 	}
+	
+	public void processWaggonEvaluation(String waggonNumber, RepairEvaluationResult repairEvaluationResult) {
+		waggonRepairInfoHash.get(waggonNumber).setRepairEvaluationResult(repairEvaluationResult);
+	}
 
 	public boolean allWaggonsAssumed() {
 		for (WaggonRepairInfo waggonRepairInfo : waggonRepairInfoHash.values()) {
@@ -50,6 +54,28 @@ public class WaggonList {
 	}
 	
 	public boolean allRepairsDone() {
-		return new Boolean(false);
+		for (WaggonRepairInfo waggonRepairInfo : waggonRepairInfoHash.values()) {
+			if (waggonRepairInfo.getRepairEvaluationResult().equals(RepairEvaluationResult.REPAIR_WAGGON)) {
+				if (!(waggonRepairInfo.isRepaired())) {
+					return new Boolean(false);					
+				}
+			}
+		}
+		// important to return 'big' boolean, 'small' can not be serialized!!
+		return new Boolean(true);
+	}
+
+	public int getRepairedWaggonCount() {
+		int count = 0;
+		for (WaggonRepairInfo waggonRepairInfo : waggonRepairInfoHash.values()) {
+			if (waggonRepairInfo.wasRepaired()) {
+				count++;				
+			}
+		}
+		return count;
+	}
+
+	public void processRepairCallback(String waggonNumber) {
+		waggonRepairInfoHash.get(waggonNumber).setRepaired(true);
 	}
 }

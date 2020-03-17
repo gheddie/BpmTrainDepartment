@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 public class WaggonRepairInfo implements Serializable {
-	
+
 	private static final long serialVersionUID = -4796291683290246151L;
 
 	private WaggonRepairInfo() {
@@ -15,15 +15,18 @@ public class WaggonRepairInfo implements Serializable {
 	}
 
 	private String waggonNumber;
-	
+
 	// hours
 	private Integer assumedRepairDuration = null;
-	
+
 	// the business key of the repair process
 	private String facilityProcessBusinessKey;
-	
+
 	private RepairEvaluationResult repairEvaluationResult = RepairEvaluationResult.UNDEFINED;
-	
+
+	// set when waggon has been repaired
+	private boolean repaired = false;
+
 	public static WaggonRepairInfo fromWaggonNumber(String waggonNumber) {
 		WaggonRepairInfo fromValues = fromValues(waggonNumber, null, null);
 		fromValues.setRepairEvaluationResult(RepairEvaluationResult.UNDEFINED);
@@ -36,5 +39,9 @@ public class WaggonRepairInfo implements Serializable {
 		waggonRepairInfo.setAssumedRepairDuration(assumedRepairDuration);
 		waggonRepairInfo.setFacilityProcessBusinessKey(businessKey);
 		return waggonRepairInfo;
+	}
+
+	public boolean wasRepaired() {
+		return (repairEvaluationResult.equals(RepairEvaluationResult.REPAIR_WAGGON) && repaired);
 	}
 }

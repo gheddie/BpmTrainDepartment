@@ -106,6 +106,8 @@ public class DepartTrainProcessConstants {
 	
 	public static final String VAR_SINGLE_WAGGON_RUNNABLE = "VAR_SINGLE_WAGGON_RUNNABLE";
 	
+	public static final String VAR_REPAIRED_WAGGON = "VAR_REPAIRED_WAGGON";
+	
 	// business key of the 'master' process --> passed to repair 
 	// process to able to call back to master
 	public static final String VAR_DEP_PROC_BK = "VAR_DEP_PROC_BK";

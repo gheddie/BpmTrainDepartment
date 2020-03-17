@@ -16,6 +16,8 @@ import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.junit.Rule;
 import org.junit.Test;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import de.gravitex.bpm.traindepartment.entity.Waggon;
 import de.gravitex.bpm.traindepartment.enumeration.RepairEvaluationResult;
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
@@ -153,10 +155,15 @@ public class DepartTrainTestCase extends BpmTestCase {
 		assertEquals(2, repairInfos.size());
 
 		processWaggonRepair("W1", processInstance);
-		// processWaggonRepair("W2", processInstance);
+		// we have 1 repaired waggon...
+		assertEquals(1, getRepairedWaggonCount(processInstance));
+
+		processWaggonRepair("W2", processInstance);
+		// we have 2 repaired waggons...
+		assertEquals(2, getRepairedWaggonCount(processInstance));
 
 		// all waggons repaired, so...
-		// assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.TASK_CHOOSE_EXIT_TRACK);
+		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.TASK_CHOOSE_EXIT_TRACK);
 
 		/*
 		 * processExitTrack(processInstance, "TrackExit");
@@ -426,6 +433,13 @@ public class DepartTrainTestCase extends BpmTestCase {
 				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_SINGLE_WAGGON_RUNNABLE, runnable).build());
 	}
 
+	@JsonIgnore
+	private int getRepairedWaggonCount(ProcessInstance processInstance) {
+		WaggonList waggonList = (WaggonList) processEngine.getRuntimeService().getVariable(processInstance.getId(),
+				DepartTrainProcessConstants.VAR_WAGGON_LIST);
+		return waggonList.getRepairedWaggonCount();
+	}
+
 	private LocalDateTime getDefaultPlannedDepartureTime() {
 		return LocalDateTime.now().plusHours(24);
 	}
@@ -435,10 +449,11 @@ public class DepartTrainTestCase extends BpmTestCase {
 		String generatedBusinessKey = RailwayStationBusinessLogic.getInstance()
 				.generateBusinessKey(DepartTrainProcessConstants.PROCESS_DEPART_TRAIN, HashMapBuilder.create().build(), null);
 		WaggonList waggonList = WaggonList.fromWaggonNumbers(extractedWaggonNumbers);
-		ProcessInstance instance = processEngine.getRuntimeService().startProcessInstanceByMessage(
-				DepartTrainProcessConstants.MSG_DEPARTURE_PLANNED, generatedBusinessKey,
-				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_WAGGON_LIST, waggonList)
-						.withValuePair(DepartTrainProcessConstants.VAR_PLANNED_DEPARTMENT_DATE, plannedDepartureTime).build());
+		ProcessInstance instance = processEngine.getRuntimeService()
+				.startProcessInstanceByMessage(DepartTrainProcessConstants.MSG_DEPARTURE_PLANNED, generatedBusinessKey,
+						HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_WAGGON_LIST, waggonList)
+								.withValuePair(DepartTrainProcessConstants.VAR_PLANNED_DEPARTMENT_DATE, plannedDepartureTime)
+								.build());
 		return instance;
 	}
 

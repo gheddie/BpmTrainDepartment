@@ -9,6 +9,7 @@ import org.camunda.bpm.engine.delegate.TaskListener;
 
 import de.gravitex.bpm.traindepartment.enumeration.RepairEvaluationResult;
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
+import de.gravitex.bpm.traindepartment.logic.WaggonList;
 import de.gravitex.bpm.traindepartment.logic.WaggonRepairInfo;
 
 public class EvaluateWaggonCompletementListener implements TaskListener {
@@ -22,6 +23,7 @@ public class EvaluateWaggonCompletementListener implements TaskListener {
 		RepairEvaluationResult evaluationResult = (RepairEvaluationResult) runtimeService
 				.getVariable(delegateTask.getExecution().getId(), DepartTrainProcessConstants.VAR_WAGGON_EVALUATION_RESULT);
 		info.setRepairEvaluationResult(evaluationResult);
+		((WaggonList) delegateTask.getProcessEngine().getRuntimeService().getVariable(delegateTask.getExecution().getId(), DepartTrainProcessConstants.VAR_WAGGON_LIST)).processWaggonEvaluation(info.getWaggonNumber(), evaluationResult);
 		switch (evaluationResult) {
 		case REPAIR_WAGGON:
 			List<WaggonRepairInfo> repairWaggonsList = (List<WaggonRepairInfo>) runtimeService
