@@ -16,14 +16,15 @@ public class RepairAssumenentComplementListener implements TaskListener {
 		System.out.println("calling back waggon assumement: " + assumedWaggon);
 		int singleAssumedTime = (int) delegateTask.getProcessEngine().getRuntimeService()
 				.getVariable(delegateTask.getExecutionId(), DepartTrainProcessConstants.VAR_ASSUMED_TIME);
+		WaggonRepairInfo callback = WaggonRepairInfo.fromValues(assumedWaggon, singleAssumedTime,
+				delegateTask.getExecution().getBusinessKey());
 		delegateTask.getProcessEngine().getRuntimeService()
 				.correlateMessage(DepartTrainProcessConstants.MSG_REPAIR_ASSUMED,
 						(String) delegateTask.getProcessEngine().getRuntimeService().getVariable(delegateTask.getExecutionId(),
 								DepartTrainProcessConstants.VAR_DEP_PROC_BK),
 						HashMapBuilder.create()
 								.withValuePair(DepartTrainProcessConstants.VAR_SINGLE_FACILITY_PROCESS_WAGGON,
-										WaggonRepairInfo.fromValues(assumedWaggon, singleAssumedTime,
-												delegateTask.getExecution().getBusinessKey()))
+										callback)
 								.build());
 	}
 }

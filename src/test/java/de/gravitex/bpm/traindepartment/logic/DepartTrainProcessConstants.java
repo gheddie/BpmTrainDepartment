@@ -60,7 +60,7 @@ public class DepartTrainProcessConstants {
 	public static final String VAR_EXIT_TRACK = "VAR_EXIT_TRACK";
 	
 	// Gesamtliste, die in den Prozess eingegeben wird
-	public static final String VAR_PLANNED_WAGGONS = "VAR_PLANNED_WAGGONS";
+	// public static final String VAR_PLANNED_WAGGONS = "VAR_PLANNED_WAGGONS";
 	
 	// ... ---> 'TaskAllRepairsDone'
 	public static final String VAR_ALL_ASSUMEMENTS_DONE = "VAR_ALL_ASSUMEMENTS_DONE";

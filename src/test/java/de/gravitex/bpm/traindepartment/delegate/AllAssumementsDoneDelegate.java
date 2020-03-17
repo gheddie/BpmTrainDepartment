@@ -17,40 +17,27 @@ public class AllAssumementsDoneDelegate implements JavaDelegate {
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
 		
-		/*
-		if (execution.getVariable(DepartTrainProcessConstants.VAR_ASSUMED_WAGGONS) == null) {
-			execution.setVariable(DepartTrainProcessConstants.VAR_ASSUMED_WAGGONS, new ArrayList<WaggonRepairInfo>());
-		}
-		*/
-		// List<WaggonRepairInfo> assumedWaggons = (List<WaggonRepairInfo>) execution.getVariable(DepartTrainProcessConstants.VAR_ASSUMED_WAGGONS);
 		WaggonRepairInfo actuallyAssumed = (WaggonRepairInfo) execution.getVariable(DepartTrainProcessConstants.VAR_SINGLE_FACILITY_PROCESS_WAGGON);
-		
-		// assumedWaggons.add(actuallyAssumed);
-		
 		WaggonList waggonList = (WaggonList) execution.getVariable(DepartTrainProcessConstants.VAR_WAGGON_LIST);
-		waggonList.processRepairAssumption(actuallyAssumed.getWaggonNumber(), actuallyAssumed.getAssumedRepairDuration());
-		
-		// all waggons assumed?
-		/*
-		List<String> waggonsToAssume = (List<String>) execution.getVariable(DepartTrainProcessConstants.VAR_WAGGONS_TO_ASSUME);
-		boolean allAssumed = RailTestUtil.areListsEqual(convert(assumedWaggons),
-				waggonsToAssume);
-				*/
-		
-		// alles abgeschätzt?
+		waggonList.processRepairAssumption(actuallyAssumed.getWaggonNumber(), actuallyAssumed.getAssumedRepairDuration(), actuallyAssumed.getFacilityProcessBusinessKey());
+		// alles abgeschätzt --> put them to 'VAR_ASSUMED_WAGGONS' ?
+		// TODO make sub process talk to 'WaggonList' instance...
 		boolean allWaggonsAssumed = waggonList.allWaggonsAssumed();
 		execution.setVariable(DepartTrainProcessConstants.VAR_ALL_ASSUMEMENTS_DONE, allWaggonsAssumed);
 		
 		if (allWaggonsAssumed) {
-			List<WaggonRepairInfo> fakedAssumedWaggons = new ArrayList<WaggonRepairInfo>();
-			fakedAssumedWaggons.add(WaggonRepairInfo.fromWaggonNumber("PETER"));
-			execution.setVariable(DepartTrainProcessConstants.VAR_ASSUMED_WAGGONS, fakedAssumedWaggons);
-		}
-		
+			List<WaggonRepairInfo> assumedWaggons = new ArrayList<WaggonRepairInfo>();
+			for (WaggonRepairInfo assumedWaggonInfo : waggonList.getWaggonRepairInfoHash().values()) {
+				assumedWaggons.add(assumedWaggonInfo);				
+			}
+			execution.setVariable(DepartTrainProcessConstants.VAR_ASSUMED_WAGGONS, assumedWaggons);
+		}		
+		/*
 		// update assumed hours...
 		int assumedUpToNow = (int) execution.getVariable(DepartTrainProcessConstants.VAR_SUMMED_UP_ASSUMED_HOURS);
 		assumedUpToNow += actuallyAssumed.getAssumedRepairDuration();
 		execution.setVariable(DepartTrainProcessConstants.VAR_SUMMED_UP_ASSUMED_HOURS, assumedUpToNow);
+		*/
 	}
 
 	private List<String> convert(List<WaggonRepairInfo> assumedWaggons) {

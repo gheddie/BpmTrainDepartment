@@ -34,8 +34,10 @@ public class WaggonList {
 		return result;
 	}
 
-	public void processRepairAssumption(String waggonNumber, Integer assumedRepairDuration) {
-		waggonRepairInfoHash.get(waggonNumber).setAssumedRepairDuration(assumedRepairDuration);
+	public void processRepairAssumption(String waggonNumber, Integer assumedRepairDuration, String facilityProcessBusinessKey) {
+		WaggonRepairInfo waggonRepairInfo = waggonRepairInfoHash.get(waggonNumber);
+		waggonRepairInfo.setAssumedRepairDuration(assumedRepairDuration);
+		waggonRepairInfo.setFacilityProcessBusinessKey(facilityProcessBusinessKey);
 	}
 
 	public boolean allWaggonsAssumed() {
