@@ -197,18 +197,6 @@ public class DepartTrainTestCase extends BpmTestCase {
 		// processEngine.getRuntimeService().createProcessInstanceQuery().list().size());
 	}
 
-	@SuppressWarnings("unchecked")
-	private HashMap<String, String> getWaggonNumberToEvaluationTaskMapping(List<Task> evaluationTasks) {
-		String waggonNumber = null;
-		HashMapBuilder<String, String> builder = HashMapBuilder.create();
-		for (Task task : evaluationTasks) {
-			waggonNumber = ((WaggonRepairInfo) processEngine.getTaskService().getVariable(task.getId(),
-					DepartTrainProcessConstants.VAR_ASSUMED_WAGGON)).getWaggonNumber();
-			builder.withValuePair(waggonNumber, task.getId());
-		}
-		return builder.build();
-	}
-
 	@Test
 	@Deployment(resources = { "departTrainProcess.bpmn" })
 	public void testRepairProcessesForCriticalErrors() {
@@ -367,6 +355,18 @@ public class DepartTrainTestCase extends BpmTestCase {
 		 * // waggons must have left the station... assertEquals(0,
 		 * RailwayStationBusinessLogic.getInstance().countWaggons());
 		 */
+	}
+	
+	@SuppressWarnings("unchecked")
+	private HashMap<String, String> getWaggonNumberToEvaluationTaskMapping(List<Task> evaluationTasks) {
+		String waggonNumber = null;
+		HashMapBuilder<String, String> builder = HashMapBuilder.create();
+		for (Task task : evaluationTasks) {
+			waggonNumber = ((WaggonRepairInfo) processEngine.getTaskService().getVariable(task.getId(),
+					DepartTrainProcessConstants.VAR_ASSUMED_WAGGON)).getWaggonNumber();
+			builder.withValuePair(waggonNumber, task.getId());
+		}
+		return builder.build();
 	}
 
 	private void processWaggonRepair(String waggonNumber, ProcessInstance parentInstance) {

@@ -394,9 +394,6 @@
       <bpmn:incoming>SequenceFlow_126g6j1</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0043anx</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:textAnnotation id="TextAnnotation_1h9tplh">
-      <bpmn:text>Alle zu planenden Wagen werden mit 'VAR_PLANNED_WAGGONS' geliefert.</bpmn:text>
-    </bpmn:textAnnotation>
     <bpmn:textAnnotation id="TextAnnotation_154ha91">
       <bpmn:text>for critical errors, a repair process is started automatically. In 'VAR_WAGGONS_TO_REPAIR' merkt sich der Hauptprozess, welche Wagen er zurückgemeldet bekommen muss.</bpmn:text>
     </bpmn:textAnnotation>
@@ -413,7 +410,6 @@
       <bpmn:text>TODO Better  do some real shunting?</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_0exob2b" sourceRef="TaskProcessCriticalErrors" targetRef="TextAnnotation_154ha91" />
-    <bpmn:association id="Association_0er4m22" sourceRef="StartEvent_1" targetRef="TextAnnotation_1h9tplh" />
     <bpmn:association id="Association_022z90p" sourceRef="TaskAllAssumementsDone" targetRef="TextAnnotation_0wo4rks" />
     <bpmn:association id="Association_0pvxmx7" sourceRef="SubProcess_1s2wqfm" targetRef="TextAnnotation_1yoz8ky" />
     <bpmn:association id="Association_1s3fkg8" sourceRef="SubProcess_1s2wqfm" targetRef="TextAnnotation_05cx3x2" />
@@ -764,13 +760,6 @@
       <bpmndi:BPMNEdge id="Association_0cw6ytl_di" bpmnElement="Association_0cw6ytl">
         <di:waypoint x="385" y="-188" />
         <di:waypoint x="258" y="-220" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="TextAnnotation_1h9tplh_di" bpmnElement="TextAnnotation_1h9tplh">
-        <dc:Bounds x="283" y="815" width="100" height="113" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Association_0er4m22_di" bpmnElement="Association_0er4m22">
-        <di:waypoint x="341" y="992" />
-        <di:waypoint x="337" y="928" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="TextAnnotation_0wo4rks_di" bpmnElement="TextAnnotation_0wo4rks">
         <dc:Bounds x="623" y="861" width="100" height="199" />
