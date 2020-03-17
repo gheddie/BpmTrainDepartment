@@ -148,6 +148,10 @@ public class DepartTrainProcessConstants {
 	
 	public static final String GW_PLACE_REPLACEMENT_WAGGONS = "GW_PLACE_REPLACEMENT_WAGGONS";
 	
+	// gateways (event)
+	
+	public static final String GW_START_OR_ABORT_REPAIR = "ExGwStartOrAbortRepair";
+	
 	// ##############################################################################
 	// ####################################### process definitions
 	// ##############################################################################
