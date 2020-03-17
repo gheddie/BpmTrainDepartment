@@ -210,7 +210,7 @@
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1t1kz93</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1affjan</bpmn:outgoing>
-      <bpmn:multiInstanceLoopCharacteristics camunda:collection="${VAR_WAGGON_LIST.getWaggonsEvaluatedAsReplacement()}" camunda:elementVariable="VAR_PROMPT_REPLACE_WAGGON" />
+      <bpmn:multiInstanceLoopCharacteristics camunda:collection="${VAR_DEPARTMENT_PROCESS_DATA.getWaggonsEvaluatedAsReplacement()}" camunda:elementVariable="VAR_PROMPT_REPLACE_WAGGON" />
     </bpmn:userTask>
     <bpmn:intermediateCatchEvent id="CATCH_MSG_REP_WAGG_ARRIVED" name="MSG_REP_WAGG_ARRIVED">
       <bpmn:incoming>SequenceFlow_1affjan</bpmn:incoming>
@@ -228,7 +228,7 @@
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_150gc27</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1pu9rxk</bpmn:outgoing>
-      <bpmn:multiInstanceLoopCharacteristics camunda:collection="${VAR_WAGGON_LIST.getWaggons()}" camunda:elementVariable="VAR_ASSUMED_WAGGON" />
+      <bpmn:multiInstanceLoopCharacteristics camunda:collection="${VAR_DEPARTMENT_PROCESS_DATA.getWaggons()}" camunda:elementVariable="VAR_ASSUMED_WAGGON" />
       <bpmn:sequenceFlow id="SequenceFlow_1ax1mlt" sourceRef="StartEvent_1qobht4" targetRef="TASK_EVALUATE_WAGGON" />
       <bpmn:endEvent id="EndEvent_1tpr4bc">
         <bpmn:incoming>SequenceFlow_1lkf4dp</bpmn:incoming>
@@ -263,7 +263,7 @@
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1da6nc0</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0epvt40</bpmn:outgoing>
-      <bpmn:multiInstanceLoopCharacteristics camunda:collection="${VAR_WAGGON_LIST.getWaggonsEvaluatedAsRepair()}" camunda:elementVariable="VAR_PROMPT_REPAIR_WAGGON" />
+      <bpmn:multiInstanceLoopCharacteristics camunda:collection="${VAR_DEPARTMENT_PROCESS_DATA.getWaggonsEvaluatedAsRepair()}" camunda:elementVariable="VAR_PROMPT_REPAIR_WAGGON" />
     </bpmn:userTask>
     <bpmn:parallelGateway id="GW_PLACE_REPLACEMENT_WAGGONS">
       <bpmn:incoming>SequenceFlow_0epvt40</bpmn:incoming>
@@ -307,7 +307,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_1y63fyx" sourceRef="TaskCreateDepartingOrder" targetRef="TaskProcessCriticalErrors" />
     <bpmn:sequenceFlow id="SequenceFlow_0rupt2s" sourceRef="TaskProcessCriticalErrors" targetRef="CATCH_MSG_WG_REPAIRED" />
     <bpmn:sequenceFlow id="SequenceFlow_1x3nblr" name="no" sourceRef="ExGwPositionsCorrect" targetRef="TaskOrderShunting">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!VAR_WAGGON_LIST.positionsOk()}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!VAR_DEPARTMENT_PROCESS_DATA.positionsOk()}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_13gkobw" sourceRef="TaskCheckWaggonPositions" targetRef="ExGwPositionsCorrect" />
     <bpmn:sequenceFlow id="SequenceFlow_0iv6lm4" sourceRef="TASK_CHOOSE_EXIT_TRACK" targetRef="TaskCheckWaggonPositions" />
@@ -317,7 +317,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_1gi1snx" sourceRef="BoundaryEvent_01ns58k" targetRef="SIG_RO_CANC" />
     <bpmn:sequenceFlow id="SequenceFlow_00nynq5" sourceRef="SIG_RO_CANC" targetRef="ExclusiveGateway_0dsc91r" />
     <bpmn:sequenceFlow id="SequenceFlow_0r593fk" sourceRef="ExGwSwitchbackToMsgAwaitAssumement" targetRef="CATCH_MSG_WG_REPAIRED">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!VAR_WAGGON_LIST.allWaggonsAssumed()}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!VAR_DEPARTMENT_PROCESS_DATA.allWaggonsAssumed()}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_198wx9r" sourceRef="CATCH_MSG_WG_REPAIRED" targetRef="TaskAllAssumementsDone" />
     <bpmn:sequenceFlow id="SequenceFlow_18o5zi2" sourceRef="BoundaryEvent_1p8wdzo" targetRef="ExclusiveGateway_1qk7c3h" />
@@ -340,7 +340,7 @@
     <bpmn:subProcess id="SubProcess_0kctscw">
       <bpmn:incoming>SequenceFlow_1dbkbrx</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1wa2m69</bpmn:outgoing>
-      <bpmn:multiInstanceLoopCharacteristics camunda:collection="${VAR_WAGGON_LIST.getWaggons()}" camunda:elementVariable="VAR_PLANNED_WAGGON" />
+      <bpmn:multiInstanceLoopCharacteristics camunda:collection="${VAR_DEPARTMENT_PROCESS_DATA.getWaggons()}" camunda:elementVariable="VAR_PLANNED_WAGGON" />
       <bpmn:startEvent id="StartEvent_04co58r">
         <bpmn:outgoing>SequenceFlow_1hzn0ur</bpmn:outgoing>
       </bpmn:startEvent>
@@ -391,7 +391,7 @@
       <bpmn:messageEventDefinition messageRef="Message_1jekl17" />
     </bpmn:intermediateCatchEvent>
     <bpmn:sequenceFlow id="SequenceFlow_0zt6zu8" sourceRef="ExGwAllRepairsDone" targetRef="CATCH_MSG_WAGGON_REPAIRED">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!VAR_WAGGON_LIST.allRepairsDone()}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!VAR_DEPARTMENT_PROCESS_DATA.allRepairsDone()}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:serviceTask id="TASK_ALL_REPAIRS_DONE" name="All repairs done" camunda:class="de.gravitex.bpm.traindepartment.delegate.AllRepairsDoneDelegate">
       <bpmn:incoming>SequenceFlow_126g6j1</bpmn:incoming>

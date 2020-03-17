@@ -23,7 +23,7 @@ import de.gravitex.bpm.traindepartment.enumeration.RepairEvaluationResult;
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogicException;
-import de.gravitex.bpm.traindepartment.logic.WaggonList;
+import de.gravitex.bpm.traindepartment.logic.DepartProcessData;
 import de.gravitex.bpm.traindepartment.logic.WaggonRepairInfo;
 import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
 
@@ -160,8 +160,8 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 		// assertEquals(2, repairInfos.size());
 		assertEquals(2,
-				((WaggonList) processEngine.getRuntimeService().getVariable(processInstance.getId(),
-						DepartTrainProcessConstants.VAR_WAGGON_LIST))
+				((DepartProcessData) processEngine.getRuntimeService().getVariable(processInstance.getId(),
+						DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA))
 								.getWaggonsByEvaluationResult(RepairEvaluationResult.REPAIR_WAGGON).size());
 
 		processWaggonRepair("W1", processInstance);
@@ -427,9 +427,9 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 	@JsonIgnore
 	private int getRepairedWaggonCount(ProcessInstance processInstance) {
-		WaggonList waggonList = (WaggonList) processEngine.getRuntimeService().getVariable(processInstance.getId(),
-				DepartTrainProcessConstants.VAR_WAGGON_LIST);
-		return waggonList.getRepairedWaggonCount();
+		DepartProcessData departProcessData = (DepartProcessData) processEngine.getRuntimeService().getVariable(processInstance.getId(),
+				DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA);
+		return departProcessData.getRepairedWaggonCount();
 	}
 
 	private LocalDateTime getDefaultPlannedDepartureTime() {
@@ -440,10 +440,10 @@ public class DepartTrainTestCase extends BpmTestCase {
 		List<String> extractedWaggonNumbers = Waggon.getWaggonNumbers(waggonNumbers);
 		String generatedBusinessKey = RailwayStationBusinessLogic.getInstance()
 				.generateBusinessKey(DepartTrainProcessConstants.PROCESS_DEPART_TRAIN, HashMapBuilder.create().build(), null);
-		WaggonList waggonList = WaggonList.fromWaggonNumbers(extractedWaggonNumbers);
+		DepartProcessData departProcessData = DepartProcessData.fromWaggonNumbers(extractedWaggonNumbers);
 		ProcessInstance instance = processEngine.getRuntimeService()
 				.startProcessInstanceByMessage(DepartTrainProcessConstants.MSG_DEPARTURE_PLANNED, generatedBusinessKey,
-						HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_WAGGON_LIST, waggonList)
+						HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA, departProcessData)
 								.withValuePair(DepartTrainProcessConstants.VAR_PLANNED_DEPARTMENT_DATE, plannedDepartureTime)
 								.build());
 		return instance;

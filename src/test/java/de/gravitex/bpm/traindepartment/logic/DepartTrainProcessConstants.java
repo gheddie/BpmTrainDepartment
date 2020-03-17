@@ -52,7 +52,8 @@ public class DepartTrainProcessConstants {
 	// ####################################### variables
 	// ##############################################################################
 	
-	public static final String VAR_WAGGON_LIST = "VAR_WAGGON_LIST";
+	// 'Backbone' - Objekt für den gesamten Prozess
+	public static final String VAR_DEPARTMENT_PROCESS_DATA = "VAR_DEPARTMENT_PROCESS_DATA";
 	
 	// planned departure time
 	public static final String VAR_PLANNED_DEPARTMENT_DATE = "VAR_PLANNED_DEPARTMENT_DATE";
@@ -88,6 +89,7 @@ public class DepartTrainProcessConstants {
 	// wurden 'waggon' replacements angefragt?
 	public static final String VAR_WG_REPLS_GEN = "VAR_WG_REPLS_GEN";
 	
+	// Die Wagen, die als Ersatz geliefert wurden
 	public static final String VAR_DELIVERED_REPLACMENT_WAGGONS = "VAR_DELIVERED_REPLACMENT_WAGGONS";
 	
 	public static final String VAR_SINGLE_WAGGON_RUNNABLE = "VAR_SINGLE_WAGGON_RUNNABLE";

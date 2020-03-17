@@ -7,7 +7,7 @@ import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
-import de.gravitex.bpm.traindepartment.logic.WaggonList;
+import de.gravitex.bpm.traindepartment.logic.DepartProcessData;
 import de.gravitex.bpm.traindepartment.logic.WaggonRepairInfo;
 import de.gravitex.bpm.traindepartment.util.RailTestUtil;
 
@@ -18,8 +18,8 @@ public class AllAssumementsDoneDelegate implements JavaDelegate {
 	public void execute(DelegateExecution execution) throws Exception {
 		
 		WaggonRepairInfo actuallyAssumed = (WaggonRepairInfo) execution.getVariable(DepartTrainProcessConstants.VAR_SINGLE_FACILITY_PROCESS_WAGGON);
-		WaggonList waggonList = (WaggonList) execution.getVariable(DepartTrainProcessConstants.VAR_WAGGON_LIST);
-		waggonList.processRepairAssumption(actuallyAssumed.getWaggonNumber(), actuallyAssumed.getAssumedRepairDuration(), actuallyAssumed.getFacilityProcessBusinessKey());
+		DepartProcessData departProcessData = (DepartProcessData) execution.getVariable(DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA);
+		departProcessData.processRepairAssumption(actuallyAssumed.getWaggonNumber(), actuallyAssumed.getAssumedRepairDuration(), actuallyAssumed.getFacilityProcessBusinessKey());
 		// alles abgeschätzt --> put them to 'VAR_ASSUMED_WAGGONS' ?
 		// TODO make sub process talk to 'WaggonList' instance...
 		/*

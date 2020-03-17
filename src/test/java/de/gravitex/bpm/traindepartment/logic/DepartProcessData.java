@@ -11,16 +11,16 @@ import de.gravitex.bpm.traindepartment.enumeration.RepairEvaluationResult;
 import lombok.Data;
 
 @Data
-public class WaggonList {
+public class DepartProcessData {
 	
-	private WaggonList() {
+	private DepartProcessData() {
 		super();
 	}
 
 	private HashMap<String, WaggonRepairInfo> waggonRepairInfoHash = new HashMap<String, WaggonRepairInfo>();
 
-	public static WaggonList fromWaggonNumbers(List<String> waggonNumbers) {
-		WaggonList result = new WaggonList();
+	public static DepartProcessData fromWaggonNumbers(List<String> waggonNumbers) {
+		DepartProcessData result = new DepartProcessData();
 		HashMap<String, WaggonRepairInfo> waggonRepairInfoHash = new HashMap<String, WaggonRepairInfo>();
 		for (String waggonNumber : waggonNumbers) {
 			waggonRepairInfoHash.put(waggonNumber, WaggonRepairInfo.fromWaggonNumber(waggonNumber));
