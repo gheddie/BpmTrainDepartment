@@ -43,19 +43,13 @@ public class DepartTrainProcessConstants {
 	
 	// ##############################################################################
 	// ####################################### collection variables (multi instances, how to
-	// ####################################### replace by vall to 'WaggonList' process object?)
+	// ####################################### replace by call to 'WaggonList' process object? --> works!!)
 	// ##############################################################################
-	
-	// waggons to be promopted to be replaced by other waggons
-	public static final String VAR_PROMPT_REPLACE_WAGGONS_LIST = "VAR_PROMPT_REPLACE_WAGGONS_LIST";
 	
 	// Hier werden in 'TaskAllRepairsDone' alle zurückgemeldeten Reparaturen gespeichert
 	// Es wird zu 'TaskChooseExitTrack' weitergegeben, wenn gilt: ('VAR_REPAIRED_WAGGONS' == 'VAR_WAGGONS_TO_REPAIR')
 	// Kann nicht ersetzt werden, weil es das Collection-Attribut des Unterprozesses ist 
 	public static final String VAR_ASSUMED_WAGGONS = "VAR_ASSUMED_WAGGONS";
-	
-	// waggons to be prompted to be repaired
-	public static final String VAR_PROMPT_REPAIR_WAGGONS_LIST = "VAR_PROMPT_REPAIR_WAGGONS_LIST";
 	
 	public static final String VAR_PLANNED_WAGGONS = "VAR_PLANNED_WAGGONS";
 

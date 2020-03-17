@@ -150,9 +150,17 @@ public class DepartTrainTestCase extends BpmTestCase {
 		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_WAGGON_REPAIRED);
 
 		// we have 2 waggons to repair (W1, W2)
-		List<WaggonRepairInfo> repairInfos = (List<WaggonRepairInfo>) processEngine.getRuntimeService()
-				.getVariable(processInstance.getId(), DepartTrainProcessConstants.VAR_PROMPT_REPAIR_WAGGONS_LIST);
-		assertEquals(2, repairInfos.size());
+		/*
+		 * List<WaggonRepairInfo> repairInfos = (List<WaggonRepairInfo>)
+		 * processEngine.getRuntimeService() .getVariable(processInstance.getId(),
+		 * DepartTrainProcessConstants.VAR_PROMPT_REPAIR_WAGGONS_LIST);
+		 */
+
+		// assertEquals(2, repairInfos.size());
+		assertEquals(2,
+				((WaggonList) processEngine.getRuntimeService().getVariable(processInstance.getId(),
+						DepartTrainProcessConstants.VAR_WAGGON_LIST))
+								.getWaggonsByEvaluationResult(RepairEvaluationResult.REPAIR_WAGGON).size());
 
 		processWaggonRepair("W1", processInstance);
 		// we have 1 repaired waggon...
@@ -356,7 +364,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		 * RailwayStationBusinessLogic.getInstance().countWaggons());
 		 */
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private HashMap<String, String> getWaggonNumberToEvaluationTaskMapping(List<Task> evaluationTasks) {
 		String waggonNumber = null;

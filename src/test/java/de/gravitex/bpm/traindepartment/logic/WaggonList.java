@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import de.gravitex.bpm.traindepartment.enumeration.RepairEvaluationResult;
 import lombok.Data;
 
@@ -64,6 +66,7 @@ public class WaggonList {
 		return true;
 	}
 
+	@JsonIgnore
 	public int getRepairedWaggonCount() {
 		int count = 0;
 		for (WaggonRepairInfo waggonRepairInfo : waggonRepairInfoHash.values()) {
@@ -76,5 +79,23 @@ public class WaggonList {
 
 	public void processRepairCallback(String waggonNumber) {
 		waggonRepairInfoHash.get(waggonNumber).setRepaired(true);
+	}
+	
+	public List<WaggonRepairInfo> getRepairWaggons() {
+		return getWaggonsByEvaluationResult(RepairEvaluationResult.REPAIR_WAGGON);
+	}
+	
+	public List<WaggonRepairInfo> getReplaceWaggons() {
+		return getWaggonsByEvaluationResult(RepairEvaluationResult.REPLACE_WAGGON);
+	}
+
+	public List<WaggonRepairInfo> getWaggonsByEvaluationResult(RepairEvaluationResult repairEvaluationResult) {
+		List<WaggonRepairInfo> result = new ArrayList<WaggonRepairInfo>();
+		for (WaggonRepairInfo waggonRepairInfo : waggonRepairInfoHash.values()) {
+			if (waggonRepairInfo.getRepairEvaluationResult().equals(repairEvaluationResult)) {
+				result.add(waggonRepairInfo);
+			}
+		}
+		return result;
 	}
 }
