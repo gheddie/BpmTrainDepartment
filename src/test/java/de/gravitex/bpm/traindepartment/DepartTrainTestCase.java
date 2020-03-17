@@ -170,40 +170,32 @@ public class DepartTrainTestCase extends BpmTestCase {
 		assertEquals(2, getRepairedWaggonCount(processInstance));
 
 		// all waggons repaired, so...
-		// assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.TASK_CHOOSE_EXIT_TRACK);
-		ensureSingleTaskPresent(DepartTrainProcessConstants.TASK_CHOOSE_EXIT_TRACK, DepartTrainProcessConstants.ROLE_DISPONENT,
-				true, HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_EXIT_TRACK, "TrackExit").build());
+		processExitTrack(processInstance, "TrackExit");
+		
+		// we have waggon runnabilities to check...
+		List<Task> checkRunnabilityTasks = processEngine.getTaskService().createTaskQuery()
+				.taskDefinitionKey(DepartTrainProcessConstants.TASK_CHECK_WAGGON_RUNNABILITY).list();
+		assertEquals(4, checkRunnabilityTasks.size());
 
-		/*
-		 * processExitTrack(processInstance, "TrackExit");
-		 * 
-		 * // we have waggon runnabilities to check... List<Task> checkRunnabilityTasks
-		 * = processEngine.getTaskService().createTaskQuery()
-		 * .taskDefinitionKey(DepartTrainProcessConstants.TASK_CHECK_WAGGON_RUNNABILITY)
-		 * .list(); assertEquals(4, checkRunnabilityTasks.size());
-		 * 
-		 * processRunnabilityCheck(checkRunnabilityTasks.get(0), true);
-		 * processRunnabilityCheck(checkRunnabilityTasks.get(1), true);
-		 * processRunnabilityCheck(checkRunnabilityTasks.get(2), true);
-		 * processRunnabilityCheck(checkRunnabilityTasks.get(3), true);
-		 * 
-		 * assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.
-		 * TASK_CONFIRM_ROLLOUT);
-		 * 
-		 * RailwayStationBusinessLogic.getInstance().print("Before rollout", false);
-		 */
+		processRunnabilityCheck(checkRunnabilityTasks.get(0), true);
+		processRunnabilityCheck(checkRunnabilityTasks.get(1), true);
+		processRunnabilityCheck(checkRunnabilityTasks.get(2), true);
+		processRunnabilityCheck(checkRunnabilityTasks.get(3), true);
+
+		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.TASK_CONFIRM_ROLLOUT);
+
+		RailwayStationBusinessLogic.getInstance().print("Before rollout", false);
 
 		// confirm roll out
-		// processRollout(processInstance, true);
+		processRollout(processInstance, true);
 
-		// RailwayStationBusinessLogic.getInstance().print("After rollout", false);
+		RailwayStationBusinessLogic.getInstance().print("After rollout", false);
 
 		// 4 waggons ware gone...
-		// assertEquals(3, RailwayStationBusinessLogic.getInstance().countWaggons());
+		assertEquals(3, RailwayStationBusinessLogic.getInstance().countWaggons());
 
 		// TODO ALL processes must be gone in the end
-		// assertEquals(0,
-		// processEngine.getRuntimeService().createProcessInstanceQuery().list().size());
+		assertEquals(0, processEngine.getRuntimeService().createProcessInstanceQuery().list().size());
 	}
 
 	@Test

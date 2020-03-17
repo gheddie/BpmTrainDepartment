@@ -7,13 +7,14 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
+import de.gravitex.bpm.traindepartment.logic.WaggonList;
 
 public class RemoveWaggonsDelegate implements JavaDelegate {
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
-		List<String> waggonsToRemove = (List<String>) execution.getVariable(DepartTrainProcessConstants.VAR_PLANNED_WAGGONS);
+		List<String> waggonsToRemove = ((WaggonList) execution.getVariable(DepartTrainProcessConstants.VAR_WAGGON_LIST))
+				.getWaggonNumbers();
 		RailwayStationBusinessLogic.getInstance().removeWaggons(waggonsToRemove);
 	}
 }

@@ -337,7 +337,7 @@
     <bpmn:subProcess id="SubProcess_0kctscw">
       <bpmn:incoming>SequenceFlow_1dbkbrx</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1wa2m69</bpmn:outgoing>
-      <bpmn:multiInstanceLoopCharacteristics camunda:collection="VAR_PLANNED_WAGGONS" camunda:elementVariable="VAR_PLANNED_WAGGON" />
+      <bpmn:multiInstanceLoopCharacteristics camunda:collection="${VAR_WAGGON_LIST.getWaggonNumbers()}" camunda:elementVariable="VAR_PLANNED_WAGGON" />
       <bpmn:startEvent id="StartEvent_04co58r">
         <bpmn:outgoing>SequenceFlow_1hzn0ur</bpmn:outgoing>
       </bpmn:startEvent>

@@ -100,6 +100,6 @@ public class WaggonList {
 	}
 	
 	public boolean positionsOk() {
-		return false;
+		return true;
 	}
 }
