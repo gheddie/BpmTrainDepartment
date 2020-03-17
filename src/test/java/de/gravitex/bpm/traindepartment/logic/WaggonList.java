@@ -48,4 +48,8 @@ public class WaggonList {
 		}
 		return true;
 	}
+	
+	public boolean allRepairsDone() {
+		return new Boolean(false);
+	}
 }
