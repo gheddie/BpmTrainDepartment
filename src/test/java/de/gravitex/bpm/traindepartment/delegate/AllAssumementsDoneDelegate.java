@@ -25,13 +25,6 @@ public class AllAssumementsDoneDelegate implements JavaDelegate {
 		boolean allWaggonsAssumed = waggonList.allWaggonsAssumed();
 		execution.setVariable(DepartTrainProcessConstants.VAR_ALL_ASSUMEMENTS_DONE, allWaggonsAssumed);
 		
-		if (allWaggonsAssumed) {
-			List<WaggonRepairInfo> assumedWaggons = new ArrayList<WaggonRepairInfo>();
-			for (WaggonRepairInfo assumedWaggonInfo : waggonList.getWaggonRepairInfoHash().values()) {
-				assumedWaggons.add(assumedWaggonInfo);				
-			}
-			execution.setVariable(DepartTrainProcessConstants.VAR_ASSUMED_WAGGONS, assumedWaggons);
-		}		
 		/*
 		// update assumed hours...
 		int assumedUpToNow = (int) execution.getVariable(DepartTrainProcessConstants.VAR_SUMMED_UP_ASSUMED_HOURS);
