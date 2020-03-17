@@ -18,6 +18,6 @@ public class CheckWaggonPositionsDelegate implements JavaDelegate {
 			throw new BpmnError(DepartTrainProcessConstants.ERR_NO_EXIT_TR);
 		}
 		// TODO shunting?
-		execution.setVariable(DepartTrainProcessConstants.VAR_POSITIONS_OK, true);
+		// execution.setVariable(DepartTrainProcessConstants.VAR_POSITIONS_OK, true);
 	}
 }

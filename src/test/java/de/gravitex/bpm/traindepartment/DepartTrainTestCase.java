@@ -47,7 +47,6 @@ public class DepartTrainTestCase extends BpmTestCase {
 		// ...
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	@Deployment(resources = { "departTrainProcess.bpmn" })
 	public void testStraightAssumement() {
@@ -137,7 +136,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		processDeliverReplacement(processInstance.getBusinessKey(), "W888", "W999");
 
 		Task chooseReplacementTrackTask = ensureSingleTaskPresent(DepartTrainProcessConstants.TASK_CHOOSE_REPLACEMENT_TRACK,
-				DepartTrainProcessConstants.ROLE_DISPONENT, false);
+				DepartTrainProcessConstants.ROLE_DISPONENT, false, null);
 		processChooseReplacementTrack(chooseReplacementTrackTask, "TrackReplacement");
 
 		// we must have 2 more waggons (now 5+2=7) in the system...
@@ -171,7 +170,9 @@ public class DepartTrainTestCase extends BpmTestCase {
 		assertEquals(2, getRepairedWaggonCount(processInstance));
 
 		// all waggons repaired, so...
-		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.TASK_CHOOSE_EXIT_TRACK);
+		// assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.TASK_CHOOSE_EXIT_TRACK);
+		ensureSingleTaskPresent(DepartTrainProcessConstants.TASK_CHOOSE_EXIT_TRACK, DepartTrainProcessConstants.ROLE_DISPONENT,
+				true, HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_EXIT_TRACK, "TrackExit").build());
 
 		/*
 		 * processExitTrack(processInstance, "TrackExit");
@@ -407,13 +408,13 @@ public class DepartTrainTestCase extends BpmTestCase {
 	}
 
 	private void processShunting(ProcessInstance processInstance) {
-		ensureSingleTaskPresent(DepartTrainProcessConstants.TASK_SHUNT_WAGGONS, null, true);
+		ensureSingleTaskPresent(DepartTrainProcessConstants.TASK_SHUNT_WAGGONS, null, true, null);
 	}
 
 	private void processRollout(ProcessInstance processInstance, boolean doRollOut) {
 		processEngine.getTaskService().complete(
 				ensureSingleTaskPresent(DepartTrainProcessConstants.TASK_CONFIRM_ROLLOUT,
-						DepartTrainProcessConstants.ROLE_DISPONENT, false).getId(),
+						DepartTrainProcessConstants.ROLE_DISPONENT, false, null).getId(),
 				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_ROLLOUT_CONFIRMED, doRollOut).build());
 	}
 

@@ -98,4 +98,8 @@ public class WaggonList {
 		}
 		return result;
 	}
+	
+	public boolean positionsOk() {
+		return false;
+	}
 }

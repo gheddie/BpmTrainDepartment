@@ -9,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 import org.camunda.bpm.engine.impl.jobexecutor.JobExecutor;
 import org.camunda.bpm.engine.impl.util.ClockUtil;
@@ -23,11 +24,11 @@ import de.gravitex.bpm.traindepartment.util.RailTestUtil;
 
 public class BpmTestCase {
 
-	protected Task ensureSingleTaskPresent(String taskName, String role, boolean executeTask) {
-		return ensureSingleTaskPresent(taskName, null, role, executeTask);
+	protected Task ensureSingleTaskPresent(String taskName, String role, boolean executeTask, Map<String, Object> variables) {
+		return ensureSingleTaskPresent(taskName, null, role, executeTask, variables);
 	}
 
-	protected Task ensureSingleTaskPresent(String taskName, String businessKey, String role, boolean executeTask) {
+	protected Task ensureSingleTaskPresent(String taskName, String businessKey, String role, boolean executeTask, Map<String, Object> variables) {
 		List<Task> taskList = null;
 		if (businessKey != null) {
 			// regard business key in addition...
@@ -47,7 +48,7 @@ public class BpmTestCase {
 		assertEquals(1, taskList.size());
 		Task task = taskList.get(0);
 		if (executeTask) {
-			taskService().complete(task.getId());
+			taskService().complete(task.getId(), variables);
 		}
 		return task;
 	}

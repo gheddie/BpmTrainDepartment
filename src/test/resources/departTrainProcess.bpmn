@@ -146,7 +146,7 @@
       <bpmn:incoming>SequenceFlow_1y63fyx</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0rupt2s</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="TaskOrderShunting" name="Order shunting" camunda:class="de.gravitex.bpm.traindepartment.delegateOrderShuntingDelegate">
+    <bpmn:serviceTask id="TaskOrderShunting" name="Order shunting" camunda:class="de.gravitex.bpm.traindepartment.delegate.OrderShuntingDelegate">
       <bpmn:incoming>SequenceFlow_1x3nblr</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0xyk95k</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -304,7 +304,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_1y63fyx" sourceRef="TaskCreateDepartingOrder" targetRef="TaskProcessCriticalErrors" />
     <bpmn:sequenceFlow id="SequenceFlow_0rupt2s" sourceRef="TaskProcessCriticalErrors" targetRef="CATCH_MSG_WG_REPAIRED" />
     <bpmn:sequenceFlow id="SequenceFlow_1x3nblr" name="no" sourceRef="ExGwPositionsCorrect" targetRef="TaskOrderShunting">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${VAR_POSITIONS_OK == false}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!VAR_WAGGON_LIST.positionsOk()}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_13gkobw" sourceRef="TaskCheckWaggonPositions" targetRef="ExGwPositionsCorrect" />
     <bpmn:sequenceFlow id="SequenceFlow_0iv6lm4" sourceRef="TASK_CHOOSE_EXIT_TRACK" targetRef="TaskCheckWaggonPositions" />
