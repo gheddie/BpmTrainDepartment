@@ -5,12 +5,12 @@ import java.util.List;
 import org.camunda.bpm.engine.delegate.BpmnError;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 
-import de.gravitex.bpm.traindepartment.delegate.base.DepartmentJavaDelegate;
+import de.gravitex.bpm.traindepartment.delegate.base.TrainDepartmentJavaDelegate;
 import de.gravitex.bpm.traindepartment.exception.RailWayException;
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
 
-public class CreateDepartingOrderDelegate extends DepartmentJavaDelegate {
+public class CreateDepartingOrderDelegate extends TrainDepartmentJavaDelegate {
 
 	@SuppressWarnings("unchecked")
 	@Override

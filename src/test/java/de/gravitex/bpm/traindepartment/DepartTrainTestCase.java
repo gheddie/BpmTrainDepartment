@@ -105,10 +105,11 @@ public class DepartTrainTestCase extends BpmTestCase {
 		ensureTaskCountPresent(DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPLACEMENT, processInstance.getId(),
 				DepartTrainProcessConstants.ROLE_DISPONENT, 2);
 
-		// all 4 facility processes are waiting at 'CATCH_MSG_START_REPAIR'...
+		// only 2 facility processes are waiting at 'CATCH_MSG_START_REPAIR' (those of waggons
+		// to be replaced have been canceled)
 		List<ProcessInstance> facilityProcessList = processEngine.getRuntimeService().createProcessInstanceQuery()
 				.processDefinitionKey(DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY).list();
-		assertEquals(4, facilityProcessList.size());
+		assertEquals(2, facilityProcessList.size());
 		for (ProcessInstance facilityProcessInstance : facilityProcessList) {
 			assertThat(facilityProcessInstance).isWaitingAt(DepartTrainProcessConstants.GW_START_OR_ABORT_REPAIR);
 		}
@@ -195,7 +196,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		assertEquals(3, RailwayStationBusinessLogic.getInstance().countWaggons());
 
 		// TODO ALL processes must be gone in the end
-		// assertEquals(0, processEngine.getRuntimeService().createProcessInstanceQuery().list().size());
+		assertEquals(0, processEngine.getRuntimeService().createProcessInstanceQuery().list().size());
 	}
 
 	@Test

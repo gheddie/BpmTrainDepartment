@@ -115,6 +115,7 @@ public class DepartTrainProcessConstants {
 	public static final String MSG_SH_ORD = "MSG_SH_ORD";
 	public static final String MSG_INVOKE_WAG_ASSUMEMENT = "MSG_INVOKE_WAG_ASSUMEMENT";
 	public static final String MSG_START_REPAIR = "MSG_START_REPAIR";
+	public static final String MSG_ABORT_REPAIR = "MSG_ABORT_REPAIR";
 	public static final String MSG_REPL_WAGG_ARRIVED = "MSG_REPL_WAGG_ARRIVED";
 	public static final String MSG_REPAIR_DONE = "MSG_REPAIR_DONE";
 	

@@ -6,13 +6,13 @@ import java.util.List;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 
-import de.gravitex.bpm.traindepartment.delegate.base.DepartmentJavaDelegate;
+import de.gravitex.bpm.traindepartment.delegate.base.TrainDepartmentJavaDelegate;
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
 import de.gravitex.bpm.traindepartment.logic.businesskey.RepairFacilityBusinessKeyCreator;
 import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
 
-public class ProcessCriticalErrorsDelegate extends DepartmentJavaDelegate {
+public class ProcessCriticalErrorsDelegate extends TrainDepartmentJavaDelegate {
 
 	@SuppressWarnings("unchecked")
 	@Override
