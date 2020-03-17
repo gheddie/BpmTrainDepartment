@@ -34,6 +34,5 @@ public class ProcessCriticalErrorsDelegate extends TrainDepartmentJavaDelegate {
 				waggonsToAssume.add(plannedWaggon);
 			}
 		}
-		execution.setVariable(DepartTrainProcessConstants.VAR_WAGGONS_TO_ASSUME, waggonsToAssume);
 	}
 }

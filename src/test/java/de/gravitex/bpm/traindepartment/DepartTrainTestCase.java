@@ -243,11 +243,6 @@ public class DepartTrainTestCase extends BpmTestCase {
 		// we must have 3 repair processes...
 		assertEquals(3, ensureProcessInstanceCount(DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY));
 
-		// 3 waggons must be marked as to be repaired...
-		List<String> waggonsToRepair = (List<String>) processEngine.getRuntimeService().getVariable(processInstance.getId(),
-				DepartTrainProcessConstants.VAR_WAGGONS_TO_ASSUME);
-		assertEquals(3, waggonsToRepair.size());
-
 		// master process is waiting at message catch...
 		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_WG_REPAIRED);
 

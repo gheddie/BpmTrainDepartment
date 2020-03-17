@@ -62,9 +62,6 @@ public class DepartTrainProcessConstants {
 	// planned departure time
 	public static final String VAR_PLANNED_DEPARTMENT_DATE = "VAR_PLANNED_DEPARTMENT_DATE";
 	
-	// Liste von Wagen, die an 'TASK_ASSUME_REPAIR_TIME' übergeben werden
-	public static final String VAR_WAGGONS_TO_ASSUME = "VAR_WAGGONS_TO_ASSUME";
-	
 	public static final String VAR_ROLLOUT_CONFIRMED = "VAR_ROLLOUT_CONFIRMED";
 	
 	public static final String VAR_EXIT_TRACK = "VAR_EXIT_TRACK";

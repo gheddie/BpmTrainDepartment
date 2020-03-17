@@ -86,11 +86,11 @@ public class WaggonList {
 		waggonRepairInfoHash.get(waggonNumber).setRepaired(true);
 	}
 	
-	public List<WaggonRepairInfo> getRepairWaggons() {
+	public List<WaggonRepairInfo> getWaggonsEvaluatedAsRepair() {
 		return getWaggonsByEvaluationResult(RepairEvaluationResult.REPAIR_WAGGON);
 	}
 	
-	public List<WaggonRepairInfo> getReplaceWaggons() {
+	public List<WaggonRepairInfo> getWaggonsEvaluatedAsReplacement() {
 		return getWaggonsByEvaluationResult(RepairEvaluationResult.REPLACE_WAGGON);
 	}
 
