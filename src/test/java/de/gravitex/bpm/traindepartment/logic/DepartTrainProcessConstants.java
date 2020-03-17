@@ -65,11 +65,9 @@ public class DepartTrainProcessConstants {
 	// ... ---> 'TaskAllRepairsDone'
 	public static final String VAR_ALL_ASSUMEMENTS_DONE = "VAR_ALL_ASSUMEMENTS_DONE";
 
-	// Entscheidet, ob zu 'TaskChooseExitTrack' übergegangen wird
-	public static final String VAR_ALL_REPAIRS_DONE = "VAR_ALL_REPAIRS_DONE";
-	
 	// Hier werden in 'TaskAllRepairsDone' alle zurückgemeldeten Reparaturen gespeichert
 	// Es wird zu 'TaskChooseExitTrack' weitergegeben, wenn gilt: ('VAR_REPAIRED_WAGGONS' == 'VAR_WAGGONS_TO_REPAIR')
+	// Kann nicht ersetzt werden, weil es das Collection-Attribut des Unterprozesses ist 
 	public static final String VAR_ASSUMED_WAGGONS = "VAR_ASSUMED_WAGGONS";
 	
 	// a single assumed waggon
