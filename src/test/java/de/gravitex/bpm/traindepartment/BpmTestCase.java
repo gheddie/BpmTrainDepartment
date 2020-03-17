@@ -8,9 +8,11 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.camunda.bpm.engine.ProcessEngineServices;
 import org.camunda.bpm.engine.impl.jobexecutor.JobExecutor;
 import org.camunda.bpm.engine.impl.util.ClockUtil;
 import org.camunda.bpm.engine.runtime.EventSubscription;
@@ -20,6 +22,8 @@ import org.camunda.bpm.engine.runtime.VariableInstance;
 import org.camunda.bpm.engine.task.Task;
 import org.camunda.bpm.engine.task.TaskQuery;
 
+import de.gravitex.bpm.traindepartment.logic.WaggonRepairInfo;
+import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
 import de.gravitex.bpm.traindepartment.util.RailTestUtil;
 
 public class BpmTestCase {
@@ -28,11 +32,13 @@ public class BpmTestCase {
 		return ensureSingleTaskPresent(taskName, null, role, executeTask, variables);
 	}
 
-	protected Task ensureSingleTaskPresent(String taskName, String businessKey, String role, boolean executeTask, Map<String, Object> variables) {
+	protected Task ensureSingleTaskPresent(String taskName, String businessKey, String role, boolean executeTask,
+			Map<String, Object> variables) {
 		List<Task> taskList = null;
 		if (businessKey != null) {
 			// regard business key in addition...
-			TaskQuery queryBk = taskService().createTaskQuery().taskDefinitionKey(taskName).processInstanceBusinessKey(businessKey);
+			TaskQuery queryBk = taskService().createTaskQuery().taskDefinitionKey(taskName)
+					.processInstanceBusinessKey(businessKey);
 			if (role != null) {
 				queryBk.taskAssignee(role);
 			}
@@ -181,6 +187,22 @@ public class BpmTestCase {
 			sleep(1000);
 		}
 		ClockUtil.reset();
+	}
+
+	@SuppressWarnings("unchecked")
+	protected HashMap<String, String> getWaggonNumberToTaskIdMapping(List<Task> tasks, String waggonRepairInfoVariable,
+			ProcessEngineServices processEngine) {
+
+		String waggonNumber = null;
+		HashMapBuilder<String, String> builder = HashMapBuilder.create();
+		if (waggonRepairInfoVariable != null) {
+			for (Task task : tasks) {
+				waggonNumber = ((WaggonRepairInfo) processEngine.getTaskService().getVariable(task.getId(),
+						waggonRepairInfoVariable)).getWaggonNumber();
+				builder.withValuePair(waggonNumber, task.getId());
+			}
+		}
+		return builder.build();
 	}
 
 	// ---

@@ -88,7 +88,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		assertThat(facilityProcessesInstances.get(3)).isWaitingAt(DepartTrainProcessConstants.GW_START_OR_ABORT_REPAIR);
 
 		HashMap<String, String> evaluationTaskMapppings = getWaggonNumberToTaskIdMapping(evaluationTasks,
-				DepartTrainProcessConstants.VAR_ASSUMED_WAGGON, null);
+				DepartTrainProcessConstants.VAR_ASSUMED_WAGGON, processEngine);
 
 		processWaggonEvaluation("W1", evaluationTaskMapppings, RepairEvaluationResult.REPAIR_WAGGON);
 		processWaggonEvaluation("W2", evaluationTaskMapppings, RepairEvaluationResult.REPAIR_WAGGON);
@@ -181,8 +181,8 @@ public class DepartTrainTestCase extends BpmTestCase {
 		assertEquals(4, checkRunnabilityTasks.size());
 
 		// TODO
-		HashMap<String, String> checkRunnabilityTaskMapppings = getWaggonNumberToTaskIdMapping(checkRunnabilityTasks, null,
-				"VAR_PLANNED_WAGGON");
+		HashMap<String, String> checkRunnabilityTaskMapppings = getWaggonNumberToTaskIdMapping(checkRunnabilityTasks,
+				"VAR_PLANNED_WAGGON", processEngine);
 
 		processRunnabilityCheck("W1", checkRunnabilityTaskMapppings, true);
 		processRunnabilityCheck("W2", checkRunnabilityTaskMapppings, true);
@@ -365,26 +365,6 @@ public class DepartTrainTestCase extends BpmTestCase {
 		 */
 	}
 
-	@SuppressWarnings("unchecked")
-	private HashMap<String, String> getWaggonNumberToTaskIdMapping(List<Task> tasks, String waggonRepairInfoVariable,
-			String waggonNumberVariable) {
-		String waggonNumber = null;
-		HashMapBuilder<String, String> builder = HashMapBuilder.create();
-		if (waggonRepairInfoVariable != null) {
-			for (Task task : tasks) {
-				waggonNumber = ((WaggonRepairInfo) processEngine.getTaskService().getVariable(task.getId(),
-						waggonRepairInfoVariable)).getWaggonNumber();
-				builder.withValuePair(waggonNumber, task.getId());
-			}
-		} else if (waggonNumberVariable != null) {
-			for (Task task : tasks) {
-				waggonNumber = ((String) processEngine.getTaskService().getVariable(task.getId(), waggonNumberVariable));
-				builder.withValuePair(waggonNumber, task.getId());
-			}
-		}
-		return builder.build();
-	}
-
 	private void processWaggonRepair(String waggonNumber, ProcessInstance parentInstance) {
 		Task processRepairTask = getRepairFacilityProcessTask(waggonNumber, DepartTrainProcessConstants.TASK_REPAIR_WAGGON,
 				parentInstance);
@@ -436,7 +416,8 @@ public class DepartTrainTestCase extends BpmTestCase {
 				.withValuePair(DepartTrainProcessConstants.VAR_REPLACE_WAGGON_TARGET_TRACK, replacementTrack).build());
 	}
 
-	private void processRunnabilityCheck(String waggonNumber, HashMap<String, String> waggonNumberToTaskIdmapping, boolean runnable) {
+	private void processRunnabilityCheck(String waggonNumber, HashMap<String, String> waggonNumberToTaskIdmapping,
+			boolean runnable) {
 		processEngine.getTaskService().complete(waggonNumberToTaskIdmapping.get(waggonNumber),
 				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_SINGLE_WAGGON_RUNNABLE, runnable).build());
 	}

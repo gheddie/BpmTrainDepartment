@@ -1,6 +1,7 @@
 package de.gravitex.bpm.traindepartment.logic;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -26,6 +27,10 @@ public class WaggonList {
 		}
 		result.setWaggonRepairInfoHash(waggonRepairInfoHash);
 		return result;
+	}
+	
+	public Collection<WaggonRepairInfo> getWaggons() {
+		return waggonRepairInfoHash.values();
 	}
 
 	public List<String> getWaggonNumbers() {
