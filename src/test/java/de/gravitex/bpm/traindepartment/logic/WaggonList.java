@@ -57,12 +57,11 @@ public class WaggonList {
 		for (WaggonRepairInfo waggonRepairInfo : waggonRepairInfoHash.values()) {
 			if (waggonRepairInfo.getRepairEvaluationResult().equals(RepairEvaluationResult.REPAIR_WAGGON)) {
 				if (!(waggonRepairInfo.isRepaired())) {
-					return new Boolean(false);					
+					return false;					
 				}
 			}
 		}
-		// important to return 'big' boolean, 'small' can not be serialized!!
-		return new Boolean(true);
+		return true;
 	}
 
 	public int getRepairedWaggonCount() {
