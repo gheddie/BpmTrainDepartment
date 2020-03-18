@@ -15,7 +15,7 @@ public abstract class TrainDepartmentJavaDelegate implements JavaDelegate {
 		return ((DepartmentProcessData) execution.getVariable(DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA)).getWaggonNumbers();
 	}
 	
-	protected DepartmentProcessData getDepartmentProcessData(DelegateExecution execution) {
+	protected DepartmentProcessData getProcessData(DelegateExecution execution) {
 		return RailwayStationBusinessLogic.getDepartmentProcessData(execution);
 	}
 }

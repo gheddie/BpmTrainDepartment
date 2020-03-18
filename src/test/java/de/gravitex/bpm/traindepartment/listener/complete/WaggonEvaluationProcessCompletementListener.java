@@ -5,7 +5,6 @@ import org.camunda.bpm.engine.delegate.ExecutionListener;
 
 public class WaggonEvaluationProcessCompletementListener implements ExecutionListener {
 
-	@SuppressWarnings({ "unchecked" })
 	@Override
 	public void notify(DelegateExecution execution) throws Exception {
 		/*

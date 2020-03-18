@@ -18,6 +18,6 @@ public class CheckWaggonPositionsDelegate extends TrainDepartmentJavaDelegate {
 			System.out.println(exitTrack == null ? "no exit track set!!" : "track " + exitTrack + " is no ext track!!");
 			throw new BpmnError(DepartTrainProcessConstants.ERR_NO_EXIT_TR);
 		}
-		getDepartmentProcessData(execution).checkWaggonPositions();
+		getProcessData(execution).checkWaggonPositions();
 	}
 }

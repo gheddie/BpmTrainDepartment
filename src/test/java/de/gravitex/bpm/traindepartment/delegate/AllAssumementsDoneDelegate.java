@@ -8,7 +8,7 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
 import de.gravitex.bpm.traindepartment.logic.DepartmentProcessData;
-import de.gravitex.bpm.traindepartment.logic.WaggonRepairInfo;
+import de.gravitex.bpm.traindepartment.logic.WaggonProcessInfo;
 import de.gravitex.bpm.traindepartment.util.RailTestUtil;
 
 public class AllAssumementsDoneDelegate implements JavaDelegate {
@@ -17,7 +17,7 @@ public class AllAssumementsDoneDelegate implements JavaDelegate {
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
 		
-		WaggonRepairInfo actuallyAssumed = (WaggonRepairInfo) execution.getVariable(DepartTrainProcessConstants.VAR_SINGLE_FACILITY_PROCESS_WAGGON);
+		WaggonProcessInfo actuallyAssumed = (WaggonProcessInfo) execution.getVariable(DepartTrainProcessConstants.VAR_SINGLE_FACILITY_PROCESS_WAGGON);
 		DepartmentProcessData departmentProcessData = (DepartmentProcessData) execution.getVariable(DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA);
 		departmentProcessData.processRepairAssumption(actuallyAssumed.getWaggonNumber(), actuallyAssumed.getAssumedRepairDuration(), actuallyAssumed.getFacilityProcessBusinessKey());
 		// alles abgeschätzt --> put them to 'VAR_ASSUMED_WAGGONS' ?
@@ -35,9 +35,9 @@ public class AllAssumementsDoneDelegate implements JavaDelegate {
 		*/
 	}
 
-	private List<String> convert(List<WaggonRepairInfo> assumedWaggons) {
+	private List<String> convert(List<WaggonProcessInfo> assumedWaggons) {
 		List<String> result = new ArrayList<String>();
-		for (WaggonRepairInfo assumedWaggon : assumedWaggons) {
+		for (WaggonProcessInfo assumedWaggon : assumedWaggons) {
 			result.add(assumedWaggon.getWaggonNumber());
 		}
 		return result;

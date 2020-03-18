@@ -9,6 +9,7 @@ import org.camunda.bpm.engine.runtime.ProcessInstance;
 
 import de.gravitex.bpm.traindepartment.entity.DepartmentOrder;
 import de.gravitex.bpm.traindepartment.entity.Track;
+import de.gravitex.bpm.traindepartment.entity.Waggon;
 import de.gravitex.bpm.traindepartment.enumeration.DepartmentOrderState;
 import de.gravitex.bpm.traindepartment.exception.RailWayException;
 import de.gravitex.bpm.traindepartment.logic.businesskey.BusinessKeyCreator;
@@ -145,6 +146,10 @@ public class RailwayStationBusinessLogic implements IRailwayStationBusinessLogic
 
 	public boolean checkTrackWaggons(String trackNumber, String... waggonNumbers) {
 		return stationData.checkTrackWaggons(trackNumber, waggonNumbers);
+	}
+	
+	public List<Waggon> getTrackWaggons(String trackNumber) {
+		return stationData.getTrackWaggons(trackNumber);
 	}
 
 	public ProcessInstance resolveProcessInstance(List<ProcessInstance> processInstances, String aProcessDefinitionKey,

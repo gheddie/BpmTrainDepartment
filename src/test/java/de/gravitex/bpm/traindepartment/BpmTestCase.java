@@ -21,8 +21,12 @@ import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.runtime.VariableInstance;
 import org.camunda.bpm.engine.task.Task;
 import org.camunda.bpm.engine.task.TaskQuery;
+import org.camunda.bpm.engine.test.ProcessEngineRule;
 
-import de.gravitex.bpm.traindepartment.logic.WaggonRepairInfo;
+import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
+import de.gravitex.bpm.traindepartment.logic.DepartmentProcessData;
+import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
+import de.gravitex.bpm.traindepartment.logic.WaggonProcessInfo;
 import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
 import de.gravitex.bpm.traindepartment.util.RailTestUtil;
 
@@ -197,12 +201,38 @@ public class BpmTestCase {
 		HashMapBuilder<String, String> builder = HashMapBuilder.create();
 		if (waggonRepairInfoVariable != null) {
 			for (Task task : tasks) {
-				waggonNumber = ((WaggonRepairInfo) processEngine.getTaskService().getVariable(task.getId(),
+				waggonNumber = ((WaggonProcessInfo) processEngine.getTaskService().getVariable(task.getId(),
 						waggonRepairInfoVariable)).getWaggonNumber();
 				builder.withValuePair(waggonNumber, task.getId());
 			}
 		}
 		return builder.build();
+	}
+
+	protected DepartmentProcessData getProcessData(ProcessEngineServices processEngine, ProcessInstance processInstance) {
+		return (DepartmentProcessData) processEngine.getRuntimeService().getVariable(processInstance.getId(),
+				DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA);
+	}
+
+	protected void assertTrackOccupancies(String... trackOccupancies) {
+		for (String trackOccupancy : trackOccupancies) {
+			assertTrackOccupancy(trackOccupancy);
+		}
+	}
+
+	private void assertTrackOccupancy(String trackOccupancy) {
+		if (!(trackOccupancy.contains(":"))) {
+			assertTrackEmpty(trackOccupancy);
+			return;
+		}
+		String[] splTrack = trackOccupancy.split(":");
+		String[] waggons = splTrack[1].split(",");
+		String trackNumber = splTrack[0];
+		assertTrue(RailwayStationBusinessLogic.getInstance().checkTrackWaggons(trackNumber, waggons));
+	}
+
+	private void assertTrackEmpty(String trackNumber) {
+		assertEquals(0, RailwayStationBusinessLogic.getInstance().getTrackWaggons(trackNumber).size());
 	}
 
 	// ---

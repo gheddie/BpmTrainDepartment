@@ -124,4 +124,8 @@ public class StationData {
 	public boolean checkTrackWaggons(String trackNumber, String... waggonNumbers) {
 		return RailTestUtil.areListsEqual(findTrack(trackNumber).getWaggonNumbers(false), Arrays.asList(waggonNumbers));
 	}
+
+	public List<Waggon> getTrackWaggons(String trackNumber) {
+		return findTrack(trackNumber).getWaggons();
+	}
 }
