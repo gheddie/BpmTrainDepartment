@@ -161,4 +161,8 @@ public class RailwayStationBusinessLogic implements IRailwayStationBusinessLogic
 		return (DepartmentProcessData) execution.getProcessEngine().getRuntimeService().getVariable(execution.getId(),
 				DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA);
 	}
+
+	public List<String> getAllWaggonNumbers() {
+		return stationData.getAllWaggonNumbers();
+	}
 }

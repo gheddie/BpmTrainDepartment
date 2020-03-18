@@ -63,7 +63,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 		RailwayStationBusinessLogic.getInstance().print("In the beginning", false);
 		
-		assertTrackOccupancies("Track1:W1,W2,W3,W4,W5", "TrackExit", "TrackReplacement");
+		assertTrackOccupancies(true, "Track1:W1,W2,W3,W4,W5", "TrackExit", "TrackReplacement");
 
 		ProcessInstance processInstance = startDepartureProcess(getDefaultPlannedDepartureTime(), "W1", "W2", "W3", "W4");
 
@@ -168,7 +168,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		processChooseReplacementTrack(chooseReplacementTrackTask, "TrackReplacement");
 		
 		// replacement waggons were put to 'TrackReplacement'...
-		assertTrackOccupancies("Track1:W1,W2,W3,W4,W5", "TrackReplacement:W888,W999");
+		assertTrackOccupancies(true, "Track1:W1,W2,W3,W4,W5", "TrackReplacement:W888,W999");
 
 		// we must have 2 more waggons (now 5+2=7) in the system...
 		assertEquals(7, RailwayStationBusinessLogic.getInstance().countWaggons());

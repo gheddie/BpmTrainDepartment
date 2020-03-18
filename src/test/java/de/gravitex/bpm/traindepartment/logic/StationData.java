@@ -128,4 +128,12 @@ public class StationData {
 	public List<Waggon> getTrackWaggons(String trackNumber) {
 		return findTrack(trackNumber).getWaggons();
 	}
+
+	public List<String> getAllWaggonNumbers() {
+		List<String> result = new ArrayList<String>();
+		for (Waggon waggon : getAllWaggons()) {
+			result.add(waggon.getWaggonNumber());
+		}
+		return result;
+	}
 }

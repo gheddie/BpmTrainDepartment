@@ -214,10 +214,26 @@ public class BpmTestCase {
 				DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA);
 	}
 
-	protected void assertTrackOccupancies(String... trackOccupancies) {
+	protected void assertTrackOccupancies(boolean checkWaggonCompleteness, String... trackOccupancies) {
+		if (checkWaggonCompleteness) {
+			checkWaggonCompleteness(trackOccupancies);			
+		}
 		for (String trackOccupancy : trackOccupancies) {
 			assertTrackOccupancy(trackOccupancy);
 		}
+	}
+
+	private void checkWaggonCompleteness(String[] trackOccupancies) {
+		List<String> requestedWaggons = new ArrayList<String>();
+		for (String trackOccupancy : trackOccupancies) {
+			if (trackOccupancy.contains(":")) {
+				for (String waggonNumber : trackOccupancy.split(":")[1].split(",")) {
+					requestedWaggons.add(waggonNumber);
+				}
+			}
+		}
+		// requested waggons must be equal to all waggons in the system...
+		assertTrue(RailTestUtil.areListsEqual(requestedWaggons, RailwayStationBusinessLogic.getInstance().getAllWaggonNumbers()));
 	}
 
 	private void assertTrackOccupancy(String trackOccupancy) {
