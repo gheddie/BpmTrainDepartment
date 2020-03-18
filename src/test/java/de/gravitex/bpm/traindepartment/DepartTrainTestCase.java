@@ -134,13 +134,11 @@ public class DepartTrainTestCase extends BpmTestCase {
 		List<Task> promptReplacementTasks = ensureTaskCountPresent(DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPLACEMENT,
 				processInstance.getId(), DepartTrainProcessConstants.ROLE_DISPONENT, 2);
 		
-		/*
 		HashMap<String, String> promptReplacementMappings = getWaggonNumberToTaskIdMapping(promptReplacementTasks,
 				DepartTrainProcessConstants.VAR_PROMPT_REPLACE_WAGGON, processEngine);
-				*/
 		
-		processPromptReplacement(promptReplacementTasks.get(0));
-		processPromptReplacement(promptReplacementTasks.get(1));
+		processPromptReplacement("W3", promptReplacementMappings);
+		processPromptReplacement("W4", promptReplacementMappings);
 
 		// waiting for replacement
 		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_REP_WAGG_ARRIVED);
@@ -395,8 +393,8 @@ public class DepartTrainTestCase extends BpmTestCase {
 				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_ROLLOUT_CONFIRMED, doRollOut).build());
 	}
 
-	private void processPromptReplacement(Task task) {
-		processEngine.getTaskService().complete(task.getId());
+	private void processPromptReplacement(String waggonNumber, HashMap<String, String> promptReplacementMappings) {
+		processEngine.getTaskService().complete(promptReplacementMappings.get(waggonNumber));
 	}
 
 	private void processPromptRepair(String waggonNumber, HashMap<String, String> promptRepairMappings) {
