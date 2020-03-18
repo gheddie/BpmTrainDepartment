@@ -62,9 +62,6 @@ public class DepartTrainProcessConstants {
 	
 	public static final String VAR_EXIT_TRACK = "VAR_EXIT_TRACK";
 	
-	// ... ---> 'TaskAllRepairsDone'
-	// public static final String VAR_ALL_ASSUMEMENTS_DONE = "VAR_ALL_ASSUMEMENTS_DONE";
-	
 	// a single assumed waggon
 	public static final String VAR_ASSUMED_WAGGON = "VAR_ASSUMED_WAGGON";
 	
@@ -83,11 +80,11 @@ public class DepartTrainProcessConstants {
 	// single waggon to prompt a repair... 
 	public static final String VAR_PROMPT_REPAIR_WAGGON = "VAR_PROMPT_REPAIR_WAGGON";
 
+	// single waggon to prompt a replacement... 
+	public static final String VAR_PROMPT_REPLACE_WAGGON = "VAR_PROMPT_REPLACE_WAGGON";
+
 	// target track for replaced waggons
 	public static final String VAR_REPLACE_WAGGON_TARGET_TRACK = "VAR_REPLACE_WAGGON_TARGET_TRACK";
-	
-	// wurden 'waggon' replacements angefragt?
-	public static final String VAR_WG_REPLS_GEN = "VAR_WG_REPLS_GEN";
 	
 	// Die Wagen, die als Ersatz geliefert wurden
 	public static final String VAR_DELIVERED_REPLACMENT_WAGGONS = "VAR_DELIVERED_REPLACMENT_WAGGONS";

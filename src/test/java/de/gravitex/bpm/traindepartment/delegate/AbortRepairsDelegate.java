@@ -14,7 +14,7 @@ public class AbortRepairsDelegate extends TrainDepartmentJavaDelegate {
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
 		// all waggons which are to be replaced will not be repaired here...
-		List<WaggonRepairInfo> evaluationWaggons = getWaggonList(execution)
+		List<WaggonRepairInfo> evaluationWaggons = getDepartmentProcessData(execution)
 				.getWaggonsByEvaluationResult(RepairEvaluationResult.REPLACE_WAGGON);
 		for (WaggonRepairInfo waggonRepairInfo : evaluationWaggons) {
 			execution.getProcessEngine().getRuntimeService().correlateMessage(DepartTrainProcessConstants.MSG_ABORT_REPAIR,

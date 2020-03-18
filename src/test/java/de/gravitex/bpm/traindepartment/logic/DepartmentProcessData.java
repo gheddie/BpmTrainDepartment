@@ -11,16 +11,23 @@ import de.gravitex.bpm.traindepartment.enumeration.RepairEvaluationResult;
 import lombok.Data;
 
 @Data
-public class DepartProcessData {
-	
-	private DepartProcessData() {
-		super();
-	}
+public class DepartmentProcessData implements IDepartmentProcessData {
 
 	private HashMap<String, WaggonRepairInfo> waggonRepairInfoHash = new HashMap<String, WaggonRepairInfo>();
 
-	public static DepartProcessData fromWaggonNumbers(List<String> waggonNumbers) {
-		DepartProcessData result = new DepartProcessData();
+	// wurden 'waggon' replacements angefragt?
+	private boolean replacementWaggonsRequested = false;
+
+	private String exitTrack;
+
+	private boolean waggonPositionsOk;;
+
+	private DepartmentProcessData() {
+		super();
+	}
+
+	public static DepartmentProcessData fromWaggonNumbers(List<String> waggonNumbers) {
+		DepartmentProcessData result = new DepartmentProcessData();
 		HashMap<String, WaggonRepairInfo> waggonRepairInfoHash = new HashMap<String, WaggonRepairInfo>();
 		for (String waggonNumber : waggonNumbers) {
 			waggonRepairInfoHash.put(waggonNumber, WaggonRepairInfo.fromWaggonNumber(waggonNumber));
@@ -28,7 +35,7 @@ public class DepartProcessData {
 		result.setWaggonRepairInfoHash(waggonRepairInfoHash);
 		return result;
 	}
-	
+
 	public Collection<WaggonRepairInfo> getWaggons() {
 		return waggonRepairInfoHash.values();
 	}
@@ -46,7 +53,7 @@ public class DepartProcessData {
 		waggonRepairInfo.setAssumedRepairDuration(assumedRepairDuration);
 		waggonRepairInfo.setFacilityProcessBusinessKey(facilityProcessBusinessKey);
 	}
-	
+
 	public void processWaggonEvaluation(String waggonNumber, RepairEvaluationResult repairEvaluationResult) {
 		waggonRepairInfoHash.get(waggonNumber).setRepairEvaluationResult(repairEvaluationResult);
 	}
@@ -59,12 +66,12 @@ public class DepartProcessData {
 		}
 		return true;
 	}
-	
+
 	public boolean allRepairsDone() {
 		for (WaggonRepairInfo waggonRepairInfo : waggonRepairInfoHash.values()) {
 			if (waggonRepairInfo.getRepairEvaluationResult().equals(RepairEvaluationResult.REPAIR_WAGGON)) {
 				if (!(waggonRepairInfo.isRepaired())) {
-					return false;					
+					return false;
 				}
 			}
 		}
@@ -76,7 +83,7 @@ public class DepartProcessData {
 		int count = 0;
 		for (WaggonRepairInfo waggonRepairInfo : waggonRepairInfoHash.values()) {
 			if (waggonRepairInfo.wasRepaired()) {
-				count++;				
+				count++;
 			}
 		}
 		return count;
@@ -85,11 +92,11 @@ public class DepartProcessData {
 	public void processRepairCallback(String waggonNumber) {
 		waggonRepairInfoHash.get(waggonNumber).setRepaired(true);
 	}
-	
+
 	public List<WaggonRepairInfo> getWaggonsEvaluatedAsRepair() {
 		return getWaggonsByEvaluationResult(RepairEvaluationResult.REPAIR_WAGGON);
 	}
-	
+
 	public List<WaggonRepairInfo> getWaggonsEvaluatedAsReplacement() {
 		return getWaggonsByEvaluationResult(RepairEvaluationResult.REPLACE_WAGGON);
 	}
@@ -103,8 +110,27 @@ public class DepartProcessData {
 		}
 		return result;
 	}
-	
-	public boolean positionsOk() {
+
+	public boolean exitTrackEmpty() {
 		return true;
+	}
+
+	public void markReplacementWaggonsRequested() {
+		replacementWaggonsRequested = true;
+	}
+
+	public void setExitTrack(String exitTrack) {
+		this.exitTrack = exitTrack;
+	}
+
+	public void checkWaggonPositions() {
+		// waggons must be 'alone' on the wxit track
+		// TODO
+		waggonPositionsOk = true;
+		/*
+		List<String> waggonNumbers = getWaggonNumbers();
+		waggonPositionsOk = RailwayStationBusinessLogic.getInstance().checkTrackWaggons(exitTrack,
+				waggonNumbers.toArray(new String[waggonNumbers.size()]));
+				*/
 	}
 }

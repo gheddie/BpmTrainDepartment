@@ -23,7 +23,7 @@ import de.gravitex.bpm.traindepartment.enumeration.RepairEvaluationResult;
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogicException;
-import de.gravitex.bpm.traindepartment.logic.DepartProcessData;
+import de.gravitex.bpm.traindepartment.logic.DepartmentProcessData;
 import de.gravitex.bpm.traindepartment.logic.WaggonRepairInfo;
 import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
 
@@ -118,17 +118,27 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 		// prompt repair (correlates message 'MSG_START_REPAIR') --> before, facility
 		// process is waiting at 'CATCH_MSG_START_REPAIR'...
-		processPromptRepair(promptRepairTasks.get(0));
-		processPromptRepair(promptRepairTasks.get(1));
+		
+		HashMap<String, String> promptRepairMappings = getWaggonNumberToTaskIdMapping(promptRepairTasks,
+				DepartTrainProcessConstants.VAR_PROMPT_REPAIR_WAGGON, processEngine);
+		
+		processPromptRepair("W1", promptRepairMappings);
+		processPromptRepair("W2", promptRepairMappings);
 
 		// we have 2 task of 'TASK_REPAIR_WAGGON' (NOT of this process instance, as we
 		// are the 'master')...
 		ensureTaskCountPresent(DepartTrainProcessConstants.TASK_REPAIR_WAGGON, null, DepartTrainProcessConstants.ROLE_REPAIR_DUDE,
 				2);
 
-		// we prompt 2 new waggons..
+		// we prompt replacement for 2 new waggons (W3+W4)..
 		List<Task> promptReplacementTasks = ensureTaskCountPresent(DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPLACEMENT,
 				processInstance.getId(), DepartTrainProcessConstants.ROLE_DISPONENT, 2);
+		
+		/*
+		HashMap<String, String> promptReplacementMappings = getWaggonNumberToTaskIdMapping(promptReplacementTasks,
+				DepartTrainProcessConstants.VAR_PROMPT_REPLACE_WAGGON, processEngine);
+				*/
+		
 		processPromptReplacement(promptReplacementTasks.get(0));
 		processPromptReplacement(promptReplacementTasks.get(1));
 
@@ -151,16 +161,9 @@ public class DepartTrainTestCase extends BpmTestCase {
 		// all prompted --> wait for repairs...
 		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_WAGGON_REPAIRED);
 
-		// we have 2 waggons to repair (W1, W2)
-		/*
-		 * List<WaggonRepairInfo> repairInfos = (List<WaggonRepairInfo>)
-		 * processEngine.getRuntimeService() .getVariable(processInstance.getId(),
-		 * DepartTrainProcessConstants.VAR_PROMPT_REPAIR_WAGGONS_LIST);
-		 */
-
 		// assertEquals(2, repairInfos.size());
 		assertEquals(2,
-				((DepartProcessData) processEngine.getRuntimeService().getVariable(processInstance.getId(),
+				((DepartmentProcessData) processEngine.getRuntimeService().getVariable(processInstance.getId(),
 						DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA))
 								.getWaggonsByEvaluationResult(RepairEvaluationResult.REPAIR_WAGGON).size());
 
@@ -173,7 +176,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		assertEquals(2, getRepairedWaggonCount(processInstance));
 
 		// all waggons repaired, so...
-		processExitTrack(processInstance, "TrackExit");
+		processChooseExitTrack(processInstance, "TrackExit");
 
 		// we have waggon runnabilities to check...
 		List<Task> checkRunnabilityTasks = processEngine.getTaskService().createTaskQuery()
@@ -201,7 +204,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		// 4 waggons ware gone...
 		assertEquals(3, RailwayStationBusinessLogic.getInstance().countWaggons());
 
-		// TODO ALL processes must be gone in the end
+		// ALL processes must be gone in the end...
 		assertEquals(0, processEngine.getRuntimeService().createProcessInstanceQuery().list().size());
 	}
 
@@ -374,7 +377,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 	}
 
-	private void processExitTrack(ProcessInstance processInstance, String trackNumber) {
+	private void processChooseExitTrack(ProcessInstance processInstance, String trackNumber) {
 		processEngine.getTaskService().complete(
 				processEngine.getTaskService().createTaskQuery().processInstanceBusinessKey(processInstance.getBusinessKey())
 						.taskDefinitionKey(DepartTrainProcessConstants.TASK_CHOOSE_EXIT_TRACK).list().get(0).getId(),
@@ -396,8 +399,8 @@ public class DepartTrainTestCase extends BpmTestCase {
 		processEngine.getTaskService().complete(task.getId());
 	}
 
-	private void processPromptRepair(Task task) {
-		processEngine.getTaskService().complete(task.getId());
+	private void processPromptRepair(String waggonNumber, HashMap<String, String> promptRepairMappings) {
+		processEngine.getTaskService().complete(promptRepairMappings.get(waggonNumber));
 	}
 
 	private void processDeliverReplacement(String businessKey, String... waggonNumbers) {
@@ -427,9 +430,9 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 	@JsonIgnore
 	private int getRepairedWaggonCount(ProcessInstance processInstance) {
-		DepartProcessData departProcessData = (DepartProcessData) processEngine.getRuntimeService().getVariable(processInstance.getId(),
+		DepartmentProcessData departmentProcessData = (DepartmentProcessData) processEngine.getRuntimeService().getVariable(processInstance.getId(),
 				DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA);
-		return departProcessData.getRepairedWaggonCount();
+		return departmentProcessData.getRepairedWaggonCount();
 	}
 
 	private LocalDateTime getDefaultPlannedDepartureTime() {
@@ -440,10 +443,10 @@ public class DepartTrainTestCase extends BpmTestCase {
 		List<String> extractedWaggonNumbers = Waggon.getWaggonNumbers(waggonNumbers);
 		String generatedBusinessKey = RailwayStationBusinessLogic.getInstance()
 				.generateBusinessKey(DepartTrainProcessConstants.PROCESS_DEPART_TRAIN, HashMapBuilder.create().build(), null);
-		DepartProcessData departProcessData = DepartProcessData.fromWaggonNumbers(extractedWaggonNumbers);
+		DepartmentProcessData departmentProcessData = DepartmentProcessData.fromWaggonNumbers(extractedWaggonNumbers);
 		ProcessInstance instance = processEngine.getRuntimeService()
 				.startProcessInstanceByMessage(DepartTrainProcessConstants.MSG_DEPARTURE_PLANNED, generatedBusinessKey,
-						HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA, departProcessData)
+						HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA, departmentProcessData)
 								.withValuePair(DepartTrainProcessConstants.VAR_PLANNED_DEPARTMENT_DATE, plannedDepartureTime)
 								.build());
 		return instance;

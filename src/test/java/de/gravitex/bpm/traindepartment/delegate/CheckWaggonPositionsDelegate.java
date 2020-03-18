@@ -4,10 +4,11 @@ import org.camunda.bpm.engine.delegate.BpmnError;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 
+import de.gravitex.bpm.traindepartment.delegate.base.TrainDepartmentJavaDelegate;
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
 
-public class CheckWaggonPositionsDelegate implements JavaDelegate {
+public class CheckWaggonPositionsDelegate extends TrainDepartmentJavaDelegate {
 
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
@@ -17,7 +18,6 @@ public class CheckWaggonPositionsDelegate implements JavaDelegate {
 			System.out.println(exitTrack == null ? "no exit track set!!" : "track " + exitTrack + " is no ext track!!");
 			throw new BpmnError(DepartTrainProcessConstants.ERR_NO_EXIT_TR);
 		}
-		// TODO shunting?
-		// execution.setVariable(DepartTrainProcessConstants.VAR_POSITIONS_OK, true);
+		getDepartmentProcessData(execution).checkWaggonPositions();
 	}
 }

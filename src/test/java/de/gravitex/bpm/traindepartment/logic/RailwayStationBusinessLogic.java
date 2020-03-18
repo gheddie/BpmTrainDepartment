@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 
 import de.gravitex.bpm.traindepartment.entity.DepartmentOrder;
@@ -149,5 +150,10 @@ public class RailwayStationBusinessLogic implements IRailwayStationBusinessLogic
 	public ProcessInstance resolveProcessInstance(List<ProcessInstance> processInstances, String aProcessDefinitionKey,
 			String value, ProcessInstance parentInstance) {
 		return BusinessKeyCreator.resolveProcessInstance(processInstances, aProcessDefinitionKey, value, parentInstance);
+	}
+	
+	public static DepartmentProcessData getDepartmentProcessData(DelegateExecution execution) {
+		return (DepartmentProcessData) execution.getProcessEngine().getRuntimeService().getVariable(execution.getId(),
+				DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA);
 	}
 }
