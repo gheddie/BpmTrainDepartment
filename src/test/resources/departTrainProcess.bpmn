@@ -64,7 +64,7 @@
         <bpmn:flowNodeRef>IntermediateCatchEvent_15nydzh</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>TASK_ALL_REPAIRS_DONE</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_1cjslvo</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_08kvqti</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TASK_EVALUATE_REPAIR_TIME_EXCEEDEMENT</bpmn:flowNodeRef>
         <bpmn:childLaneSet id="LaneSet_0jjenap">
           <bpmn:lane id="Lane_0zda05c" name="Supervisor">
             <bpmn:flowNodeRef>ExGwRollout</bpmn:flowNodeRef>
@@ -111,7 +111,7 @@
             <bpmn:flowNodeRef>IntermediateCatchEvent_15nydzh</bpmn:flowNodeRef>
             <bpmn:flowNodeRef>TASK_ALL_REPAIRS_DONE</bpmn:flowNodeRef>
             <bpmn:flowNodeRef>ExclusiveGateway_1cjslvo</bpmn:flowNodeRef>
-            <bpmn:flowNodeRef>Task_08kvqti</bpmn:flowNodeRef>
+            <bpmn:flowNodeRef>TASK_EVALUATE_REPAIR_TIME_EXCEEDEMENT</bpmn:flowNodeRef>
           </bpmn:lane>
         </bpmn:childLaneSet>
       </bpmn:lane>
@@ -424,7 +424,7 @@
       <bpmn:outgoing>SequenceFlow_0ez2a0m</bpmn:outgoing>
     </bpmn:eventBasedGateway>
     <bpmn:sequenceFlow id="SequenceFlow_0ez2a0m" sourceRef="ExGwAwaitRepairOutcome" targetRef="IntermediateCatchEvent_15nydzh" />
-    <bpmn:sequenceFlow id="SequenceFlow_1e7yyz9" sourceRef="IntermediateCatchEvent_15nydzh" targetRef="Task_08kvqti" />
+    <bpmn:sequenceFlow id="SequenceFlow_1e7yyz9" sourceRef="IntermediateCatchEvent_15nydzh" targetRef="TASK_EVALUATE_REPAIR_TIME_EXCEEDEMENT" />
     <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_15nydzh">
       <bpmn:incoming>SequenceFlow_0ez2a0m</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1e7yyz9</bpmn:outgoing>
@@ -440,11 +440,11 @@
       <bpmn:outgoing>SequenceFlow_0kdplx5</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="SequenceFlow_0kdplx5" sourceRef="ExclusiveGateway_1cjslvo" targetRef="TASK_ALL_REPAIRS_DONE" />
-    <bpmn:userTask id="Task_08kvqti" name="Evaluate repair time exceedement">
+    <bpmn:userTask id="TASK_EVALUATE_REPAIR_TIME_EXCEEDEMENT" name="Evaluate repair time exceedement">
       <bpmn:incoming>SequenceFlow_1e7yyz9</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_03dxqcn</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:sequenceFlow id="SequenceFlow_03dxqcn" sourceRef="Task_08kvqti" targetRef="ExclusiveGateway_1cjslvo" />
+    <bpmn:sequenceFlow id="SequenceFlow_03dxqcn" sourceRef="TASK_EVALUATE_REPAIR_TIME_EXCEEDEMENT" targetRef="ExclusiveGateway_1cjslvo" />
     <bpmn:textAnnotation id="TextAnnotation_1yoz8ky">
       <bpmn:text>Alle Reparaturen abgeschätzt. Jetzt muss pro Waggon beurteilt werden, ob er verwendet werden kann oder ob ggf.Ersatzwagen beschafft werden müssen.</bpmn:text>
     </bpmn:textAnnotation>
@@ -569,12 +569,9 @@
       <bpmn:outgoing>SequenceFlow_18icwig</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_1s4bptw</bpmn:outgoing>
     </bpmn:eventBasedGateway>
-    <bpmn:userTask id="TASK_ALERT_REPAIR_TIME_EXCEEDED" name="Alert repair time exceeded">
-      <bpmn:extensionElements>
-        <camunda:taskListener class="de.gravitex.bpm.traindepartment.listener.complete.AlertRepairTimeExceededComplementListener" event="complete" />
-      </bpmn:extensionElements>
+    <bpmn:serviceTask id="TASK_ALERT_REPAIR_TIME_EXCEEDED" name="Alert repair time exceeded" camunda:class="de.gravitex.bpm.traindepartment.delegate.AlertRepairTimeExceededDelegate">
       <bpmn:incoming>SequenceFlow_0eung5a</bpmn:incoming>
-    </bpmn:userTask>
+    </bpmn:serviceTask>
     <bpmn:association id="Association_0cw6ytl" sourceRef="StartEvent_14lghgj" targetRef="TextAnnotation_1mqltw5" />
     <bpmn:association id="Association_0qo6rtv" sourceRef="TASK_ASSUME_REPAIR_TIME" targetRef="TextAnnotation_0y8n73l" />
     <bpmn:textAnnotation id="TextAnnotation_0y8n73l">
@@ -1290,9 +1287,6 @@
         <di:waypoint x="1127" y="-398" />
         <di:waypoint x="1195" y="-398" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="UserTask_06dkhn6_di" bpmnElement="TASK_ALERT_REPAIR_TIME_EXCEEDED">
-        <dc:Bounds x="1195" y="-438" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="IntermediateCatchEvent_15nydzh_di" bpmnElement="IntermediateCatchEvent_15nydzh">
         <dc:Bounds x="980" y="510" width="36" height="36" />
       </bpmndi:BPMNShape>
@@ -1312,7 +1306,7 @@
         <di:waypoint x="1016" y="528" />
         <di:waypoint x="1121" y="528" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="UserTask_028ufe3_di" bpmnElement="Task_08kvqti">
+      <bpmndi:BPMNShape id="UserTask_028ufe3_di" bpmnElement="TASK_EVALUATE_REPAIR_TIME_EXCEEDEMENT">
         <dc:Bounds x="1121" y="488" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ExclusiveGateway_1cjslvo_di" bpmnElement="ExclusiveGateway_1cjslvo" isMarkerVisible="true">
@@ -1326,6 +1320,9 @@
         <di:waypoint x="1171" y="568" />
         <di:waypoint x="1171" y="714" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0kb587s_di" bpmnElement="TASK_ALERT_REPAIR_TIME_EXCEEDED">
+        <dc:Bounds x="1195" y="-438" width="100" height="80" />
+      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

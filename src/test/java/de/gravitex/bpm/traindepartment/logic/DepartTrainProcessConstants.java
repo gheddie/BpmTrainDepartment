@@ -34,7 +34,7 @@ public class DepartTrainProcessConstants {
 	public static final String TASK_PROMPT_WAGGON_REPAIR = "TASK_PROMPT_WAGGON_REPAIR";
 	public static final String TASK_CHOOSE_REPLACEMENT_TRACK = "TASK_CHOOSE_REPLACEMENT_TRACK";	
 	public static final String TASK_CHECK_WAGGON_RUNNABILITY = "TASK_CHECK_WAGGON_RUNNABILITY";
-	public static final String TASK_ALERT_REPAIR_TIME_EXCEEDED = "TASK_ALERT_REPAIR_TIME_EXCEEDED";
+	public static final String TASK_EVALUATE_REPAIR_TIME_EXCEEDEMENT = "TASK_EVALUATE_REPAIR_TIME_EXCEEDEMENT";
 
 	// ##############################################################################
 	// ####################################### signals

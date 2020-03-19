@@ -9,7 +9,9 @@ import java.util.List;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.ProcessEngineServices;
 import org.camunda.bpm.engine.TaskService;
+import org.camunda.bpm.engine.repository.CaseDefinition;
 import org.camunda.bpm.engine.runtime.Execution;
+import org.camunda.bpm.engine.runtime.Job;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
 
@@ -82,11 +84,19 @@ public abstract class DepartmentProcessRunner extends ProcessRunner {
 		getProcessEngine().getTaskService().complete(getWaggonNumberToTaskIdMapping(promptRepairTasks,
 				DepartTrainProcessConstants.VAR_PROMPT_REPAIR_WAGGON, getProcessEngine()).get(waggonNumber));
 	}
-	
+
 	public void finishWaggonRepair(ProcessInstance processInstance, String waggonNumber) {
 		Task repairWaggonTask = getRepairFacilityProcessTask(waggonNumber, DepartTrainProcessConstants.TASK_REPAIR_WAGGON,
 				processInstance);
 		getProcessEngine().getTaskService().complete(repairWaggonTask.getId());
+	}
+
+	public void timeoutWaggonRepair(ProcessInstance processInstance, String waggonNumber) {
+		List<Job> jobs = getProcessEngine().getManagementService().createJobQuery()
+				.processInstanceId(resolveRepairFacilityProcessForWaggonNumber(waggonNumber, processInstance).getId()).active()
+				.timers().list();
+		assertEquals(1, jobs.size());
+		getProcessEngine().getManagementService().executeJob(jobs.get(0).getId());
 	}
 
 	private Task getRepairFacilityProcessTask(String waggonNumber, String taskDefinitionKey, ProcessInstance processInstance) {

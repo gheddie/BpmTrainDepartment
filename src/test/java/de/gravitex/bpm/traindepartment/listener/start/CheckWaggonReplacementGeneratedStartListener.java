@@ -19,10 +19,9 @@ public class CheckWaggonReplacementGeneratedStartListener implements ExecutionLi
 		List<WaggonProcessInfo> waggonReplacements = ((DepartmentProcessData) execution.getProcessEngine().getRuntimeService()
 				.getVariable(execution.getId(), DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA))
 						.getWaggonsByEvaluationResult(WaggonState.REPLACE_WAGGON);
-		/*
-		runtimeService.setVariable(execution.getId(), DepartTrainProcessConstants.VAR_WG_REPLS_GEN,
-				(waggonReplacements != null && waggonReplacements.size() > 0));
-				*/
-		((DepartmentProcessData) runtimeService.getVariable(execution.getId(), DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA)).markReplacementWaggonsRequested();
+		if (!(waggonReplacements.isEmpty())) {
+			((DepartmentProcessData) runtimeService.getVariable(execution.getId(),
+					DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA)).markReplacementWaggonsRequested();
+		}
 	}
 }
