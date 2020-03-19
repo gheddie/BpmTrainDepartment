@@ -1,5 +1,6 @@
 package de.gravitex.bpm.traindepartment;
 
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertThat;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.managementService;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.runtimeService;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.taskService;
@@ -64,6 +65,7 @@ public class BpmTestCase {
 	}
 
 	protected List<Task> ensureTaskCountPresent(String taskName, String processInstanceId, String role, int taskCount) {
+		
 		TaskQuery query = taskService().createTaskQuery().taskDefinitionKey(taskName);
 		if (role != null) {
 			query.taskAssignee(role);
@@ -126,6 +128,10 @@ public class BpmTestCase {
 		}
 		// business keys must match here...
 		assertTrue(RailTestUtil.areListsEqual(expectedBusinessKeys, actualProcessBusinessKeysFromSubscriptions));
+	}
+
+	protected void assertWaitState(ProcessInstance processInstance, String waitState) {
+		assertThat(processInstance).isWaitingAt(waitState);
 	}
 
 	protected Object getProcessVariableByName(String variableName) {
@@ -216,7 +222,7 @@ public class BpmTestCase {
 
 	protected void assertTrackOccupancies(boolean checkWaggonCompleteness, String... trackOccupancies) {
 		if (checkWaggonCompleteness) {
-			checkWaggonCompleteness(trackOccupancies);			
+			checkWaggonCompleteness(trackOccupancies);
 		}
 		for (String trackOccupancy : trackOccupancies) {
 			assertTrackOccupancy(trackOccupancy);

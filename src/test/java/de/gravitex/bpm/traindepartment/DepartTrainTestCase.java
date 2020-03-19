@@ -26,6 +26,7 @@ import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
 import de.gravitex.bpm.traindepartment.logic.DepartmentProcessData;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogicException;
+import de.gravitex.bpm.traindepartment.runner.EvaluateAllToRepairProcessRunner;
 import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
 import de.gravitex.bpm.traindepartment.util.RailTestUtil;
 
@@ -62,21 +63,22 @@ public class DepartTrainTestCase extends BpmTestCase {
 						DepartTrainProcessConstants.ROLE_REPAIR_DUDE, DepartTrainProcessConstants.ROLE_WAGGON_MASTER);
 
 		RailwayStationBusinessLogic.getInstance().print("In the beginning", false);
-		
+
 		assertTrackOccupancies(true, "Track1:W1,W2,W3,W4,W5", "TrackExit", "TrackReplacement");
 
 		ProcessInstance processInstance = startDepartureProcess(getDefaultPlannedDepartureTime(), "W1", "W2", "W3", "W4");
 
 		// we have 4 facility processes, so 4 assumement tasks..
 		assertEquals(4, ensureProcessInstanceCount(DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY));
+		
 		ensureTaskCountPresent(DepartTrainProcessConstants.TASK_ASSUME_REPAIR_TIME, null,
 				DepartTrainProcessConstants.ROLE_REPAIR_DUDE, 4);
 
 		// assume a waggon (for all 4 waggons)
-		processWaggonRepairAssumement("W1", 11, processInstance);
-		processWaggonRepairAssumement("W2", 4, processInstance);
-		processWaggonRepairAssumement("W3", 3, processInstance);
-		processWaggonRepairAssumement("W4", 3, processInstance);
+		assumeWaggonRepair(processInstance, "W1", 11);
+		assumeWaggonRepair(processInstance, "W2", 4);
+		assumeWaggonRepair(processInstance, "W3", 3);
+		assumeWaggonRepair(processInstance, "W4", 3);
 
 		// 4 evaluations to be done...
 		List<Task> evaluationTasks = ensureTaskCountPresent(DepartTrainProcessConstants.TASK_EVALUATE_WAGGON,
@@ -166,7 +168,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		Task chooseReplacementTrackTask = ensureSingleTaskPresent(DepartTrainProcessConstants.TASK_CHOOSE_REPLACEMENT_TRACK,
 				DepartTrainProcessConstants.ROLE_DISPONENT, false, null);
 		processChooseReplacementTrack(chooseReplacementTrackTask, "TrackReplacement");
-		
+
 		// replacement waggons were put to 'TrackReplacement'...
 		assertTrackOccupancies(true, "Track1:W1,W2,W3,W4,W5", "TrackReplacement:W888,W999");
 
@@ -265,7 +267,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		assertEquals(3, ensureProcessInstanceCount(DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY));
 
 		// master process is waiting at message catch...
-		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_WG_REPAIRED);
+		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_WG_ASSUMED);
 
 		// 3 tasks 'TASK_ASSUME_REPAIR_TIME'...
 		List<Task> repairTasks = processEngine.getTaskService().createTaskQuery()
@@ -275,19 +277,19 @@ public class DepartTrainTestCase extends BpmTestCase {
 		// assume waggon 1 of 3 --> not done (back to message catch)
 		assertEquals(1, processEngine.getRuntimeService().createEventSubscriptionQuery()
 				.eventName(DepartTrainProcessConstants.MSG_REPAIR_ASSUMED).list().size());
-		processWaggonRepairAssumement("W1", 2, processInstance);
-		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_WG_REPAIRED);
+		assumeWaggonRepair(processInstance, "W1", 2);
+		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_WG_ASSUMED);
 
 		// assume waggon 2 of 3 --> not done (back to message catch)
 		assertEquals(1, processEngine.getRuntimeService().createEventSubscriptionQuery()
 				.eventName(DepartTrainProcessConstants.MSG_REPAIR_ASSUMED).list().size());
-		processWaggonRepairAssumement("W2", 2, processInstance);
-		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_WG_REPAIRED);
+		assumeWaggonRepair(processInstance, "W2", 2);
+		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_WG_ASSUMED);
 
 		// assume waggon 3 of 3 --> done!!!
 		assertEquals(1, processEngine.getRuntimeService().createEventSubscriptionQuery()
 				.eventName(DepartTrainProcessConstants.MSG_REPAIR_ASSUMED).list().size());
-		processWaggonRepairAssumement("W3", 2, processInstance);
+		assumeWaggonRepair(processInstance, "W3", 2);
 
 		// ...
 		// assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.TASK_EVALUATE_REPAIR);
@@ -334,14 +336,14 @@ public class DepartTrainTestCase extends BpmTestCase {
 		assertThat(instanceB).isWaitingAt(DepartTrainProcessConstants.SIG_RO_CANC);
 
 		// process A
-		assertThat(instanceA).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_WG_REPAIRED);
+		assertThat(instanceA).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_WG_ASSUMED);
 
 		// process repair assume for instance A
 		List<Task> assumeListA = processEngine.getTaskService().createTaskQuery()
 				.taskDefinitionKey(DepartTrainProcessConstants.TASK_ASSUME_REPAIR_TIME).list();
 		assertEquals(1, assumeListA.size());
 
-		processWaggonRepairAssumement("W1", 12, instanceA);
+		assumeWaggonRepair(instanceA, "W1", 12);
 
 		// ...
 		// assertThat(instanceA).isWaitingAt(DepartTrainProcessConstants.TASK_EVALUATE_REPAIR);
@@ -380,7 +382,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		 * RailwayStationBusinessLogic.getInstance().countWaggons());
 		 */
 	}
-
+	
 	private void processWaggonRepair(String waggonNumber, ProcessInstance parentInstance) {
 		Task processRepairTask = getRepairFacilityProcessTask(waggonNumber, DepartTrainProcessConstants.TASK_REPAIR_WAGGON,
 				parentInstance);
@@ -388,9 +390,9 @@ public class DepartTrainTestCase extends BpmTestCase {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void processWaggonRepairAssumement(String waggonNumber, int hours, ProcessInstance parentInstance) {
+	private void assumeWaggonRepair(ProcessInstance processInstance, String waggonNumber, int hours) {
 		Task assumeRepairTimeTask = getRepairFacilityProcessTask(waggonNumber,
-				DepartTrainProcessConstants.TASK_ASSUME_REPAIR_TIME, parentInstance);
+				DepartTrainProcessConstants.TASK_ASSUME_REPAIR_TIME, processInstance);
 		processEngine.getTaskService().complete(assumeRepairTimeTask.getId(),
 				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_ASSUMED_TIME, hours).build());
 

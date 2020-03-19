@@ -39,6 +39,7 @@ public class DepartmentProcessData implements IDepartmentProcessData {
 		return result;
 	}
 
+	@JsonIgnore
 	public Collection<WaggonProcessInfo> getWaggons() {
 		return waggonRepairInfoHash.values();
 	}

@@ -2,6 +2,8 @@ package de.gravitex.bpm.traindepartment.logic;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import de.gravitex.bpm.traindepartment.enumeration.WaggonState;
 import lombok.Data;
 
@@ -52,6 +54,7 @@ public class WaggonProcessInfo implements Serializable {
 		return (waggonState.equals(WaggonState.REPAIR_WAGGON) && repaired);
 	}
 
+	@JsonIgnore
 	public boolean isUsable() {
 		return waggonState.isUsable();
 	}

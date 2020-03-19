@@ -127,11 +127,10 @@ public class DepartTrainProcessConstants {
 	// ####################################### message catchers
 	// ##############################################################################
 	
-	public static final String CATCH_MSG_WG_REPAIRED = "CATCH_MSG_WG_REPAIRED";
 	public static final String CATCH_MSG_SH_DONE = "CATCH_MSG_SH_DONE";
 	public static final String CATCH_MSG_START_REPAIR = "CATCH_MSG_START_REPAIR";
 	public static final String CATCH_MSG_REP_WAGG_ARRIVED = "CATCH_MSG_REP_WAGG_ARRIVED";
-	public static final String CATCH_MSG_WAGGON_REPAIRED = "CATCH_MSG_WAGGON_REPAIRED";
+	public static final String CATCH_MSG_WG_ASSUMED = "CATCH_MSG_WG_ASSUMED";
 	
 	// ##############################################################################
 	// ####################################### elements
