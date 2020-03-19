@@ -49,7 +49,7 @@ public class BpmTestCase {
 			}
 			taskList = queryBk.list();
 		} else {
-			// do not regard business key...
+			// do not regard business key..
 			TaskQuery queryNoBk = taskService().createTaskQuery().taskDefinitionKey(taskName);
 			if (role != null) {
 				queryNoBk.taskAssignee(role);
