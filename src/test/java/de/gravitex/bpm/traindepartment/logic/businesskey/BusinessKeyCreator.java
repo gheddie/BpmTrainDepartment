@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 
@@ -30,8 +31,8 @@ public abstract class BusinessKeyCreator {
 
 	public String generate(HashMap<String, Object> additionalValues, String parentBusinessKey) {
 		this.additionalValues = additionalValues;
-		String businessKey = processDefinitionKey + DIVIDER + String.valueOf(System.currentTimeMillis()) + DIVIDER
-				+ String.valueOf(random.nextInt(1000)) + DIVIDER
+		String businessKey = processDefinitionKey + DIVIDER + UUID.randomUUID() + DIVIDER
+				// + String.valueOf(random.nextInt(1000)) + DIVIDER
 				+ (parentBusinessKey != null ? parentBusinessKey.replaceAll(DIVIDER, SUB_DIVIDER) : "0");
 		return businessKey;
 	}
@@ -45,11 +46,11 @@ public abstract class BusinessKeyCreator {
 	}
 
 	public static String getParentBusinessKey(String businessKey) {
-		return businessKey.split(BusinessKeyCreator.DIVIDER)[3];
+		return businessKey.split(BusinessKeyCreator.DIVIDER)[2];
 	}
 
 	public static String getAdditionalKey(String businessKey) {
-		return businessKey.split(BusinessKeyCreator.DIVIDER)[4];
+		return businessKey.split(BusinessKeyCreator.DIVIDER)[3];
 	}
 
 	public static ProcessInstance resolveProcessInstance(List<ProcessInstance> processInstances, String aProcessDefinitionKey,

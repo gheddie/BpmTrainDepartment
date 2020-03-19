@@ -97,6 +97,9 @@ public class DepartTrainProcessConstants {
 	// process to able to call back to master
 	public static final String VAR_DEP_PROC_BK = "VAR_DEP_PROC_BK";
 	
+	// assumed reapair deadline base on waggon repair assumption
+	public static final String VAR_TIMER_EXCEEDED_REPAIR_TIME = "VAR_TIMER_EXCEEDED_REPAIR_TIME";
+	
 	// ##############################################################################
 	// ####################################### messages
 	// ##############################################################################
