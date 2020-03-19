@@ -71,7 +71,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		// we have 4 facility processes, so 4 assumement tasks..
 		assertEquals(4, ensureProcessInstanceCount(DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY));
 		
-		ensureTaskCountPresent(DepartTrainProcessConstants.TASK_ASSUME_REPAIR_TIME, null,
+		ensureTaskCountPresent(null, DepartTrainProcessConstants.TASK_ASSUME_REPAIR_TIME,
 				DepartTrainProcessConstants.ROLE_REPAIR_DUDE, 4);
 
 		// assume a waggon (for all 4 waggons)
@@ -81,8 +81,8 @@ public class DepartTrainTestCase extends BpmTestCase {
 		assumeWaggonRepair(processInstance, "W4", 3);
 
 		// 4 evaluations to be done...
-		List<Task> evaluationTasks = ensureTaskCountPresent(DepartTrainProcessConstants.TASK_EVALUATE_WAGGON,
-				processInstance, DepartTrainProcessConstants.ROLE_SUPERVISOR, 4);
+		List<Task> evaluationTasks = ensureTaskCountPresent(processInstance,
+				DepartTrainProcessConstants.TASK_EVALUATE_WAGGON, DepartTrainProcessConstants.ROLE_SUPERVISOR, 4);
 
 		// 4 facility processes are waiting at 'CATCH_MSG_START_REPAIR'...
 		List<ProcessInstance> facilityProcessesInstances = getProcessesInstances(
@@ -96,10 +96,10 @@ public class DepartTrainTestCase extends BpmTestCase {
 		HashMap<String, String> evaluationTaskMapppings = getWaggonNumberToTaskIdMapping(evaluationTasks,
 				DepartTrainProcessConstants.VAR_ASSUMED_WAGGON, processEngine);
 
-		processWaggonEvaluation("W1", evaluationTaskMapppings, WaggonState.REPAIR_WAGGON);
-		processWaggonEvaluation("W2", evaluationTaskMapppings, WaggonState.REPAIR_WAGGON);
-		processWaggonEvaluation("W3", evaluationTaskMapppings, WaggonState.REPLACE_WAGGON);
-		processWaggonEvaluation("W4", evaluationTaskMapppings, WaggonState.REPLACE_WAGGON);
+		evaluateWaggonRepair("W1", evaluationTaskMapppings, WaggonState.REPAIR_WAGGON);
+		evaluateWaggonRepair("W2", evaluationTaskMapppings, WaggonState.REPAIR_WAGGON);
+		evaluateWaggonRepair("W3", evaluationTaskMapppings, WaggonState.REPLACE_WAGGON);
+		evaluateWaggonRepair("W4", evaluationTaskMapppings, WaggonState.REPLACE_WAGGON);
 
 		// (W3+W4) must have been removed from the data model...
 		assertEquals(Arrays.asList(new String[] { "W1", "W2" }),
@@ -109,11 +109,11 @@ public class DepartTrainTestCase extends BpmTestCase {
 				DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPLACEMENT);
 
 		// we have 2 prompt repair task...
-		List<Task> promptRepairTasks = ensureTaskCountPresent(DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPAIR,
-				processInstance, DepartTrainProcessConstants.ROLE_DISPONENT, 2);
+		List<Task> promptRepairTasks = ensureTaskCountPresent(processInstance,
+				DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPAIR, DepartTrainProcessConstants.ROLE_DISPONENT, 2);
 
 		// ...and 2 prompt replacement task
-		ensureTaskCountPresent(DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPLACEMENT, processInstance,
+		ensureTaskCountPresent(processInstance, DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPLACEMENT,
 				DepartTrainProcessConstants.ROLE_DISPONENT, 2);
 
 		// only 2 facility processes are waiting at 'CATCH_MSG_START_REPAIR' (those of
@@ -137,12 +137,12 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 		// we have 2 task of 'TASK_REPAIR_WAGGON' (NOT of this process instance, as we
 		// are the 'master')...
-		ensureTaskCountPresent(DepartTrainProcessConstants.TASK_REPAIR_WAGGON, null, DepartTrainProcessConstants.ROLE_REPAIR_DUDE,
+		ensureTaskCountPresent(null, DepartTrainProcessConstants.TASK_REPAIR_WAGGON, DepartTrainProcessConstants.ROLE_REPAIR_DUDE,
 				2);
 
 		// we prompt replacement for 2 new waggons (W3+W4)..
-		List<Task> promptReplacementTasks = ensureTaskCountPresent(DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPLACEMENT,
-				processInstance, DepartTrainProcessConstants.ROLE_DISPONENT, 2);
+		List<Task> promptReplacementTasks = ensureTaskCountPresent(processInstance,
+				DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPLACEMENT, DepartTrainProcessConstants.ROLE_DISPONENT, 2);
 
 		HashMap<String, String> promptReplacementMappings = getWaggonNumberToTaskIdMapping(promptReplacementTasks,
 				DepartTrainProcessConstants.VAR_PROMPT_REPLACE_WAGGON, processEngine);
@@ -447,7 +447,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void processWaggonEvaluation(String waggonNumber, HashMap<String, String> waggonNumberToTaskIdmapping,
+	private void evaluateWaggonRepair(String waggonNumber, HashMap<String, String> waggonNumberToTaskIdmapping,
 			WaggonState waggonState) {
 		TaskService taskService = processEngine.getTaskService();
 		String taskId = waggonNumberToTaskIdmapping.get(waggonNumber);

@@ -64,7 +64,7 @@ public class BpmTestCase {
 		return task;
 	}
 
-	protected List<Task> ensureTaskCountPresent(String taskName, ProcessInstance processInstance, String role, int taskCount) {
+	protected List<Task> ensureTaskCountPresent(ProcessInstance processInstance, String taskName, String role, int taskCount) {
 		
 		TaskQuery query = taskService().createTaskQuery().taskDefinitionKey(taskName);
 		if (role != null) {
@@ -130,8 +130,8 @@ public class BpmTestCase {
 		assertTrue(RailTestUtil.areListsEqual(expectedBusinessKeys, actualProcessBusinessKeysFromSubscriptions));
 	}
 
-	protected void assertWaitState(ProcessInstance processInstance, String waitState) {
-		assertThat(processInstance).isWaitingAt(waitState);
+	protected void assertWaitStates(ProcessInstance processInstance, String... waitStates) {
+		assertThat(processInstance).isWaitingAt(waitStates);
 	}
 
 	protected Object getProcessVariableByName(String variableName) {

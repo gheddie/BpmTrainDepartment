@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertThat;
 
+import de.gravitex.bpm.traindepartment.enumeration.WaggonState;
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
 import de.gravitex.bpm.traindepartment.runner.EvaluateAllToRepairProcessRunner;
 
@@ -29,11 +30,18 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 
 		ProcessInstance processInstance = processRunner.startDepartureProcess(LocalDateTime.now(), new String[] { "W1", "W2" });
 		
-		assertWaitState(processInstance, DepartTrainProcessConstants.CATCH_MSG_WG_ASSUMED);
-		
+		assertWaitStates(processInstance, DepartTrainProcessConstants.CATCH_MSG_WG_ASSUMED);
+
+		// assume repairs
 		processRunner.assumeWaggonRepair(processInstance, "W1", 12);
 		processRunner.assumeWaggonRepair(processInstance, "W2", 24);
 		
-		ensureTaskCountPresent(DepartTrainProcessConstants.TASK_EVALUATE_WAGGON, processInstance, DepartTrainProcessConstants.ROLE_SUPERVISOR, 2);
+		ensureTaskCountPresent(processInstance, DepartTrainProcessConstants.TASK_EVALUATE_WAGGON, DepartTrainProcessConstants.ROLE_SUPERVISOR, 2);
+		
+		// evaluate repairs
+		processRunner.evaluateWaggonRepair(processInstance, "W1", WaggonState.REPAIR_WAGGON);
+		processRunner.evaluateWaggonRepair(processInstance, "W2", WaggonState.REPAIR_WAGGON);
+		
+		assertWaitStates(processInstance, DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPAIR);
 	}
 }
