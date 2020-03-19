@@ -82,7 +82,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 		// 4 evaluations to be done...
 		List<Task> evaluationTasks = ensureTaskCountPresent(DepartTrainProcessConstants.TASK_EVALUATE_WAGGON,
-				processInstance.getId(), DepartTrainProcessConstants.ROLE_SUPERVISOR, 4);
+				processInstance, DepartTrainProcessConstants.ROLE_SUPERVISOR, 4);
 
 		// 4 facility processes are waiting at 'CATCH_MSG_START_REPAIR'...
 		List<ProcessInstance> facilityProcessesInstances = getProcessesInstances(
@@ -110,10 +110,10 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 		// we have 2 prompt repair task...
 		List<Task> promptRepairTasks = ensureTaskCountPresent(DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPAIR,
-				processInstance.getId(), DepartTrainProcessConstants.ROLE_DISPONENT, 2);
+				processInstance, DepartTrainProcessConstants.ROLE_DISPONENT, 2);
 
 		// ...and 2 prompt replacement task
-		ensureTaskCountPresent(DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPLACEMENT, processInstance.getId(),
+		ensureTaskCountPresent(DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPLACEMENT, processInstance,
 				DepartTrainProcessConstants.ROLE_DISPONENT, 2);
 
 		// only 2 facility processes are waiting at 'CATCH_MSG_START_REPAIR' (those of
@@ -142,7 +142,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 		// we prompt replacement for 2 new waggons (W3+W4)..
 		List<Task> promptReplacementTasks = ensureTaskCountPresent(DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPLACEMENT,
-				processInstance.getId(), DepartTrainProcessConstants.ROLE_DISPONENT, 2);
+				processInstance, DepartTrainProcessConstants.ROLE_DISPONENT, 2);
 
 		HashMap<String, String> promptReplacementMappings = getWaggonNumberToTaskIdMapping(promptReplacementTasks,
 				DepartTrainProcessConstants.VAR_PROMPT_REPLACE_WAGGON, processEngine);

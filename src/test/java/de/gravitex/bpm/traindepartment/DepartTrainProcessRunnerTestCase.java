@@ -34,6 +34,6 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 		processRunner.assumeWaggonRepair(processInstance, "W1", 12);
 		processRunner.assumeWaggonRepair(processInstance, "W2", 24);
 		
-		ensureTaskCountPresent(DepartTrainProcessConstants.TASK_EVALUATE_WAGGON, processInstance.getId(), DepartTrainProcessConstants.ROLE_SUPERVISOR, 2);
+		ensureTaskCountPresent(DepartTrainProcessConstants.TASK_EVALUATE_WAGGON, processInstance, DepartTrainProcessConstants.ROLE_SUPERVISOR, 2);
 	}
 }

@@ -64,14 +64,14 @@ public class BpmTestCase {
 		return task;
 	}
 
-	protected List<Task> ensureTaskCountPresent(String taskName, String processInstanceId, String role, int taskCount) {
+	protected List<Task> ensureTaskCountPresent(String taskName, ProcessInstance processInstance, String role, int taskCount) {
 		
 		TaskQuery query = taskService().createTaskQuery().taskDefinitionKey(taskName);
 		if (role != null) {
 			query.taskAssignee(role);
 		}
-		if (processInstanceId != null) {
-			query.processInstanceId(processInstanceId);
+		if (processInstance != null) {
+			query.processInstanceId(processInstance.getId());
 		}
 		List<Task> taskList = query.list();
 		assertEquals(taskCount, taskList.size());
