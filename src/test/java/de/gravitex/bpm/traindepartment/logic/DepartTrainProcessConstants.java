@@ -112,6 +112,7 @@ public class DepartTrainProcessConstants {
 	public static final String MSG_ABORT_REPAIR = "MSG_ABORT_REPAIR";
 	public static final String MSG_REPL_WAGG_ARRIVED = "MSG_REPL_WAGG_ARRIVED";
 	public static final String MSG_REPAIR_DONE = "MSG_REPAIR_DONE";
+	public static final String MSG_REPAIR_TIME_EXCEEDED = "MSG_REPAIR_TIME_EXCEEDED";
 	
 	// ##############################################################################
 	// ####################################### errors
@@ -146,6 +147,7 @@ public class DepartTrainProcessConstants {
 	// gateways (event)
 	
 	public static final String GW_START_OR_ABORT_REPAIR = "ExGwStartOrAbortRepair";
+	public static final String GW_AWAIT_REPAIR_OUTCOME = "ExGwAwaitRepairOutcome";
 	
 	// ##############################################################################
 	// ####################################### process definitions

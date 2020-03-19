@@ -176,8 +176,8 @@ public class DepartTrainTestCase extends BpmTestCase {
 		// check replacement track...
 		assertTrue(RailwayStationBusinessLogic.getInstance().checkTrackWaggons("TrackReplacement", "W888", "W999"));
 
-		// all prompted --> wait for repairs...
-		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_WAGGON_REPAIRED);
+		// all prompted --> wait for repairs (or exceedements)...
+		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.GW_AWAIT_REPAIR_OUTCOME);
 
 		// assertEquals(2, repairInfos.size());
 		assertEquals(2,
