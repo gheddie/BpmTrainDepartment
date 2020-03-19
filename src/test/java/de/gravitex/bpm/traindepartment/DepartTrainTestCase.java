@@ -132,8 +132,8 @@ public class DepartTrainTestCase extends BpmTestCase {
 		HashMap<String, String> promptRepairMappings = getWaggonNumberToTaskIdMapping(promptRepairTasks,
 				DepartTrainProcessConstants.VAR_PROMPT_REPAIR_WAGGON, processEngine);
 
-		processPromptRepair("W1", promptRepairMappings);
-		processPromptRepair("W2", promptRepairMappings);
+		promptWaggonRepair("W1", promptRepairMappings);
+		promptWaggonRepair("W2", promptRepairMappings);
 
 		// we have 2 task of 'TASK_REPAIR_WAGGON' (NOT of this process instance, as we
 		// are the 'master')...
@@ -147,8 +147,8 @@ public class DepartTrainTestCase extends BpmTestCase {
 		HashMap<String, String> promptReplacementMappings = getWaggonNumberToTaskIdMapping(promptReplacementTasks,
 				DepartTrainProcessConstants.VAR_PROMPT_REPLACE_WAGGON, processEngine);
 
-		processPromptReplacement("W3", promptReplacementMappings);
-		processPromptReplacement("W4", promptReplacementMappings);
+		promptWaggonReplacement("W3", promptReplacementMappings);
+		promptWaggonReplacement("W4", promptReplacementMappings);
 
 		// waiting for replacement
 		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_REP_WAGG_ARRIVED);
@@ -187,11 +187,11 @@ public class DepartTrainTestCase extends BpmTestCase {
 						DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA))
 								.getWaggonsByEvaluationResult(WaggonState.REPAIR_WAGGON).size());
 
-		processWaggonRepair("W1", processInstance);
+		finishWaggonRepair("W1", processInstance);
 		// we have 1 repaired waggon...
 		assertEquals(1, getRepairedWaggonCount(processInstance));
 
-		processWaggonRepair("W2", processInstance);
+		finishWaggonRepair("W2", processInstance);
 		// we have 2 repaired waggons...
 		assertEquals(2, getRepairedWaggonCount(processInstance));
 
@@ -383,7 +383,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		 */
 	}
 	
-	private void processWaggonRepair(String waggonNumber, ProcessInstance parentInstance) {
+	private void finishWaggonRepair(String waggonNumber, ProcessInstance parentInstance) {
 		Task processRepairTask = getRepairFacilityProcessTask(waggonNumber, DepartTrainProcessConstants.TASK_REPAIR_WAGGON,
 				parentInstance);
 		processEngine.getTaskService().complete(processRepairTask.getId());
@@ -418,11 +418,11 @@ public class DepartTrainTestCase extends BpmTestCase {
 				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_ROLLOUT_CONFIRMED, doRollOut).build());
 	}
 
-	private void processPromptReplacement(String waggonNumber, HashMap<String, String> promptReplacementMappings) {
+	private void promptWaggonReplacement(String waggonNumber, HashMap<String, String> promptReplacementMappings) {
 		processEngine.getTaskService().complete(promptReplacementMappings.get(waggonNumber));
 	}
 
-	private void processPromptRepair(String waggonNumber, HashMap<String, String> promptRepairMappings) {
+	private void promptWaggonRepair(String waggonNumber, HashMap<String, String> promptRepairMappings) {
 		processEngine.getTaskService().complete(promptRepairMappings.get(waggonNumber));
 	}
 

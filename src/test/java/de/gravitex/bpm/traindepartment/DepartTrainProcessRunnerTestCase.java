@@ -24,7 +24,9 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 	public void testProcessRunner() {
 
 		EvaluateAllToRepairProcessRunner processRunner = new EvaluateAllToRepairProcessRunner(processEngine);
+		
 		processRunner.clear();
+		
 		processRunner.withTracks("Track1@true", "TrackExit@true", "TrackReplacement").withWaggons("Track1", "W1@C1#N1", "W2@C1",
 				"W3@C1", "W4@C1", "W5");
 
@@ -43,5 +45,13 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 		processRunner.evaluateWaggonRepair(processInstance, "W2", WaggonState.REPAIR_WAGGON);
 		
 		assertWaitStates(processInstance, DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPAIR);
+		
+		// prompt repairs
+		processRunner.promptWaggonRepair(processInstance, "W1");
+		processRunner.promptWaggonRepair(processInstance, "W2");
+		
+		// finish WaggonRepairs
+		// processRunner.finishWaggonRepair(processInstance, "W1");
+		// processRunner.finishWaggonRepair(processInstance, "W2");
 	}
 }
