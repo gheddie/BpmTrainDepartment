@@ -3,14 +3,9 @@ package de.gravitex.bpm.traindepartment.runner.base;
 import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 
-import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.ProcessEngineServices;
-import org.camunda.bpm.engine.TaskService;
-import org.camunda.bpm.engine.repository.CaseDefinition;
-import org.camunda.bpm.engine.runtime.Execution;
 import org.camunda.bpm.engine.runtime.Job;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
@@ -20,7 +15,7 @@ import de.gravitex.bpm.traindepartment.enumeration.WaggonState;
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
 import de.gravitex.bpm.traindepartment.logic.DepartmentProcessData;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
-import de.gravitex.bpm.traindepartment.logic.WaggonProcessInfo;
+import de.gravitex.bpm.traindepartment.runner.taskmapping.TaskMapper;
 import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
 import lombok.Data;
 
@@ -67,22 +62,14 @@ public abstract class DepartmentProcessRunner extends ProcessRunner {
 
 	@SuppressWarnings("unchecked")
 	public void evaluateWaggonRepair(ProcessInstance processInstance, String waggonNumber, WaggonState waggonState) {
-		TaskService taskService = getProcessEngine().getTaskService();
-		List<Task> evaluationTasks = getProcessEngine().getTaskService().createTaskQuery()
-				.taskDefinitionKey(DepartTrainProcessConstants.TASK_EVALUATE_WAGGON).processInstanceId(processInstance.getId())
-				.taskAssignee(DepartTrainProcessConstants.ROLE_SUPERVISOR).list();
-		String taskId = getWaggonNumberToTaskIdMapping(evaluationTasks, DepartTrainProcessConstants.VAR_ASSUMED_WAGGON,
-				getProcessEngine()).get(waggonNumber);
-		taskService.complete(taskId, HashMapBuilder.create()
+		String taskId = TaskMapper.map(DepartTrainProcessConstants.TASK_EVALUATE_WAGGON, processInstance, waggonNumber, getProcessEngine());
+		getProcessEngine().getTaskService().complete(taskId, HashMapBuilder.create()
 				.withValuePair(DepartTrainProcessConstants.VAR_WAGGON_EVALUATION_RESULT, waggonState).build());
 	}
 
 	public void promptWaggonRepair(ProcessInstance processInstance, String waggonNumber) {
-		List<Task> promptRepairTasks = getProcessEngine().getTaskService().createTaskQuery()
-				.taskDefinitionKey(DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPAIR)
-				.processInstanceId(processInstance.getId()).taskAssignee(DepartTrainProcessConstants.ROLE_DISPONENT).list();
-		getProcessEngine().getTaskService().complete(getWaggonNumberToTaskIdMapping(promptRepairTasks,
-				DepartTrainProcessConstants.VAR_PROMPT_REPAIR_WAGGON, getProcessEngine()).get(waggonNumber));
+		String taskId = TaskMapper.map(DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPAIR, processInstance, waggonNumber, getProcessEngine());
+		getProcessEngine().getTaskService().complete(taskId);
 	}
 
 	public void finishWaggonRepair(ProcessInstance processInstance, String waggonNumber) {
@@ -111,20 +98,5 @@ public abstract class DepartmentProcessRunner extends ProcessRunner {
 		ProcessInstance instance = RailwayStationBusinessLogic.getInstance().resolveProcessInstance(getProcessInstances(),
 				DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY, waggonNumber, parentInstance);
 		return instance;
-	}
-
-	@SuppressWarnings("unchecked")
-	protected HashMap<String, String> getWaggonNumberToTaskIdMapping(List<Task> tasks, String waggonRepairInfoVariable,
-			ProcessEngineServices processEngine) {
-		String waggonNumber = null;
-		HashMapBuilder<String, String> builder = HashMapBuilder.create();
-		if (waggonRepairInfoVariable != null) {
-			for (Task task : tasks) {
-				waggonNumber = ((WaggonProcessInfo) processEngine.getTaskService().getVariable(task.getId(),
-						waggonRepairInfoVariable)).getWaggonNumber();
-				builder.withValuePair(waggonNumber, task.getId());
-			}
-		}
-		return builder.build();
 	}
 }
