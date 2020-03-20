@@ -56,7 +56,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 		RailwayStationBusinessLogic.getInstance().reset();
 
-		// prepare test data
+		// prepare test data...
 		RailwayStationBusinessLogic.getInstance().withTracks("Track1@true", "TrackExit@true", "TrackReplacement")
 				.withWaggons("Track1", "W1@C1#N1", "W2@C1", "W3@C1", "W4@C1", "W5")
 				.withRoles(DepartTrainProcessConstants.ROLE_DISPONENT, DepartTrainProcessConstants.ROLE_SHUNTER,
