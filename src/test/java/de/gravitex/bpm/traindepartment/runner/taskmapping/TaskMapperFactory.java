@@ -21,7 +21,7 @@ public class TaskMapperFactory {
 	// TODO cache it!!
 	private static HashMap<TaskMappingType, HashMap<String, String>> taskMappings = new HashMap<TaskMappingType, HashMap<String,String>>();
 
-	public static String map(TaskMappingType taskMappingType, ProcessInstance processInstance, String waggonNumber,
+	public static String mapWaggonNumberToTaskId(TaskMappingType taskMappingType, ProcessInstance processInstance, String waggonNumber,
 			ProcessEngineServices processEngine) {
 		if (taskMappings.get(taskMappingType) == null) {
 			TaskMapper taskMapper = taskMappers.get(taskMappingType);
