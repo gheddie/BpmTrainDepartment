@@ -17,27 +17,21 @@ public class TaskMapper {
 			ProcessEngineServices processEngine) {
 		switch (taskName) {
 		case DepartTrainProcessConstants.TASK_EVALUATE_WAGGON:
-			return evaluate(processInstance, waggonNumber, processEngine);
+			return mapIntern(processEngine, processInstance, DepartTrainProcessConstants.TASK_EVALUATE_WAGGON,
+					DepartTrainProcessConstants.ROLE_SUPERVISOR, DepartTrainProcessConstants.VAR_ASSUMED_WAGGON, waggonNumber);
 		case DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPAIR:
-			return prompt(processInstance, waggonNumber, processEngine);
+			return mapIntern(processEngine, processInstance, DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPAIR,
+					DepartTrainProcessConstants.ROLE_DISPONENT, DepartTrainProcessConstants.VAR_PROMPT_REPAIR_WAGGON,
+					waggonNumber);
 		}
 		return null;
 	}
 
-	private static String evaluate(ProcessInstance processInstance, String waggonNumber, ProcessEngineServices processEngine) {
-		String taskId = getWaggonNumberToTaskIdMapping(processEngine.getTaskService().createTaskQuery()
-				.taskDefinitionKey(DepartTrainProcessConstants.TASK_EVALUATE_WAGGON).processInstanceId(processInstance.getId())
-				.taskAssignee(DepartTrainProcessConstants.ROLE_SUPERVISOR).list(), DepartTrainProcessConstants.VAR_ASSUMED_WAGGON,
+	private static String mapIntern(ProcessEngineServices processEngine, ProcessInstance processInstance, String taskName,
+			String role, String variableName, String waggonNumber) {
+		return getWaggonNumberToTaskIdMapping(processEngine.getTaskService().createTaskQuery()
+				.taskDefinitionKey(taskName).processInstanceId(processInstance.getId()).taskAssignee(role).list(), variableName,
 				processEngine).get(waggonNumber);
-		return taskId;
-	}
-
-	private static String prompt(ProcessInstance processInstance, String waggonNumber, ProcessEngineServices processEngine) {
-		String taskId = getWaggonNumberToTaskIdMapping(processEngine.getTaskService().createTaskQuery()
-				.taskDefinitionKey(DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPAIR)
-				.processInstanceId(processInstance.getId()).taskAssignee(DepartTrainProcessConstants.ROLE_DISPONENT).list(),
-				DepartTrainProcessConstants.VAR_PROMPT_REPAIR_WAGGON, processEngine).get(waggonNumber);
-		return taskId;
 	}
 
 	@SuppressWarnings("unchecked")
