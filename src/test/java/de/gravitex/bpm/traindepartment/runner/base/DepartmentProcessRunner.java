@@ -15,7 +15,8 @@ import de.gravitex.bpm.traindepartment.enumeration.WaggonState;
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
 import de.gravitex.bpm.traindepartment.logic.DepartmentProcessData;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
-import de.gravitex.bpm.traindepartment.runner.taskmapping.TaskMapper;
+import de.gravitex.bpm.traindepartment.runner.taskmapping.TaskMapperFactory;
+import de.gravitex.bpm.traindepartment.runner.taskmapping.TaskMappingType;
 import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
 import lombok.Data;
 
@@ -62,13 +63,14 @@ public abstract class DepartmentProcessRunner extends ProcessRunner {
 
 	@SuppressWarnings("unchecked")
 	public void evaluateWaggonRepair(ProcessInstance processInstance, String waggonNumber, WaggonState waggonState) {
-		String taskId = TaskMapper.map(DepartTrainProcessConstants.TASK_EVALUATE_WAGGON, processInstance, waggonNumber, getProcessEngine());
+		String taskId = TaskMapperFactory.map(TaskMappingType.EVAULATE_WAGGON, processInstance, waggonNumber, getProcessEngine());
 		getProcessEngine().getTaskService().complete(taskId, HashMapBuilder.create()
 				.withValuePair(DepartTrainProcessConstants.VAR_WAGGON_EVALUATION_RESULT, waggonState).build());
 	}
 
 	public void promptWaggonRepair(ProcessInstance processInstance, String waggonNumber) {
-		String taskId = TaskMapper.map(DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPAIR, processInstance, waggonNumber, getProcessEngine());
+		String taskId = TaskMapperFactory.map(TaskMappingType.PROMPT_WAGGON_REPAIR, processInstance, waggonNumber,
+				getProcessEngine());
 		getProcessEngine().getTaskService().complete(taskId);
 	}
 
