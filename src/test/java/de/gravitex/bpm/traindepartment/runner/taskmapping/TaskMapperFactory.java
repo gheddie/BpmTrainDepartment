@@ -12,7 +12,7 @@ import de.gravitex.bpm.traindepartment.logic.WaggonProcessInfo;
 import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
 
 public class TaskMapperFactory {
-	
+
 	private static HashMap<TaskMappingType, TaskMapper> taskMappers = new HashMap<TaskMappingType, TaskMapper>();
 	static {
 		taskMappers.put(TaskMappingType.EVAULATE_WAGGON, new EvaluateWaggonTaskMapper());
@@ -21,23 +21,15 @@ public class TaskMapperFactory {
 
 	public static String map(TaskMappingType taskMappingType, ProcessInstance processInstance, String waggonNumber,
 			ProcessEngineServices processEngine) {
-		switch (taskMappingType) {
-		case EVAULATE_WAGGON:
-			return mapIntern(processEngine, processInstance, DepartTrainProcessConstants.TASK_EVALUATE_WAGGON,
-					DepartTrainProcessConstants.ROLE_SUPERVISOR, DepartTrainProcessConstants.VAR_ASSUMED_WAGGON, waggonNumber);
-		case PROMPT_WAGGON_REPAIR:
-			return mapIntern(processEngine, processInstance, DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPAIR,
-					DepartTrainProcessConstants.ROLE_DISPONENT, DepartTrainProcessConstants.VAR_PROMPT_REPAIR_WAGGON,
-					waggonNumber);
-		}
-		return null;
+		return mapIntern(processEngine, processInstance, taskMappers.get(taskMappingType), waggonNumber);
 	}
 
-	private static String mapIntern(ProcessEngineServices processEngine, ProcessInstance processInstance, String taskName,
-			String role, String variableName, String waggonNumber) {
-		return getWaggonNumberToTaskIdMapping(processEngine.getTaskService().createTaskQuery()
-				.taskDefinitionKey(taskName).processInstanceId(processInstance.getId()).taskAssignee(role).list(), variableName,
-				processEngine).get(waggonNumber);
+	private static String mapIntern(ProcessEngineServices processEngine, ProcessInstance processInstance, TaskMapper taskMapper,
+			String waggonNumber) {
+		return getWaggonNumberToTaskIdMapping(
+				processEngine.getTaskService().createTaskQuery().taskDefinitionKey(taskMapper.getTaskName())
+						.processInstanceId(processInstance.getId()).taskAssignee(taskMapper.getRole()).list(),
+				taskMapper.getVariableName(), processEngine).get(waggonNumber);
 	}
 
 	@SuppressWarnings("unchecked")
