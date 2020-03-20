@@ -63,15 +63,16 @@ public abstract class DepartmentProcessRunner extends ProcessRunner {
 
 	@SuppressWarnings("unchecked")
 	public void evaluateWaggonRepair(ProcessInstance processInstance, String waggonNumber, WaggonState waggonState) {
-		String taskId = TaskMapperFactory.mapWaggonNumberToTaskId(TaskMappingType.EVAULATE_WAGGON, processInstance, waggonNumber, getProcessEngine());
-		getProcessEngine().getTaskService().complete(taskId, HashMapBuilder.create()
-				.withValuePair(DepartTrainProcessConstants.VAR_WAGGON_EVALUATION_RESULT, waggonState).build());
+		getProcessEngine().getTaskService().complete(
+				TaskMapperFactory.mapWaggonNumberToTaskId(TaskMappingType.EVAULATE_WAGGON, processInstance, waggonNumber,
+						getProcessEngine()),
+				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_WAGGON_EVALUATION_RESULT, waggonState)
+						.build());
 	}
 
 	public void promptWaggonRepair(ProcessInstance processInstance, String waggonNumber) {
-		String taskId = TaskMapperFactory.mapWaggonNumberToTaskId(TaskMappingType.PROMPT_WAGGON_REPAIR, processInstance, waggonNumber,
-				getProcessEngine());
-		getProcessEngine().getTaskService().complete(taskId);
+		getProcessEngine().getTaskService().complete(TaskMapperFactory.mapWaggonNumberToTaskId(
+				TaskMappingType.PROMPT_WAGGON_REPAIR, processInstance, waggonNumber, getProcessEngine()));
 	}
 
 	public void finishWaggonRepair(ProcessInstance processInstance, String waggonNumber) {
