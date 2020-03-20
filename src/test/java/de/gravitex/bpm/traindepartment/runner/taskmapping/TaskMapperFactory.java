@@ -7,7 +7,6 @@ import org.camunda.bpm.engine.ProcessEngineServices;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
 
-import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
 import de.gravitex.bpm.traindepartment.logic.WaggonProcessInfo;
 import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
 
@@ -21,11 +20,7 @@ public class TaskMapperFactory {
 
 	public static String map(TaskMappingType taskMappingType, ProcessInstance processInstance, String waggonNumber,
 			ProcessEngineServices processEngine) {
-		return mapIntern(processEngine, processInstance, taskMappers.get(taskMappingType), waggonNumber);
-	}
-
-	private static String mapIntern(ProcessEngineServices processEngine, ProcessInstance processInstance, TaskMapper taskMapper,
-			String waggonNumber) {
+		TaskMapper taskMapper = taskMappers.get(taskMappingType);
 		return getWaggonNumberToTaskIdMapping(
 				processEngine.getTaskService().createTaskQuery().taskDefinitionKey(taskMapper.getTaskName())
 						.processInstanceId(processInstance.getId()).taskAssignee(taskMapper.getRole()).list(),
