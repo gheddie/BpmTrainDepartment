@@ -9,7 +9,6 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
 import de.gravitex.bpm.traindepartment.logic.DepartmentProcessData;
 import de.gravitex.bpm.traindepartment.logic.WaggonProcessInfo;
-import de.gravitex.bpm.traindepartment.util.RailTestUtil;
 
 public class AllAssumementsDoneDelegate implements JavaDelegate {
 

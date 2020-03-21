@@ -89,6 +89,17 @@ public abstract class DepartmentProcessRunner extends ProcessRunner {
 		getProcessEngine().getManagementService().executeJob(jobs.get(0).getId());
 	}
 
+	public void promptRepairWaggonReplacement(ProcessInstance processInstance, String waggonNumber) {
+		List<Task> promptRepairWaggonReplacementTasks = getProcessEngine().getTaskService().createTaskQuery().processInstanceId(processInstance.getId())
+				.taskDefinitionKey(DepartTrainProcessConstants.TASK_PROMPT_REPAIR_WAGGON_REPLACEMENT).list();
+		assertEquals(1, promptRepairWaggonReplacementTasks.size());
+		getProcessEngine().getTaskService().complete(promptRepairWaggonReplacementTasks.get(0).getId());
+	}
+	
+	public void deliverRepairReplacementWaggon(ProcessInstance processInstance, String WaggonNumber) {
+		getProcessEngine().getRuntimeService().correlateMessage(DepartTrainProcessConstants.MSG_REP_REPLACE_ARR);
+	}
+
 	private Task getRepairFacilityProcessTask(String waggonNumber, String taskDefinitionKey, ProcessInstance processInstance) {
 		ProcessInstance instance = resolveRepairFacilityProcessForWaggonNumber(waggonNumber, processInstance);
 		List<Task> tasksAssumeRepairTime = getProcessEngine().getTaskService().createTaskQuery()

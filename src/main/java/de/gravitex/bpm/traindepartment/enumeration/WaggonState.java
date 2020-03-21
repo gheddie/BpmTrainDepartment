@@ -12,7 +12,9 @@ public enum WaggonState {
 	REPLACE_WAGGON(false),
 	
 	// delivered as a replacement
-	WAS_REPLACED(true);
+	WAGGON_REPLACED(true),
+	
+	REPAIR_TIMEOUT(false);
 	
 	private boolean usable;
 	

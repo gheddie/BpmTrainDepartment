@@ -22,14 +22,13 @@ import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.runtime.VariableInstance;
 import org.camunda.bpm.engine.task.Task;
 import org.camunda.bpm.engine.task.TaskQuery;
-import org.camunda.bpm.engine.test.ProcessEngineRule;
 
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
 import de.gravitex.bpm.traindepartment.logic.DepartmentProcessData;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
 import de.gravitex.bpm.traindepartment.logic.WaggonProcessInfo;
 import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
-import de.gravitex.bpm.traindepartment.util.RailTestUtil;
+import de.gravitex.bpm.traindepartment.util.RailUtil;
 
 public class BpmTestCase {
 
@@ -127,7 +126,7 @@ public class BpmTestCase {
 			;
 		}
 		// business keys must match here...
-		assertTrue(RailTestUtil.areListsEqual(expectedBusinessKeys, actualProcessBusinessKeysFromSubscriptions));
+		assertTrue(RailUtil.areListsEqual(expectedBusinessKeys, actualProcessBusinessKeysFromSubscriptions));
 	}
 
 	protected void assertWaitStates(ProcessInstance processInstance, String... waitStates) {
@@ -239,7 +238,7 @@ public class BpmTestCase {
 			}
 		}
 		// requested waggons must be equal to all waggons in the system...
-		assertTrue(RailTestUtil.areListsEqual(requestedWaggons, RailwayStationBusinessLogic.getInstance().getAllWaggonNumbers()));
+		assertTrue(RailUtil.areListsEqual(requestedWaggons, RailwayStationBusinessLogic.getInstance().getAllWaggonNumbers()));
 	}
 
 	private void assertTrackOccupancy(String trackOccupancy) {

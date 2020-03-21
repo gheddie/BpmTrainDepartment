@@ -12,7 +12,6 @@ import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
 
 public class CreateDepartingOrderDelegate extends TrainDepartmentJavaDelegate {
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void execute(DelegateExecution execution) {
 		

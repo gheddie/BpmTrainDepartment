@@ -7,7 +7,7 @@ import java.util.List;
 import de.gravitex.bpm.traindepartment.entity.Track;
 import de.gravitex.bpm.traindepartment.entity.Waggon;
 
-public class RailTestUtil {
+public class RailUtil {
 
 	public static HashMap<String, Waggon> hashWaggons(List<Waggon> waggons) {
 		HashMap<String, Waggon> hashedWaggons = new HashMap<String, Waggon>();

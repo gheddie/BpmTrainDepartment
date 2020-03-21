@@ -18,21 +18,14 @@ public class TaskMapperFactory {
 		taskMappers.put(TaskMappingType.PROMPT_WAGGON_REPAIR, new PromptWaggonRepairTaskMapper());
 	}
 	
-	// TODO cache it!!
-	private static HashMap<TaskMappingType, HashMap<String, String>> taskMappings = new HashMap<TaskMappingType, HashMap<String,String>>();
-
 	public static String mapWaggonNumberToTaskId(TaskMappingType taskMappingType, ProcessInstance processInstance, String waggonNumber,
 			ProcessEngineServices processEngine) {
-		if (taskMappings.get(taskMappingType) == null) {
-			TaskMapper taskMapper = taskMappers.get(taskMappingType);
-			HashMap<String, String> waggonNumberToTaskIdMapping = getWaggonNumberToTaskIdMapping(
-					processEngine.getTaskService().createTaskQuery().taskDefinitionKey(taskMapper.getTaskName())
-							.processInstanceId(processInstance.getId()).taskAssignee(taskMapper.getRole()).list(),
-					taskMapper.getVariableName(), processEngine);
-			taskMappings.put(taskMappingType, waggonNumberToTaskIdMapping);
-		}
-		return taskMappings.get(taskMappingType).get(waggonNumber);
-
+		TaskMapper taskMapper = taskMappers.get(taskMappingType);
+		HashMap<String, String> waggonNumberToTaskIdMapping = getWaggonNumberToTaskIdMapping(
+				processEngine.getTaskService().createTaskQuery().taskDefinitionKey(taskMapper.getTaskName())
+						.processInstanceId(processInstance.getId()).taskAssignee(taskMapper.getRole()).list(),
+				taskMapper.getVariableName(), processEngine);
+		return waggonNumberToTaskIdMapping.get(waggonNumber);
 	}
 
 	@SuppressWarnings("unchecked")
