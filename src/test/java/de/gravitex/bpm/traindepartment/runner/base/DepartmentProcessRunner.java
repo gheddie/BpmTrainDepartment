@@ -63,14 +63,15 @@ public abstract class DepartmentProcessRunner extends ProcessRunner {
 
 	@SuppressWarnings("unchecked")
 	public void evaluateWaggonRepair(ProcessInstance processInstance, String waggonNumber, WaggonState waggonState) {
-		String taskId = TaskMapperFactory.mapWaggonNumberToTaskId(TaskMappingType.EVAULATE_WAGGON, processInstance, waggonNumber, getProcessEngine());
+		String taskId = TaskMapperFactory.mapWaggonNumberToTaskId(TaskMappingType.EVAULATE_WAGGON, processInstance, waggonNumber,
+				getProcessEngine());
 		getProcessEngine().getTaskService().complete(taskId, HashMapBuilder.create()
 				.withValuePair(DepartTrainProcessConstants.VAR_WAGGON_EVALUATION_RESULT, waggonState).build());
 	}
 
 	public void promptWaggonRepair(ProcessInstance processInstance, String waggonNumber) {
-		String taskId = TaskMapperFactory.mapWaggonNumberToTaskId(TaskMappingType.PROMPT_WAGGON_REPAIR, processInstance, waggonNumber,
-				getProcessEngine());
+		String taskId = TaskMapperFactory.mapWaggonNumberToTaskId(TaskMappingType.PROMPT_WAGGON_REPAIR, processInstance,
+				waggonNumber, getProcessEngine());
 		getProcessEngine().getTaskService().complete(taskId);
 	}
 
@@ -86,6 +87,17 @@ public abstract class DepartmentProcessRunner extends ProcessRunner {
 				.timers().list();
 		assertEquals(1, jobs.size());
 		getProcessEngine().getManagementService().executeJob(jobs.get(0).getId());
+	}
+
+	public void promptRepairWaggonReplacement(ProcessInstance processInstance, String waggonNumber) {
+		List<Task> promptRepairWaggonReplacementTasks = getProcessEngine().getTaskService().createTaskQuery().processInstanceId(processInstance.getId())
+				.taskDefinitionKey(DepartTrainProcessConstants.TASK_PROMPT_REPAIR_WAGGON_REPLACEMENT).list();
+		assertEquals(1, promptRepairWaggonReplacementTasks.size());
+		getProcessEngine().getTaskService().complete(promptRepairWaggonReplacementTasks.get(0).getId());
+	}
+	
+	public void deliverRepairReplacementWaggon(ProcessInstance processInstance, String WaggonNumber) {
+		getProcessEngine().getRuntimeService().correlateMessage(DepartTrainProcessConstants.MSG_REP_REPLACE_ARR);
 	}
 
 	private Task getRepairFacilityProcessTask(String waggonNumber, String taskDefinitionKey, ProcessInstance processInstance) {
