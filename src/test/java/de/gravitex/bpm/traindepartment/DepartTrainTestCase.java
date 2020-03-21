@@ -47,7 +47,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 	@Test
 	@Deployment(resources = { "departTrainProcess.bpmn" })
 	public void testDeployment() {
-		// ...
+		// ..
 	}
 
 	@Test
