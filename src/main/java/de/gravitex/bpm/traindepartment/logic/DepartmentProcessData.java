@@ -5,12 +5,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import org.assertj.core.util.Arrays;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import de.gravitex.bpm.traindepartment.enumeration.WaggonState;
-import de.gravitex.bpm.traindepartment.util.RailTestUtil;
 import lombok.Data;
 
 @Data
