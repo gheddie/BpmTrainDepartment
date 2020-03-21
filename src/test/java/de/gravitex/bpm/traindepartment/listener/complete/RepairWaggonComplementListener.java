@@ -12,13 +12,9 @@ public class RepairWaggonComplementListener implements TaskListener {
 	public void notify(DelegateTask delegateTask) {
 		String parentInstanceBusinessKey = (String) delegateTask.getProcessEngine().getRuntimeService()
 				.getVariable(delegateTask.getExecutionId(), DepartTrainProcessConstants.VAR_DEP_PROC_BK);
-
 		// the actually repaired waggon
 		String repairedWaggon = (String) delegateTask.getProcessEngine().getRuntimeService()
 				.getVariable(delegateTask.getExecution().getId(), DepartTrainProcessConstants.VAR_SINGLE_FACILITY_PROCESS_WAGGON);
-
-		int werner = 5;
-		
 		delegateTask.getProcessEngine().getRuntimeService().correlateMessage(DepartTrainProcessConstants.MSG_REPAIR_DONE,
 				parentInstanceBusinessKey, HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_REPAIRED_WAGGON, repairedWaggon).build());
 	}
