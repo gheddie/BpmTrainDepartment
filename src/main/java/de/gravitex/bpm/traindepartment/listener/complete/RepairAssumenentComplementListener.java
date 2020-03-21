@@ -8,6 +8,7 @@ import java.time.temporal.TemporalUnit;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
+import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.delegate.DelegateTask;
 import org.camunda.bpm.engine.delegate.TaskListener;
 
@@ -24,15 +25,16 @@ public class RepairAssumenentComplementListener extends TrainDepartmentTaskListe
 	@SuppressWarnings("unchecked")
 	@Override
 	public void notify(DelegateTask delegateTask) {
-		String assumedWaggon = (String) delegateTask.getProcessEngine().getRuntimeService()
+		RuntimeService runtimeService = delegateTask.getProcessEngine().getRuntimeService();
+		String assumedWaggon = (String) runtimeService
 				.getVariable(delegateTask.getExecutionId(), DepartTrainProcessConstants.VAR_SINGLE_FACILITY_PROCESS_WAGGON);
 		logger.info("calling back waggon assumement: " + assumedWaggon);
-		int singleAssumedTime = (int) delegateTask.getProcessEngine().getRuntimeService()
+		int singleAssumedTime = (int) runtimeService
 				.getVariable(delegateTask.getExecutionId(), DepartTrainProcessConstants.VAR_ASSUMED_TIME);
 		WaggonProcessInfo callback = WaggonProcessInfo.fromValues(assumedWaggon, singleAssumedTime,
 				delegateTask.getExecution().getBusinessKey());
-		delegateTask.getProcessEngine().getRuntimeService().correlateMessage(DepartTrainProcessConstants.MSG_REPAIR_ASSUMED,
-				(String) delegateTask.getProcessEngine().getRuntimeService().getVariable(delegateTask.getExecutionId(),
+		runtimeService.correlateMessage(DepartTrainProcessConstants.MSG_REPAIR_ASSUMED,
+				(String) runtimeService.getVariable(delegateTask.getExecutionId(),
 						DepartTrainProcessConstants.VAR_DEP_PROC_BK),
 				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_SINGLE_FACILITY_PROCESS_WAGGON, callback)
 						.build());
@@ -40,7 +42,7 @@ public class RepairAssumenentComplementListener extends TrainDepartmentTaskListe
 		// set repair dead line timer (variable)
 		new Date(Timestamp.valueOf(LocalDateTime.now().plusHours(singleAssumedTime)).getTime());
 		Date repairDeadline = new Date(Timestamp.valueOf(LocalDateTime.now().plusHours(singleAssumedTime)).getTime());
-		delegateTask.getProcessEngine().getRuntimeService().setVariable(delegateTask.getExecution().getId(),
+		runtimeService.setVariable(delegateTask.getExecution().getId(),
 				DepartTrainProcessConstants.VAR_TIMER_EXCEEDED_REPAIR_TIME,
 				repairDeadline);
 	}
