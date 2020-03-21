@@ -115,6 +115,7 @@ public class DepartTrainProcessConstants {
 	public static final String MSG_REPAIR_DONE = "MSG_REPAIR_DONE";
 	public static final String MSG_REPAIR_TIME_EXCEEDED = "MSG_REPAIR_TIME_EXCEEDED";
 	public static final String MSG_REP_REPLACE_ARR = "MSG_REP_REPLACE_ARR";
+	public static final String MSG_SH_DONE = "MSG_SH_DONE";
 	
 	// ##############################################################################
 	// ####################################### errors
