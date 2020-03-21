@@ -26,9 +26,8 @@ import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
 import de.gravitex.bpm.traindepartment.logic.DepartmentProcessData;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogicException;
-import de.gravitex.bpm.traindepartment.runner.EvaluateAllToRepairProcessRunner;
 import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
-import de.gravitex.bpm.traindepartment.util.RailTestUtil;
+import de.gravitex.bpm.traindepartment.util.RailUtil;
 
 public class DepartTrainTestCase extends BpmTestCase {
 
@@ -162,7 +161,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		deliveredWaggons.add("W2");
 		deliveredWaggons.add("W888");
 		deliveredWaggons.add("W999");
-		assertTrue(RailTestUtil.areListsEqual(deliveredWaggons,
+		assertTrue(RailUtil.areListsEqual(deliveredWaggons,
 				getProcessData(processEngine, processInstance).getUsableWaggonNumbers()));
 
 		Task chooseReplacementTrackTask = ensureSingleTaskPresent(DepartTrainProcessConstants.TASK_CHOOSE_REPLACEMENT_TRACK,

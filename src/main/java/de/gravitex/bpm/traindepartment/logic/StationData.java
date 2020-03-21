@@ -8,7 +8,7 @@ import java.util.List;
 import de.gravitex.bpm.traindepartment.entity.DepartmentOrder;
 import de.gravitex.bpm.traindepartment.entity.Track;
 import de.gravitex.bpm.traindepartment.entity.Waggon;
-import de.gravitex.bpm.traindepartment.util.RailTestUtil;
+import de.gravitex.bpm.traindepartment.util.RailUtil;
 import lombok.Data;
 
 @Data
@@ -20,7 +20,7 @@ public class StationData {
 	private List<Track> tracks = new ArrayList<Track>();
 
 	public boolean allWaggonsPresent(List<String> waggonNumbers) {
-		HashMap<String, Waggon> allWaggons = RailTestUtil.hashWaggons(getAllWaggons());
+		HashMap<String, Waggon> allWaggons = RailUtil.hashWaggons(getAllWaggons());
 		for (String waggonNumber : waggonNumbers) {
 			if (allWaggons.get(waggonNumber) == null) {
 				return false;
@@ -73,7 +73,7 @@ public class StationData {
 	}
 
 	public Track findTrack(String trackNumber) {
-		HashMap<String, Track> hashedTracks = RailTestUtil.hashTracks(tracks);
+		HashMap<String, Track> hashedTracks = RailUtil.hashTracks(tracks);
 		return hashedTracks.get(trackNumber);
 	}
 
@@ -122,7 +122,7 @@ public class StationData {
 	}
 
 	public boolean checkTrackWaggons(String trackNumber, String... waggonNumbers) {
-		return RailTestUtil.areListsEqual(findTrack(trackNumber).getWaggonNumbers(false), Arrays.asList(waggonNumbers));
+		return RailUtil.areListsEqual(findTrack(trackNumber).getWaggonNumbers(false), Arrays.asList(waggonNumbers));
 	}
 
 	public List<Waggon> getTrackWaggons(String trackNumber) {

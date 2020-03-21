@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import de.gravitex.bpm.traindepartment.util.RailTestUtil;
+import de.gravitex.bpm.traindepartment.util.RailUtil;
 import lombok.Data;
 
 @Data
@@ -28,13 +28,13 @@ public class Track extends RailTestEntity<Track> {
 	}
 
 	public void removeWaggon(String waggonNumber) {
-		HashMap<String, Waggon> trackWaggons = RailTestUtil.hashWaggons(waggons);
+		HashMap<String, Waggon> trackWaggons = RailUtil.hashWaggons(waggons);
 		trackWaggons.remove(waggonNumber);
 		waggons = new ArrayList<Waggon>(trackWaggons.values());
 	}
 
 	public Waggon getWaggon(String waggonNumber) {
-		return RailTestUtil.hashWaggons(waggons).get(waggonNumber);
+		return RailUtil.hashWaggons(waggons).get(waggonNumber);
 	}
 
 	@Override
