@@ -7,22 +7,26 @@ import java.time.temporal.TemporalField;
 import java.time.temporal.TemporalUnit;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.camunda.bpm.engine.delegate.DelegateTask;
 import org.camunda.bpm.engine.delegate.TaskListener;
 
+import de.gravitex.bpm.traindepartment.delegate.AllRepairsDoneDelegate;
 import de.gravitex.bpm.traindepartment.listener.base.TrainDepartmentTaskListener;
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
 import de.gravitex.bpm.traindepartment.logic.WaggonProcessInfo;
 import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
 
 public class RepairAssumenentComplementListener extends TrainDepartmentTaskListener {
+	
+	public static final Logger logger = Logger.getLogger(TrainDepartmentTaskListener.class);
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void notify(DelegateTask delegateTask) {
 		String assumedWaggon = (String) delegateTask.getProcessEngine().getRuntimeService()
 				.getVariable(delegateTask.getExecutionId(), DepartTrainProcessConstants.VAR_SINGLE_FACILITY_PROCESS_WAGGON);
-		System.out.println("calling back waggon assumement: " + assumedWaggon);
+		logger.info("calling back waggon assumement: " + assumedWaggon);
 		int singleAssumedTime = (int) delegateTask.getProcessEngine().getRuntimeService()
 				.getVariable(delegateTask.getExecutionId(), DepartTrainProcessConstants.VAR_ASSUMED_TIME);
 		WaggonProcessInfo callback = WaggonProcessInfo.fromValues(assumedWaggon, singleAssumedTime,
