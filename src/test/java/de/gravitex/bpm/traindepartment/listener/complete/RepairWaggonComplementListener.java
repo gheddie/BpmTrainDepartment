@@ -6,7 +6,7 @@ import org.camunda.bpm.engine.delegate.TaskListener;
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
 import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
 
-public class WaggonRepairDoneComplementListener implements TaskListener {
+public class RepairWaggonComplementListener implements TaskListener {
 
 	@Override
 	public void notify(DelegateTask delegateTask) {

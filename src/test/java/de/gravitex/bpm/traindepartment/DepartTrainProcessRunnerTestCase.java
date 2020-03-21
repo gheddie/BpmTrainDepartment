@@ -56,6 +56,17 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 		processRunner.finishWaggonRepair(processInstance, "W1");
 		processRunner.timeoutWaggonRepair(processInstance, "W2");
 		
-		assertWaitStates(processInstance, DepartTrainProcessConstants.TASK_EVALUATE_REPAIR_TIME_EXCEEDEMENT);
+		assertWaitStates(processInstance, DepartTrainProcessConstants.TASK_PROMPT_REPAIR_WAGGON_REPLACEMENT);
+		
+		// request a replacement waggon for 'W2' (for repair has timed out)...
+		processRunner.promptRepairWaggonReplacement(processInstance, "W2");
+		
+		assertWaitStates(processInstance, DepartTrainProcessConstants.CATCH_MSG_REP_REPLACE_ARR);
+		
+		// repair replacement waggon arrives...
+		processRunner.deliverRepairReplacementWaggon(processInstance, "W1000");
+		
+		// ready to choose an exit track...
+		assertWaitStates(processInstance, DepartTrainProcessConstants.TASK_CHOOSE_EXIT_TRACK);
 	}
 }

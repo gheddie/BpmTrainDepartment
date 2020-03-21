@@ -13,7 +13,7 @@ public class IntegrateReplacementWaggonsDelegate extends TrainDepartmentJavaDele
 	public void execute(DelegateExecution execution) throws Exception {
 		String[] deliveredWaggons = (String[]) execution.getProcessEngine().getRuntimeService().getVariable(execution.getId(), DepartTrainProcessConstants.VAR_DELIVERED_REPLACMENT_WAGGONS);
 		for (String deliveredWaggon : deliveredWaggons) {
-			getProcessData(execution).addWaggon(WaggonProcessInfo.fromValues(deliveredWaggon, WaggonState.WAS_REPLACED));			
+			getProcessData(execution).addWaggon(WaggonProcessInfo.fromValues(deliveredWaggon, WaggonState.WAGGON_REPLACED));			
 		}
 	}
 }

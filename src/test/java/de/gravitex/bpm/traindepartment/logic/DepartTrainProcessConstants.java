@@ -34,7 +34,7 @@ public class DepartTrainProcessConstants {
 	public static final String TASK_PROMPT_WAGGON_REPAIR = "TASK_PROMPT_WAGGON_REPAIR";
 	public static final String TASK_CHOOSE_REPLACEMENT_TRACK = "TASK_CHOOSE_REPLACEMENT_TRACK";	
 	public static final String TASK_CHECK_WAGGON_RUNNABILITY = "TASK_CHECK_WAGGON_RUNNABILITY";
-	public static final String TASK_EVALUATE_REPAIR_TIME_EXCEEDEMENT = "TASK_EVALUATE_REPAIR_TIME_EXCEEDEMENT";
+	public static final String TASK_PROMPT_REPAIR_WAGGON_REPLACEMENT = "TASK_PROMPT_REPAIR_WAGGON_REPLACEMENT";
 
 	// ##############################################################################
 	// ####################################### signals
@@ -114,6 +114,7 @@ public class DepartTrainProcessConstants {
 	public static final String MSG_REPL_WAGG_ARRIVED = "MSG_REPL_WAGG_ARRIVED";
 	public static final String MSG_REPAIR_DONE = "MSG_REPAIR_DONE";
 	public static final String MSG_REPAIR_TIME_EXCEEDED = "MSG_REPAIR_TIME_EXCEEDED";
+	public static final String MSG_REP_REPLACE_ARR = "MSG_REP_REPLACE_ARR";
 	
 	// ##############################################################################
 	// ####################################### errors
@@ -131,6 +132,7 @@ public class DepartTrainProcessConstants {
 	public static final String CATCH_MSG_START_REPAIR = "CATCH_MSG_START_REPAIR";
 	public static final String CATCH_MSG_REP_WAGG_ARRIVED = "CATCH_MSG_REP_WAGG_ARRIVED";
 	public static final String CATCH_MSG_WG_ASSUMED = "CATCH_MSG_WG_ASSUMED";
+	public static final String CATCH_MSG_REP_REPLACE_ARR = "CATCH_MSG_REP_REPLACE_ARR";
 	
 	// ##############################################################################
 	// ####################################### elements
