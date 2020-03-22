@@ -15,7 +15,6 @@ public class AllAssumementsDoneDelegate implements JavaDelegate {
 
 	public static final Logger logger = Logger.getLogger(AllAssumementsDoneDelegate.class);
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
 
