@@ -1,5 +1,7 @@
 package de.gravitex.bpm.traindepartment;
 
+import static org.junit.Assert.assertEquals;
+
 import java.time.LocalDateTime;
 
 import org.camunda.bpm.engine.runtime.ProcessInstance;
@@ -81,15 +83,30 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 		processRunner.withTracks("Track1@true", "TrackExit@true", "TrackReplacement").withWaggons("Track1", "W1@C1#N1", "W2@C1",
 				"W3@C1", "W4@C1", "W5");
 
-		ProcessInstance processInstance = processRunner.startDepartureProcess(LocalDateTime.now(), new String[] { "W1", "W2" });
+		ProcessInstance processInstance = processRunner.startDepartureProcess(LocalDateTime.now(), new String[] { "W1", "W2", "W3" });
 
 		// assume repairs
-		processRunner.assumeWaggonRepairs(processInstance, 12, "W1", "W2");
-		
+		processRunner.assumeWaggonRepairs(processInstance, 12, "W1", "W2", "W3");
+
 		// evaluate repairs
-		processRunner.evaluateWaggonRepairs(processInstance, WaggonState.REPAIR_WAGGON, "W1", "W2");
+		processRunner.evaluateWaggonRepairs(processInstance, WaggonState.REPAIR_WAGGON, "W1", "W2", "W3");
 		
+		// we have 3 prompt waggon repair tasks...
+		assertEquals(3, processEngine.getTaskService().createTaskQuery().processInstanceId(processInstance.getId())
+				.taskDefinitionKey(DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPAIR).list().size());
+
 		// prompt all to repair...
-		processRunner.promptWaggonRepairs(processInstance, "W1", "W2");
+		processRunner.promptWaggonRepairs(processInstance, "W1", "W2", "W3");
+
+		// we have 3 waggon repair tasks...
+		assertEquals(3, processEngine.getTaskService().createTaskQuery()
+				.taskDefinitionKey(DepartTrainProcessConstants.TASK_REPAIR_WAGGON).list().size());
+
+		// time out W1+W2...
+		// processRunner.timeoutWaggonRepair(processInstance, "W1");
+		processRunner.timeoutWaggonRepair(processInstance, "W2");
+		
+		// repair W3...
+		// processRunner.finishWaggonRepair(processInstance, "W3");
 	}
 }
