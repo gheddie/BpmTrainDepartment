@@ -39,12 +39,10 @@
         <bpmn:flowNodeRef>TaskAllAssumementsDone</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>SubProcess_1s2wqfm</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_0g2agjo</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>TASK_CHOOSE_REPLACEMENT_TRACK</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>TASK_PROMPT_WAGGON_REPAIR</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>GW_PLACE_REPLACEMENT_WAGGONS</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ThrowLinkAllPrompted</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_0dz0yqf</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>TaskPlaceReplacementWaggons</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExGwAllRepairsDone</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>CATCH_MSG_WAGGON_REPAIRED</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
@@ -58,7 +56,6 @@
         <bpmn:flowNodeRef>TASK_PROMPT_WAGGON_REPLACEMENT</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>CATCH_MSG_REP_WAGG_ARRIVED</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExGwWaggonReplacementsGenerated</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>TaskIntegrateReplacementWaggons</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>CatchLinkAllPrompted</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExGwAwaitRepairOutcome</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>IntermediateCatchEvent_15nydzh</bpmn:flowNodeRef>
@@ -66,6 +63,8 @@
         <bpmn:flowNodeRef>ExclusiveGateway_1cjslvo</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>TASK_PROMPT_REPAIR_WAGGON_REPLACEMENT</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>CATCH_MSG_REP_REPLACE_ARR</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TASK_CHOOSE_REPLACEMENT_TRACK</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TaskProcessReplacementWaggons</bpmn:flowNodeRef>
         <bpmn:childLaneSet id="LaneSet_0jjenap">
           <bpmn:lane id="Lane_0zda05c" name="Supervisor">
             <bpmn:flowNodeRef>ExGwRollout</bpmn:flowNodeRef>
@@ -87,12 +86,10 @@
             <bpmn:flowNodeRef>TaskAllAssumementsDone</bpmn:flowNodeRef>
             <bpmn:flowNodeRef>SubProcess_1s2wqfm</bpmn:flowNodeRef>
             <bpmn:flowNodeRef>ExclusiveGateway_0g2agjo</bpmn:flowNodeRef>
-            <bpmn:flowNodeRef>TASK_CHOOSE_REPLACEMENT_TRACK</bpmn:flowNodeRef>
             <bpmn:flowNodeRef>TASK_PROMPT_WAGGON_REPAIR</bpmn:flowNodeRef>
             <bpmn:flowNodeRef>GW_PLACE_REPLACEMENT_WAGGONS</bpmn:flowNodeRef>
             <bpmn:flowNodeRef>ThrowLinkAllPrompted</bpmn:flowNodeRef>
             <bpmn:flowNodeRef>ExclusiveGateway_0dz0yqf</bpmn:flowNodeRef>
-            <bpmn:flowNodeRef>TaskPlaceReplacementWaggons</bpmn:flowNodeRef>
             <bpmn:flowNodeRef>ExGwAllRepairsDone</bpmn:flowNodeRef>
             <bpmn:flowNodeRef>CATCH_MSG_WAGGON_REPAIRED</bpmn:flowNodeRef>
             <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
@@ -106,7 +103,6 @@
             <bpmn:flowNodeRef>TASK_PROMPT_WAGGON_REPLACEMENT</bpmn:flowNodeRef>
             <bpmn:flowNodeRef>CATCH_MSG_REP_WAGG_ARRIVED</bpmn:flowNodeRef>
             <bpmn:flowNodeRef>ExGwWaggonReplacementsGenerated</bpmn:flowNodeRef>
-            <bpmn:flowNodeRef>TaskIntegrateReplacementWaggons</bpmn:flowNodeRef>
             <bpmn:flowNodeRef>CatchLinkAllPrompted</bpmn:flowNodeRef>
             <bpmn:flowNodeRef>ExGwAwaitRepairOutcome</bpmn:flowNodeRef>
             <bpmn:flowNodeRef>IntermediateCatchEvent_15nydzh</bpmn:flowNodeRef>
@@ -114,6 +110,8 @@
             <bpmn:flowNodeRef>ExclusiveGateway_1cjslvo</bpmn:flowNodeRef>
             <bpmn:flowNodeRef>TASK_PROMPT_REPAIR_WAGGON_REPLACEMENT</bpmn:flowNodeRef>
             <bpmn:flowNodeRef>CATCH_MSG_REP_REPLACE_ARR</bpmn:flowNodeRef>
+            <bpmn:flowNodeRef>TASK_CHOOSE_REPLACEMENT_TRACK</bpmn:flowNodeRef>
+            <bpmn:flowNodeRef>TaskProcessReplacementWaggons</bpmn:flowNodeRef>
           </bpmn:lane>
         </bpmn:childLaneSet>
       </bpmn:lane>
@@ -229,10 +227,6 @@
       <bpmn:outgoing>SequenceFlow_1da6nc0</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_16zpy9y</bpmn:outgoing>
     </bpmn:parallelGateway>
-    <bpmn:userTask id="TASK_CHOOSE_REPLACEMENT_TRACK" name="Choose replacement track" camunda:assignee="ROLE_DISPONENT">
-      <bpmn:incoming>SequenceFlow_1mo7l40</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1fjholy</bpmn:outgoing>
-    </bpmn:userTask>
     <bpmn:userTask id="TASK_PROMPT_WAGGON_REPAIR" name="Prompt waggon repair" camunda:assignee="ROLE_DISPONENT">
       <bpmn:extensionElements>
         <camunda:taskListener class="de.gravitex.bpm.traindepartment.listener.complete.PromptWaggonRepairComplementListener" event="complete" />
@@ -255,10 +249,6 @@
       <bpmn:incoming>SequenceFlow_1iwgzmp</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0ddzgd6</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:serviceTask id="TaskPlaceReplacementWaggons" name="Place replacement waggons" camunda:class="de.gravitex.bpm.traindepartment.delegate.PlaceReplacementWaggonsDelegate">
-      <bpmn:incoming>SequenceFlow_1fjholy</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1f4qov0</bpmn:outgoing>
-    </bpmn:serviceTask>
     <bpmn:boundaryEvent id="BoundaryEvent_1p8wdzo" name="ERR_NO_EXIT_TR" attachedToRef="TaskCheckWaggonPositions">
       <bpmn:outgoing>SequenceFlow_18o5zi2</bpmn:outgoing>
       <bpmn:errorEventDefinition errorRef="Error_0ia8k1j" />
@@ -291,16 +281,16 @@
     <bpmn:sequenceFlow id="SequenceFlow_18o5zi2" sourceRef="BoundaryEvent_1p8wdzo" targetRef="ExclusiveGateway_1qk7c3h" />
     <bpmn:sequenceFlow id="SequenceFlow_1gxtmn8" sourceRef="TaskAllAssumementsDone" targetRef="ExGwSwitchbackToMsgAwaitAssumement" />
     <bpmn:sequenceFlow id="SequenceFlow_150gc27" sourceRef="ExGwSwitchbackToMsgAwaitAssumement" targetRef="SubProcess_1s2wqfm" />
-    <bpmn:sequenceFlow id="SequenceFlow_1nlus19" sourceRef="CATCH_MSG_REP_WAGG_ARRIVED" targetRef="TaskIntegrateReplacementWaggons" />
+    <bpmn:sequenceFlow id="SequenceFlow_1nlus19" sourceRef="CATCH_MSG_REP_WAGG_ARRIVED" targetRef="TASK_CHOOSE_REPLACEMENT_TRACK" />
     <bpmn:sequenceFlow id="SequenceFlow_16zpy9y" sourceRef="ExclusiveGateway_0g2agjo" targetRef="ExGwWaggonReplacementsGenerated" />
     <bpmn:sequenceFlow id="SequenceFlow_1iwgzmp" name="no" sourceRef="ExGwWaggonReplacementsGenerated" targetRef="ExclusiveGateway_0dz0yqf" />
     <bpmn:sequenceFlow id="SequenceFlow_1pu9rxk" sourceRef="SubProcess_1s2wqfm" targetRef="TaskEvaluationCleanup" />
     <bpmn:sequenceFlow id="SequenceFlow_1da6nc0" sourceRef="ExclusiveGateway_0g2agjo" targetRef="TASK_PROMPT_WAGGON_REPAIR" />
-    <bpmn:sequenceFlow id="SequenceFlow_1fjholy" sourceRef="TASK_CHOOSE_REPLACEMENT_TRACK" targetRef="TaskPlaceReplacementWaggons" />
+    <bpmn:sequenceFlow id="SequenceFlow_1fjholy" sourceRef="TASK_CHOOSE_REPLACEMENT_TRACK" targetRef="TaskProcessReplacementWaggons" />
     <bpmn:sequenceFlow id="SequenceFlow_0epvt40" sourceRef="TASK_PROMPT_WAGGON_REPAIR" targetRef="GW_PLACE_REPLACEMENT_WAGGONS" />
     <bpmn:sequenceFlow id="SequenceFlow_0ddzgd6" sourceRef="ExclusiveGateway_0dz0yqf" targetRef="GW_PLACE_REPLACEMENT_WAGGONS" />
     <bpmn:sequenceFlow id="SequenceFlow_1sqgwgn" sourceRef="GW_PLACE_REPLACEMENT_WAGGONS" targetRef="ThrowLinkAllPrompted" />
-    <bpmn:sequenceFlow id="SequenceFlow_1f4qov0" sourceRef="TaskPlaceReplacementWaggons" targetRef="ExclusiveGateway_0dz0yqf" />
+    <bpmn:sequenceFlow id="SequenceFlow_1f4qov0" sourceRef="TaskProcessReplacementWaggons" targetRef="ExclusiveGateway_0dz0yqf" />
     <bpmn:subProcess id="SubProcess_0kctscw">
       <bpmn:incoming>SequenceFlow_1dbkbrx</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1wa2m69</bpmn:outgoing>
@@ -387,7 +377,6 @@
       <bpmn:incoming>SequenceFlow_1pu9rxk</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0kf9op4</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="SequenceFlow_1mo7l40" sourceRef="TaskIntegrateReplacementWaggons" targetRef="TASK_CHOOSE_REPLACEMENT_TRACK" />
     <bpmn:userTask id="TASK_PROMPT_WAGGON_REPLACEMENT" name="Prompt waggon replacement" camunda:assignee="ROLE_DISPONENT">
       <bpmn:extensionElements>
         <camunda:taskListener class="de.gravitex.bpm.traindepartment.listener.complete.PromptWaggonReplacementComplementListener" event="complete" />
@@ -410,10 +399,6 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${VAR_DEPARTMENT_PROCESS_DATA.isReplacementWaggonsRequested()}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_1affjan" sourceRef="TASK_PROMPT_WAGGON_REPLACEMENT" targetRef="CATCH_MSG_REP_WAGG_ARRIVED" />
-    <bpmn:serviceTask id="TaskIntegrateReplacementWaggons" name="Integrate replacement waggons" camunda:class="de.gravitex.bpm.traindepartment.delegate.IntegrateReplacementWaggonsDelegate">
-      <bpmn:incoming>SequenceFlow_1nlus19</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1mo7l40</bpmn:outgoing>
-    </bpmn:serviceTask>
     <bpmn:intermediateCatchEvent id="CatchLinkAllPrompted" name="LNK_ALL_PROMPTED">
       <bpmn:outgoing>SequenceFlow_1rmhtdq</bpmn:outgoing>
       <bpmn:linkEventDefinition name="LNK_ALL_PROMPTED" />
@@ -453,6 +438,14 @@
       <bpmn:outgoing>SequenceFlow_1im9ee4</bpmn:outgoing>
       <bpmn:messageEventDefinition messageRef="Message_05w0wwj" />
     </bpmn:intermediateCatchEvent>
+    <bpmn:userTask id="TASK_CHOOSE_REPLACEMENT_TRACK" name="Choose replacement track" camunda:assignee="ROLE_DISPONENT">
+      <bpmn:incoming>SequenceFlow_1nlus19</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1fjholy</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="TaskProcessReplacementWaggons" name="Process replacement waggons" camunda:class="de.gravitex.bpm.traindepartment.delegate.ProcessReplacementWaggonsDelegate">
+      <bpmn:incoming>SequenceFlow_1fjholy</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1f4qov0</bpmn:outgoing>
+    </bpmn:serviceTask>
     <bpmn:textAnnotation id="TextAnnotation_1yoz8ky">
       <bpmn:text>Alle Reparaturen abgeschätzt. Jetzt muss pro Waggon beurteilt werden, ob er verwendet werden kann oder ob ggf.Ersatzwagen beschafft werden müssen.</bpmn:text>
     </bpmn:textAnnotation>
@@ -469,7 +462,7 @@
     <bpmn:association id="Association_022z90p" sourceRef="TaskAllAssumementsDone" targetRef="TextAnnotation_0wo4rks" />
     <bpmn:association id="Association_0pvxmx7" sourceRef="SubProcess_1s2wqfm" targetRef="TextAnnotation_1yoz8ky" />
     <bpmn:association id="Association_1s3fkg8" sourceRef="SubProcess_1s2wqfm" targetRef="TextAnnotation_05cx3x2" />
-    <bpmn:association id="Association_0wce7jc" sourceRef="TaskPlaceReplacementWaggons" targetRef="TextAnnotation_1q2e94m" />
+    <bpmn:association id="Association_0wce7jc" sourceRef="TaskProcessReplacementWaggons" targetRef="TextAnnotation_1q2e94m" />
     <bpmn:textAnnotation id="TextAnnotation_154ha91">
       <bpmn:text>for critical errors, a repair process is started automatically. In 'VAR_WAGGONS_TO_REPAIR' merkt sich der Hauptprozess, welche Wagen er zurückgemeldet bekommen muss.</bpmn:text>
     </bpmn:textAnnotation>
@@ -1036,7 +1029,7 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1nlus19_di" bpmnElement="SequenceFlow_1nlus19">
         <di:waypoint x="2296" y="1517" />
-        <di:waypoint x="2296" y="1494" />
+        <di:waypoint x="2296" y="1452" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="IntermediateCatchEvent_0fkrtb5_di" bpmnElement="CATCH_MSG_REP_WAGG_ARRIVED">
         <dc:Bounds x="2278" y="1517" width="36" height="36" />
@@ -1066,25 +1059,25 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_1f4qov0_di" bpmnElement="SequenceFlow_1f4qov0">
-        <di:waypoint x="2296" y="1209" />
+        <di:waypoint x="2296" y="1257" />
         <di:waypoint x="2296" y="1177" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ServiceTask_07gto37_di" bpmnElement="TaskPlaceReplacementWaggons">
-        <dc:Bounds x="2246" y="1209" width="100" height="80" />
+      <bpmndi:BPMNShape id="ServiceTask_07gto37_di" bpmnElement="TaskProcessReplacementWaggons">
+        <dc:Bounds x="2246" y="1257" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TextAnnotation_1q2e94m_di" bpmnElement="TextAnnotation_1q2e94m">
         <dc:Bounds x="2399" y="1297" width="66" height="96" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Association_0wce7jc_di" bpmnElement="Association_0wce7jc">
-        <di:waypoint x="2345" y="1283" />
-        <di:waypoint x="2399" y="1321" />
+        <di:waypoint x="2346" y="1314" />
+        <di:waypoint x="2399" y="1333" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="UserTask_16jx1r5_di" bpmnElement="TASK_CHOOSE_REPLACEMENT_TRACK">
-        <dc:Bounds x="2246" y="1313" width="100" height="80" />
+        <dc:Bounds x="2246" y="1372" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1fjholy_di" bpmnElement="SequenceFlow_1fjholy">
-        <di:waypoint x="2296" y="1313" />
-        <di:waypoint x="2296" y="1289" />
+        <di:waypoint x="2296" y="1372" />
+        <di:waypoint x="2296" y="1337" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_1pu9rxk_di" bpmnElement="SequenceFlow_1pu9rxk">
         <di:waypoint x="1460" y="1270" />
@@ -1278,13 +1271,6 @@
         <di:waypoint x="1615" y="1310" />
         <di:waypoint x="1642" y="1406" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_1mo7l40_di" bpmnElement="SequenceFlow_1mo7l40">
-        <di:waypoint x="2296" y="1414" />
-        <di:waypoint x="2296" y="1393" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ServiceTask_030tlia_di" bpmnElement="TaskIntegrateReplacementWaggons">
-        <dc:Bounds x="2246" y="1414" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TextAnnotation_0y8n73l_di" bpmnElement="TextAnnotation_0y8n73l">
         <dc:Bounds x="560" y="-438" width="100" height="54" />
       </bpmndi:BPMNShape>

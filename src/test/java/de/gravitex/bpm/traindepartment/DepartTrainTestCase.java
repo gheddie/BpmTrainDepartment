@@ -155,6 +155,10 @@ public class DepartTrainTestCase extends BpmTestCase {
 		// 2 replacements to be be processed...
 		processDeliverReplacement(processInstance.getBusinessKey(), "W888", "W999");
 
+		Task chooseReplacementTrackTask = ensureSingleTaskPresent(DepartTrainProcessConstants.TASK_CHOOSE_REPLACEMENT_TRACK,
+				DepartTrainProcessConstants.ROLE_DISPONENT, false, null);
+		processChooseReplacementTrack(chooseReplacementTrackTask, "TrackReplacement");
+		
 		// we must have the replaced waggons as usable waggons...
 		List<String> deliveredWaggons = new ArrayList<String>();
 		deliveredWaggons.add("W1");
@@ -163,10 +167,6 @@ public class DepartTrainTestCase extends BpmTestCase {
 		deliveredWaggons.add("W999");
 		assertTrue(RailUtil.areListsEqual(deliveredWaggons,
 				getProcessData(processEngine, processInstance).getUsableWaggonNumbers()));
-
-		Task chooseReplacementTrackTask = ensureSingleTaskPresent(DepartTrainProcessConstants.TASK_CHOOSE_REPLACEMENT_TRACK,
-				DepartTrainProcessConstants.ROLE_DISPONENT, false, null);
-		processChooseReplacementTrack(chooseReplacementTrackTask, "TrackReplacement");
 
 		// replacement waggons were put to 'TrackReplacement'...
 		assertTrackOccupancies(true, "Track1:W1,W2,W3,W4,W5", "TrackReplacement:W888,W999");
