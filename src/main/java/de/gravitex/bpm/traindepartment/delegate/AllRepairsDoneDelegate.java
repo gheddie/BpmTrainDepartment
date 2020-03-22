@@ -14,10 +14,10 @@ public class AllRepairsDoneDelegate implements JavaDelegate {
 
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
-		WaggonProcessInfo waggon = (WaggonProcessInfo) execution.getVariable(DepartTrainProcessConstants.VAR_REPAIRED_WAGGON);
-		logger.info("Received repair waggon callback : " + waggon.getWaggonNumber());
+		WaggonProcessInfo waggonProcessInfo = (WaggonProcessInfo) execution.getVariable(DepartTrainProcessConstants.VAR_REPAIRED_WAGGON);
+		logger.info("Received repair waggon callback : " + waggonProcessInfo.getWaggonNumber());
 		((DepartmentProcessData) execution.getProcessEngine().getRuntimeService().getVariable(execution.getId(),
 				DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA))
-						.processRepairCallback(waggon.getWaggonNumber());
+						.processRepairCallback(waggonProcessInfo);
 	}
 }

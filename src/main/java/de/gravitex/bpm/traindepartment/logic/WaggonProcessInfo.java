@@ -26,9 +26,6 @@ public class WaggonProcessInfo implements Serializable {
 
 	private WaggonState waggonState = WaggonState.UNDEFINED;
 
-	// set when waggon has been repaired
-	private boolean repaired = false;
-
 	public static WaggonProcessInfo fromValues(String waggonNumber) {
 		WaggonProcessInfo fromValues = fromValues(waggonNumber, null, null);
 		fromValues.setWaggonState(WaggonState.UNDEFINED);
@@ -50,8 +47,8 @@ public class WaggonProcessInfo implements Serializable {
 		return waggonProcessInfo;
 	}
 
-	public boolean wasRepaired() {
-		return (waggonState.equals(WaggonState.REPAIR_WAGGON) && repaired);
+	public boolean repairDone() {
+		return (waggonState.equals(WaggonState.REPAIRED));
 	}
 
 	@JsonIgnore

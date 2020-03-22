@@ -97,7 +97,7 @@ public abstract class DepartmentProcessRunner extends ProcessRunner {
 	}
 	
 	public void deliverRepairReplacementWaggon(ProcessInstance processInstance, String WaggonNumber) {
-		getProcessEngine().getRuntimeService().correlateMessage(DepartTrainProcessConstants.MSG_REP_REPLACE_ARR);
+		getProcessEngine().getRuntimeService().correlateMessage(DepartTrainProcessConstants.MSG_REP_REPLACE_ARR, processInstance.getBusinessKey());
 	}
 
 	private Task getRepairFacilityProcessTask(String waggonNumber, String taskDefinitionKey, ProcessInstance processInstance) {

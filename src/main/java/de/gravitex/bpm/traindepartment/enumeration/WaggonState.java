@@ -8,13 +8,16 @@ public enum WaggonState {
 	// repair and use waggon for planned department
 	REPAIR_WAGGON(true),
 	
-	// replace waggon
+	// replace waggon (for a repair time assumed too long)
 	REPLACE_WAGGON(false),
 	
-	// delivered as a replacement
-	WAGGON_REPLACED(true),
+	// delivered as a replacement (for replacement on 'REPLACE_WAGGON' or a timed out repair)
+	REPLACED(true),
 	
-	REPAIR_TIMEOUT(false);
+	// repair time was exceeded
+	REPAIR_EXCEEDED(false),
+	
+	REPAIRED(true);
 	
 	private boolean usable;
 	
