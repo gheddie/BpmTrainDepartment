@@ -39,7 +39,7 @@ public class WaggonProcessInfo implements Serializable {
 		WaggonProcessInfo waggonProcessInfo = new WaggonProcessInfo();
 		waggonProcessInfo.setWaggonNumber(waggonNumber);
 		waggonProcessInfo.setAssumedRepairDuration(assumedRepairDuration);
-		waggonProcessInfo.setFacilityProcessBusinessKey(businessKey);
+		// waggonProcessInfo.setFacilityProcessBusinessKey(businessKey);
 		return waggonProcessInfo;
 	}
 	

@@ -5,13 +5,18 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import de.gravitex.bpm.traindepartment.delegate.AllAssumementsDoneDelegate;
 import de.gravitex.bpm.traindepartment.enumeration.WaggonState;
 import lombok.Data;
 
 @Data
 public class DepartmentProcessData implements IDepartmentProcessData {
+	
+	public static final Logger logger = Logger.getLogger(DepartmentProcessData.class);
 
 	private HashMap<String, WaggonProcessInfo> waggonRepairInfoHash = new HashMap<String, WaggonProcessInfo>();
 
@@ -49,10 +54,10 @@ public class DepartmentProcessData implements IDepartmentProcessData {
 		return result;
 	}
 
-	public void processRepairAssumption(String waggonNumber, Integer assumedRepairDuration, String facilityProcessBusinessKey) {
+	public void processRepairAssumption(String waggonNumber, Integer assumedRepairDuration, String masterProcessBusinessKey) {
 		WaggonProcessInfo waggonProcessInfo = waggonRepairInfoHash.get(waggonNumber);
 		waggonProcessInfo.setAssumedRepairDuration(assumedRepairDuration);
-		waggonProcessInfo.setFacilityProcessBusinessKey(facilityProcessBusinessKey);
+		// waggonProcessInfo.setFacilityProcessBusinessKey(masterProcessBusinessKey);
 	}
 
 	public void processWaggonEvaluation(String waggonNumber, WaggonState waggonState) {
@@ -62,9 +67,11 @@ public class DepartmentProcessData implements IDepartmentProcessData {
 	public boolean allWaggonsAssumed() {
 		for (WaggonProcessInfo waggonProcessInfo : waggonRepairInfoHash.values()) {
 			if (waggonProcessInfo.getAssumedRepairDuration() == null) {
+				logger.info("waggon ["+waggonProcessInfo.getWaggonNumber()+"] was NOT assumed --> returning false.");
 				return false;
 			}
 		}
+		logger.info("all waggons were assumed...");
 		return true;
 	}
 

@@ -532,6 +532,9 @@
     <bpmn:sequenceFlow id="SequenceFlow_1s4bptw" sourceRef="ExGwStartOrAbortRepair" targetRef="IntermediateCatchEvent_0ipfz9z" />
     <bpmn:sequenceFlow id="SequenceFlow_0lxd2yu" sourceRef="IntermediateCatchEvent_0ipfz9z" targetRef="EndEvent_1233df0" />
     <bpmn:startEvent id="StartEvent_14lghgj" name="MSG_INVOKE_WAG_ASSUMEMENT">
+      <bpmn:extensionElements>
+        <camunda:executionListener class="de.gravitex.bpm.traindepartment.listener.start.InvokeWaggonAssumementStartListener" event="start" />
+      </bpmn:extensionElements>
       <bpmn:outgoing>SequenceFlow_0juzu23</bpmn:outgoing>
       <bpmn:messageEventDefinition messageRef="Message_1hobrwx" />
     </bpmn:startEvent>
@@ -558,7 +561,7 @@
     </bpmn:intermediateCatchEvent>
     <bpmn:userTask id="TASK_ASSUME_REPAIR_TIME" name="Assume repair time" camunda:assignee="ROLE_REPAIR_DUDE">
       <bpmn:extensionElements>
-        <camunda:taskListener class="de.gravitex.bpm.traindepartment.listener.complete.RepairAssumenentComplementListener" event="complete" />
+        <camunda:taskListener class="de.gravitex.bpm.traindepartment.listener.complete.AssumeRepairTimeComplementListener" event="complete" />
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0juzu23</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1l55lzh</bpmn:outgoing>

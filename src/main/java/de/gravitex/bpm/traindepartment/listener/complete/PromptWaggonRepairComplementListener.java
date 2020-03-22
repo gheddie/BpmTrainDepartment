@@ -13,7 +13,9 @@ public class PromptWaggonRepairComplementListener implements TaskListener {
 	public void notify(DelegateTask delegateTask) {
 		RuntimeService runtimeService = delegateTask.getProcessEngine().getRuntimeService();
 		// single info stored in 'VAR_PROMPT_REPAIR_WAGGON'...
-		WaggonProcessInfo info = (WaggonProcessInfo) runtimeService.getVariable(delegateTask.getExecution().getId(), DepartTrainProcessConstants.VAR_PROMPT_REPAIR_WAGGON);
-		runtimeService.correlateMessage(DepartTrainProcessConstants.MSG_START_REPAIR, info.getFacilityProcessBusinessKey());
+		WaggonProcessInfo info = (WaggonProcessInfo) runtimeService.getVariable(delegateTask.getExecution().getId(),
+				DepartTrainProcessConstants.VAR_PROMPT_REPAIR_WAGGON);
+		String facilityProcessBusinessKey = info.getFacilityProcessBusinessKey();
+		runtimeService.correlateMessage(DepartTrainProcessConstants.MSG_START_REPAIR, facilityProcessBusinessKey);
 	}
 }

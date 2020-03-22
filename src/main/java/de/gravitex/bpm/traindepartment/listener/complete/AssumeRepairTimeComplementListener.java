@@ -18,7 +18,7 @@ import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
 import de.gravitex.bpm.traindepartment.logic.WaggonProcessInfo;
 import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
 
-public class RepairAssumenentComplementListener extends TrainDepartmentTaskListener {
+public class AssumeRepairTimeComplementListener extends TrainDepartmentTaskListener {
 	
 	public static final Logger logger = Logger.getLogger(TrainDepartmentTaskListener.class);
 
@@ -26,17 +26,16 @@ public class RepairAssumenentComplementListener extends TrainDepartmentTaskListe
 	@Override
 	public void notify(DelegateTask delegateTask) {
 		RuntimeService runtimeService = delegateTask.getProcessEngine().getRuntimeService();
-		String assumedWaggon = (String) runtimeService
+		WaggonProcessInfo assumedWaggon = (WaggonProcessInfo) runtimeService
 				.getVariable(delegateTask.getExecutionId(), DepartTrainProcessConstants.VAR_SINGLE_FACILITY_PROCESS_WAGGON);
 		logger.info("calling back waggon assumement: " + assumedWaggon);
 		int singleAssumedTime = (int) runtimeService
 				.getVariable(delegateTask.getExecutionId(), DepartTrainProcessConstants.VAR_ASSUMED_TIME);
-		WaggonProcessInfo callback = WaggonProcessInfo.fromValues(assumedWaggon, singleAssumedTime,
-				delegateTask.getExecution().getBusinessKey());
+		assumedWaggon.setAssumedRepairDuration(singleAssumedTime);
 		runtimeService.correlateMessage(DepartTrainProcessConstants.MSG_REPAIR_ASSUMED,
 				(String) runtimeService.getVariable(delegateTask.getExecutionId(),
 						DepartTrainProcessConstants.VAR_DEP_PROC_BK),
-				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_SINGLE_FACILITY_PROCESS_WAGGON, callback)
+				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_SINGLE_FACILITY_PROCESS_WAGGON, assumedWaggon)
 						.build());
 
 		// set repair dead line timer (variable)
