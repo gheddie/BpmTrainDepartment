@@ -15,7 +15,7 @@ public class PromptWaggonRepairTaskMapper implements TaskMapper {
 	}
 
 	@Override
-	public String getVariableName() {
+	public String getListVariableName() {
 		return DepartTrainProcessConstants.VAR_PROMPT_REPAIR_WAGGON;
 	}
 }

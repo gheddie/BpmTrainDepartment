@@ -166,4 +166,8 @@ public class RailwayStationBusinessLogic implements IRailwayStationBusinessLogic
 	public List<String> getAllWaggonNumbers() {
 		return stationData.getAllWaggonNumbers();
 	}
+
+	public String getAdditionalValueForProcessInstance(ProcessInstance processInstance) {
+		return BusinessKeyCreator.getAdditionalKey(processInstance.getBusinessKey());
+	}
 }

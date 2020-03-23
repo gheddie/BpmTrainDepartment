@@ -5,17 +5,20 @@ import static org.junit.Assert.assertEquals;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.camunda.bpm.engine.ProcessEngineServices;
 import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.runtime.Job;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
 
+import de.gravitex.bpm.traindepartment.delegate.AllAssumementsDoneDelegate;
 import de.gravitex.bpm.traindepartment.entity.Waggon;
 import de.gravitex.bpm.traindepartment.enumeration.WaggonState;
 import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
 import de.gravitex.bpm.traindepartment.logic.DepartmentProcessData;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
+import de.gravitex.bpm.traindepartment.logic.WaggonProcessInfo;
 import de.gravitex.bpm.traindepartment.runner.taskmapping.TaskMapperFactory;
 import de.gravitex.bpm.traindepartment.runner.taskmapping.TaskMappingType;
 import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
@@ -23,6 +26,8 @@ import lombok.Data;
 
 @Data
 public class DepartmentProcessRunner extends ProcessRunner {
+
+	public static final Logger logger = Logger.getLogger(DepartmentProcessRunner.class);
 
 	private String[] waggonNumbers;
 
@@ -60,7 +65,7 @@ public class DepartmentProcessRunner extends ProcessRunner {
 			Task assumeRepairTimeTask = getRepairFacilityProcessTask(waggonNumber,
 					DepartTrainProcessConstants.TASK_ASSUME_REPAIR_TIME, processInstance);
 			getProcessEngine().getTaskService().complete(assumeRepairTimeTask.getId(),
-					HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_ASSUMED_TIME, hours).build());	
+					HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_ASSUMED_TIME, hours).build());
 		}
 	}
 
@@ -72,41 +77,47 @@ public class DepartmentProcessRunner extends ProcessRunner {
 					TaskMapperFactory.mapWaggonNumberToTaskId(TaskMappingType.EVAULATE_WAGGON, processInstance, waggonNumber,
 							getProcessEngine()),
 					HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_WAGGON_EVALUATION_RESULT, waggonState)
-							.build());	
+							.build());
 		}
 	}
 
 	public void promptWaggonRepairs(ProcessInstance processInstance, String... waggonNumbers) {
 		TaskService taskService = getProcessEngine().getTaskService();
 		for (String waggonNumber : waggonNumbers) {
-			taskService.complete(TaskMapperFactory.mapWaggonNumberToTaskId(
-					TaskMappingType.PROMPT_WAGGON_REPAIR, processInstance, waggonNumber, getProcessEngine()));	
+			taskService.complete(TaskMapperFactory.mapWaggonNumberToTaskId(TaskMappingType.PROMPT_WAGGON_REPAIR, processInstance,
+					waggonNumber, getProcessEngine()));
 		}
 	}
 
 	public void finishWaggonRepair(ProcessInstance processInstance, String waggonNumber) {
+		logger.info("finishing waggon repair for waggon: " + waggonNumber);
 		Task repairWaggonTask = getRepairFacilityProcessTask(waggonNumber, DepartTrainProcessConstants.TASK_REPAIR_WAGGON,
 				processInstance);
 		getProcessEngine().getTaskService().complete(repairWaggonTask.getId());
 	}
 
 	public void timeoutWaggonRepair(ProcessInstance processInstance, String waggonNumber) {
+		logger.info("timing out waggon repair for waggon: " + waggonNumber);
+		ProcessInstance repairFacilityProcess = resolveRepairFacilityProcessForWaggonNumber(waggonNumber, processInstance);
 		List<Job> jobs = getProcessEngine().getManagementService().createJobQuery()
-				.processInstanceId(resolveRepairFacilityProcessForWaggonNumber(waggonNumber, processInstance).getId()).active()
-				.timers().list();
+				.processInstanceId(repairFacilityProcess.getId()).active().timers().list();
 		assertEquals(1, jobs.size());
-		getProcessEngine().getManagementService().executeJob(jobs.get(0).getId());
+		Job job = jobs.get(0);
+		List<ProcessInstance> executionList = getProcessEngine().getRuntimeService().createProcessInstanceQuery().processInstanceId(job.getProcessInstanceId()).list();
+		assertEquals(1, executionList.size());
+		logger.info("firing timer for waggon " + waggonNumber + " execution with business key: "
+				+ repairFacilityProcess.getBusinessKey());
+		getProcessEngine().getManagementService().executeJob(job.getId());
 	}
 
 	public void promptRepairWaggonReplacement(ProcessInstance processInstance, String waggonNumber) {
-		List<Task> promptRepairWaggonReplacementTasks = getProcessEngine().getTaskService().createTaskQuery().processInstanceId(processInstance.getId())
-				.taskDefinitionKey(DepartTrainProcessConstants.TASK_PROMPT_REPAIR_WAGGON_REPLACEMENT).list();
-		assertEquals(1, promptRepairWaggonReplacementTasks.size());
-		getProcessEngine().getTaskService().complete(promptRepairWaggonReplacementTasks.get(0).getId());
+		getProcessEngine().getTaskService().complete(TaskMapperFactory.mapWaggonNumberToTaskId(
+				TaskMappingType.PROMPT_REPAIR_REPLACEMENT, processInstance, waggonNumber, getProcessEngine()));
 	}
-	
+
 	public void deliverRepairReplacementWaggon(ProcessInstance processInstance, String WaggonNumber) {
-		getProcessEngine().getRuntimeService().correlateMessage(DepartTrainProcessConstants.MSG_REP_REPLACE_ARR, processInstance.getBusinessKey());
+		getProcessEngine().getRuntimeService().correlateMessage(DepartTrainProcessConstants.MSG_REP_REPLACE_ARR,
+				processInstance.getBusinessKey());
 	}
 
 	private Task getRepairFacilityProcessTask(String waggonNumber, String taskDefinitionKey, ProcessInstance processInstance) {
@@ -120,6 +131,13 @@ public class DepartmentProcessRunner extends ProcessRunner {
 	private ProcessInstance resolveRepairFacilityProcessForWaggonNumber(String waggonNumber, ProcessInstance parentInstance) {
 		ProcessInstance instance = RailwayStationBusinessLogic.getInstance().resolveProcessInstance(getProcessInstances(),
 				DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY, waggonNumber, parentInstance);
+		// backwards check
+		assertEquals(waggonNumber, RailwayStationBusinessLogic.getInstance().getAdditionalValueForProcessInstance(instance));
 		return instance;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<WaggonProcessInfo> getWaggonsToBePromptedOnRepairTimeout(ProcessInstance processInstance) {
+		return (List<WaggonProcessInfo>) getProcessEngine().getRuntimeService().getVariable(processInstance.getId(), DepartTrainProcessConstants.VAR_WAGGONS_REPAIR_TIME_EXCEEDED_LIST);
 	}
 }

@@ -92,11 +92,21 @@ public class DepartTrainProcessConstants {
 	
 	public static final String VAR_SINGLE_WAGGON_RUNNABLE = "VAR_SINGLE_WAGGON_RUNNABLE";
 	
+	// Ein Wagen, der vom Facility-Prozess als repariert zurückgemeldet wurde
 	public static final String VAR_REPAIRED_WAGGON = "VAR_REPAIRED_WAGGON";
+	
+	// Ein Wagen, der vom Facility-Prozess als 'repair tiemout' zurückgemeldet wurde
+	public static final String VAR_WAGGON_REPAIR_TIMEOUT = "VAR_WAGGON_REPAIR_TIMEOUT";
 	
 	// business key of the 'master' process --> passed to repair 
 	// process to able to call back to master
 	public static final String VAR_DEP_PROC_BK = "VAR_DEP_PROC_BK";
+	
+	// Liste mit allen Wagen, die vom Facility-Prozess als 'repair exceeded' zurückgemeldet wurden...
+	public static final String VAR_WAGGONS_REPAIR_TIME_EXCEEDED_LIST = "VAR_WAGGONS_REPAIR_TIME_EXCEEDED_LIST";
+	
+	// Ein einzelner Wagen aus 'VAR_WAGGONS_REPAIR_TIME_EXCEEDED_LIST' (s.o.)
+	public static final String VAR_WAGGON_REPAIR_TIME_EXCEEDED = "VAR_WAGGON_REPAIR_TIME_EXCEEDED";
 	
 	// assumed reapair deadline base on waggon repair assumption
 	public static final String VAR_TIMER_EXCEEDED_REPAIR_TIME = "VAR_TIMER_EXCEEDED_REPAIR_TIME";
@@ -134,6 +144,7 @@ public class DepartTrainProcessConstants {
 	public static final String CATCH_MSG_REP_WAGG_ARRIVED = "CATCH_MSG_REP_WAGG_ARRIVED";
 	public static final String CATCH_MSG_WG_ASSUMED = "CATCH_MSG_WG_ASSUMED";
 	public static final String CATCH_MSG_REP_REPLACE_ARR = "CATCH_MSG_REP_REPLACE_ARR";
+	public static final String CATCH_MSG_REPAIR_TIME_EXCEEDED = "CATCH_MSG_REPAIR_TIME_EXCEEDED";
 	
 	// ##############################################################################
 	// ####################################### elements
