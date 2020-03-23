@@ -103,10 +103,16 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 				.taskDefinitionKey(DepartTrainProcessConstants.TASK_REPAIR_WAGGON).list().size());
 
 		// time out W1+W2...
-		// processRunner.timeoutWaggonRepair(processInstance, "W1");
+		processRunner.timeoutWaggonRepair(processInstance, "W1");
 		processRunner.timeoutWaggonRepair(processInstance, "W2");
 		
 		// repair W3...
-		// processRunner.finishWaggonRepair(processInstance, "W3");
+		processRunner.finishWaggonRepair(processInstance, "W3");
+		
+		// 2 repair waggons to be replaced...
+		assertEquals(2, processEngine.getTaskService().createTaskQuery().processInstanceId(processInstance.getId())
+				.taskDefinitionKey(DepartTrainProcessConstants.TASK_PROMPT_REPAIR_WAGGON_REPLACEMENT).list().size());
+		
+		processRunner.promptRepairWaggonReplacement(processInstance, "W1");
 	}
 }
