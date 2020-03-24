@@ -24,11 +24,11 @@ public class WaggonProcessInfo implements Serializable {
 	// the business key of the repair process
 	private String facilityProcessBusinessKey;
 
-	private WaggonState waggonState = WaggonState.UNDEFINED;
+	private WaggonState waggonState = WaggonState.NOMINAL;
 
 	public static WaggonProcessInfo fromValues(String waggonNumber) {
 		WaggonProcessInfo fromValues = fromValues(waggonNumber, null, null);
-		fromValues.setWaggonState(WaggonState.UNDEFINED);
+		fromValues.setWaggonState(WaggonState.NOMINAL);
 		return fromValues;
 	}
 
@@ -49,10 +49,5 @@ public class WaggonProcessInfo implements Serializable {
 
 	public boolean repairDone() {
 		return (waggonState.equals(WaggonState.REPAIRED));
-	}
-
-	@JsonIgnore
-	public boolean isUsable() {
-		return waggonState.isUsable();
 	}
 }

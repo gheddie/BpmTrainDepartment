@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 
 import de.gravitex.bpm.traindepartment.delegate.base.TrainDepartmentJavaDelegate;
+import de.gravitex.bpm.traindepartment.enumeration.WaggonState;
 import de.gravitex.bpm.traindepartment.logic.DtpConstants;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
 import de.gravitex.bpm.traindepartment.logic.WaggonProcessInfo;
@@ -25,6 +26,7 @@ public class ProcessCriticalErrorsDelegate extends TrainDepartmentJavaDelegate {
 								.withValuePair(RepairFacilityBusinessKeyCreator.AV_WAGGON_NUMBER, plannedWaggon.getWaggonNumber())
 								.build(), execution.getBusinessKey());
 				plannedWaggon.setFacilityProcessBusinessKey(facilityProcessBusinessKey);
+				plannedWaggon.setWaggonState(WaggonState.TO_BE_ASSUMED);
 				// pass master process business key to call back...
 				execution.getProcessEngine().getRuntimeService().startProcessInstanceByMessage(
 						DtpConstants.Facility.MESSAGE.MSG_INVOKE_WAG_ASSUMEMENT, facilityProcessBusinessKey,

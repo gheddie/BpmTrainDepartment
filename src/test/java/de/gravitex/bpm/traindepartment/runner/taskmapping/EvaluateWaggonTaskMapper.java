@@ -6,7 +6,7 @@ public class EvaluateWaggonTaskMapper implements TaskMapper {
 
 	@Override
 	public String getTaskName() {
-		return DtpConstants.NotQualified.TASK.TASK_EVALUATE_WAGGON;
+		return DtpConstants.Main.TASK.TASK_EVALUATE_WAGGON;
 	}
 
 	@Override

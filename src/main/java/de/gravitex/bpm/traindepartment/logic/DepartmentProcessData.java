@@ -44,6 +44,10 @@ public class DepartmentProcessData implements IDepartmentProcessData {
 	public Collection<WaggonProcessInfo> getWaggons() {
 		return waggonRepairInfoHash.values();
 	}
+	
+	public Collection<WaggonProcessInfo> getAssumedWaggons() {
+		return getWaggonsByWaggonState(WaggonState.ASSUMED);
+	}
 
 	public List<String> getWaggonNumbers() {
 		List<String> result = new ArrayList<String>();
@@ -56,7 +60,7 @@ public class DepartmentProcessData implements IDepartmentProcessData {
 	public void processRepairAssumption(String waggonNumber, Integer assumedRepairDuration, String masterProcessBusinessKey) {
 		WaggonProcessInfo waggonProcessInfo = waggonRepairInfoHash.get(waggonNumber);
 		waggonProcessInfo.setAssumedRepairDuration(assumedRepairDuration);
-		// waggonProcessInfo.setFacilityProcessBusinessKey(masterProcessBusinessKey);
+		waggonProcessInfo.setWaggonState(WaggonState.ASSUMED);
 	}
 
 	public void processWaggonEvaluation(String waggonNumber, WaggonState waggonState) {
@@ -65,8 +69,8 @@ public class DepartmentProcessData implements IDepartmentProcessData {
 
 	public boolean allWaggonsAssumed() {
 		for (WaggonProcessInfo waggonProcessInfo : waggonRepairInfoHash.values()) {
-			if (waggonProcessInfo.getAssumedRepairDuration() == null) {
-				logger.info("waggon [" + waggonProcessInfo.getWaggonNumber() + "] was NOT assumed --> returning false.");
+			if (waggonProcessInfo.getWaggonState().equals(WaggonState.TO_BE_ASSUMED)) {
+				logger.info("waggon [" + waggonProcessInfo.getWaggonNumber() + "] was NOT assumed [state:"+WaggonState.TO_BE_ASSUMED+"] --> returning false.");
 				return false;
 			}
 		}
@@ -105,14 +109,14 @@ public class DepartmentProcessData implements IDepartmentProcessData {
 	}
 
 	public List<WaggonProcessInfo> getWaggonsEvaluatedAsRepair() {
-		return getWaggonsByEvaluationResult(WaggonState.REPAIR_WAGGON);
+		return getWaggonsByWaggonState(WaggonState.REPAIR_WAGGON);
 	}
 
 	public List<WaggonProcessInfo> getWaggonsEvaluatedAsReplacement() {
-		return getWaggonsByEvaluationResult(WaggonState.REPLACE_WAGGON);
+		return getWaggonsByWaggonState(WaggonState.REPLACE_WAGGON);
 	}
 
-	public List<WaggonProcessInfo> getWaggonsByEvaluationResult(WaggonState waggonState) {
+	public List<WaggonProcessInfo> getWaggonsByWaggonState(WaggonState waggonState) {
 		List<WaggonProcessInfo> result = new ArrayList<WaggonProcessInfo>();
 		for (WaggonProcessInfo waggonProcessInfo : waggonRepairInfoHash.values()) {
 			if (waggonProcessInfo.getWaggonState().equals(waggonState)) {
@@ -143,24 +147,6 @@ public class DepartmentProcessData implements IDepartmentProcessData {
 		 * RailwayStationBusinessLogic.getInstance().checkTrackWaggons(exitTrack,
 		 * waggonNumbers.toArray(new String[waggonNumbers.size()]));
 		 */
-	}
-
-	public List<String> getUsableWaggonNumbers() {
-		List<String> usableWaggonNumbers = new ArrayList<String>();
-		for (WaggonProcessInfo waggonProcessInfo : getUsableWaggons()) {
-			usableWaggonNumbers.add(waggonProcessInfo.getWaggonNumber());
-		}
-		return usableWaggonNumbers;
-	}
-
-	public List<WaggonProcessInfo> getUsableWaggons() {
-		List<WaggonProcessInfo> usableWaggons = new ArrayList<WaggonProcessInfo>();
-		for (WaggonProcessInfo waggonProcessInfo : waggonRepairInfoHash.values()) {
-			if (waggonProcessInfo.isUsable()) {
-				usableWaggons.add(waggonProcessInfo);
-			}
-		}
-		return usableWaggons;
 	}
 
 	public void removeWaggon(String waggonNumber) {

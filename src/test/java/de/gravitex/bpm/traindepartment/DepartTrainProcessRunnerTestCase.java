@@ -43,7 +43,7 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 		processRunner.assumeWaggonRepairs(processInstance, 12, "W1");
 		processRunner.assumeWaggonRepairs(processInstance, 24, "W2");
 
-		ensureTaskCountPresent(processInstance, DtpConstants.NotQualified.TASK.TASK_EVALUATE_WAGGON,
+		ensureTaskCountPresent(processInstance, DtpConstants.Main.TASK.TASK_EVALUATE_WAGGON,
 				DtpConstants.NotQualified.ROLE.ROLE_SUPERVISOR, 2);
 
 		// evaluate repairs
@@ -174,7 +174,16 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 		ProcessInstance processInstance = processRunner.startDepartureProcess(LocalDateTime.now(),
 				new String[] { "W1", "W2", "W3", "W4", "W5", "W6", "W7", "W8" });
 		
+		// 6 waggons to be assumed...
 		assertEquals(6, processEngine.getTaskService().createTaskQuery()
 				.taskDefinitionKey(DtpConstants.Facility.TASK.TASK_ASSUME_REPAIR_TIME).list().size());
+		
+		processRunner.assumeWaggonRepairs(processInstance, 12, "W2", "W3", "W4", "W6", "W7", "W8");
+		
+		// 6 waggons to be evaluated...
+		assertEquals(6,
+				processEngine.getTaskService().createTaskQuery()
+						.taskDefinitionKey(DtpConstants.Main.TASK.TASK_EVALUATE_WAGGON)
+						.processInstanceId(processInstance.getId()).list().size());
 	}
 }

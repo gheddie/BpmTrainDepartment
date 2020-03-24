@@ -27,9 +27,10 @@ public class AssumeRepairTimeComplementListener extends TrainDepartmentTaskListe
 		int singleAssumedTime = (int) runtimeService
 				.getVariable(delegateTask.getExecutionId(), DtpConstants.NotQualified.VAR.VAR_ASSUMED_TIME);
 		assumedWaggon.setAssumedRepairDuration(singleAssumedTime);
+		String masterProcessBusinessKey = (String) runtimeService.getVariable(delegateTask.getExecutionId(),
+				DtpConstants.NotQualified.VAR.VAR_DEP_PROC_BK);
 		runtimeService.correlateMessage(DtpConstants.NotQualified.MESSAGE.MSG_REPAIR_ASSUMED,
-				(String) runtimeService.getVariable(delegateTask.getExecutionId(),
-						DtpConstants.NotQualified.VAR.VAR_DEP_PROC_BK),
+				masterProcessBusinessKey,
 				HashMapBuilder.create().withValuePair(DtpConstants.Facility.VAR.VAR_SINGLE_FACILITY_PROCESS_WAGGON, assumedWaggon)
 						.build());
 

@@ -3,29 +3,23 @@ package de.gravitex.bpm.traindepartment.enumeration;
 public enum WaggonState {
 	
 	// on initialiazation
-	UNDEFINED(false),
+	NOMINAL,
 	
 	// repair and use waggon for planned department
-	REPAIR_WAGGON(true),
+	REPAIR_WAGGON,
 	
 	// replace waggon (for a repair time assumed too long)
-	REPLACE_WAGGON(false),
+	REPLACE_WAGGON,
 	
 	// delivered as a replacement (for replacement on 'REPLACE_WAGGON' or a timed out repair)
-	REPLACED(true),
+	REPLACED,
 	
 	// repair time was exceeded
-	REPAIR_EXCEEDED(false),
+	REPAIR_EXCEEDED,
 	
-	REPAIRED(true);
+	REPAIRED,
 	
-	private boolean usable;
+	ASSUMED,
 	
-	private WaggonState(final boolean aUsable) {
-        this.usable = aUsable;
-    }
-
-	public boolean isUsable() {
-		return usable;
-	}
+	TO_BE_ASSUMED;
 }

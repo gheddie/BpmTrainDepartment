@@ -112,7 +112,6 @@ public class DtpConstants {
 			public static final String TASK_CONFIRM_ROLLOUT = "TASK_CONFIRM_ROLLOUT";
 			public static final String TASK_SHUNT_WAGGONS = "TASK_SHUNT_WAGGONS";
 			public static final String TASK_REPAIR_WAGGON = "TASK_REPAIR_WAGGON";
-			public static final String TASK_EVALUATE_WAGGON = "TASK_EVALUATE_WAGGON";
 			public static final String TASK_PROMPT_WAGGON_REPLACEMENT = "TASK_PROMPT_WAGGON_REPLACEMENT";
 			public static final String TASK_PROMPT_WAGGON_REPAIR = "TASK_PROMPT_WAGGON_REPAIR";
 			public static final String TASK_CHOOSE_REPLACEMENT_TRACK = "TASK_CHOOSE_REPLACEMENT_TRACK";
@@ -164,7 +163,7 @@ public class DtpConstants {
 		}
 
 		public class TASK {
-
+			public static final String TASK_EVALUATE_WAGGON = "TASK_EVALUATE_WAGGON";
 		}
 
 		public class LINK {

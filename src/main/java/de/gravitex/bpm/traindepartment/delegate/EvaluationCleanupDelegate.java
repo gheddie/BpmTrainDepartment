@@ -15,7 +15,7 @@ public class EvaluationCleanupDelegate extends TrainDepartmentJavaDelegate {
 	public void execute(DelegateExecution execution) throws Exception {
 		// all waggons which are to be replaced will not be repaired here...
 		List<WaggonProcessInfo> evaluationWaggons = getProcessData(execution)
-				.getWaggonsByEvaluationResult(WaggonState.REPLACE_WAGGON);
+				.getWaggonsByWaggonState(WaggonState.REPLACE_WAGGON);
 		for (WaggonProcessInfo waggonProcessInfo : evaluationWaggons) {
 			// remove repair process
 			execution.getProcessEngine().getRuntimeService().correlateMessage(
