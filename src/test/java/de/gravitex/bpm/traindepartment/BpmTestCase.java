@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.camunda.bpm.engine.ProcessEngineServices;
 import org.camunda.bpm.engine.impl.jobexecutor.JobExecutor;
 import org.camunda.bpm.engine.impl.util.ClockUtil;
@@ -24,6 +25,8 @@ import org.camunda.bpm.engine.task.Task;
 import org.camunda.bpm.engine.task.TaskQuery;
 
 import de.gravitex.bpm.traindepartment.logic.DtpConstants;
+import de.gravitex.bpm.traindepartment.delegate.AllAssumementsDoneDelegate;
+import de.gravitex.bpm.traindepartment.enumeration.WaggonState;
 import de.gravitex.bpm.traindepartment.logic.DepartmentProcessData;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
 import de.gravitex.bpm.traindepartment.logic.WaggonProcessInfo;
@@ -31,6 +34,8 @@ import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
 import de.gravitex.bpm.traindepartment.util.RailUtil;
 
 public class BpmTestCase {
+	
+	public static final Logger logger = Logger.getLogger(BpmTestCase.class);
 
 	protected Task ensureSingleTaskPresent(String taskName, String role, boolean executeTask, Map<String, Object> variables) {
 		return ensureSingleTaskPresent(taskName, null, role, executeTask, variables);
@@ -131,6 +136,21 @@ public class BpmTestCase {
 
 	protected void assertWaitStates(ProcessInstance processInstance, String... waitStates) {
 		assertThat(processInstance).isWaitingAt(waitStates);
+	}
+	
+	protected void assertWaggonStates(ProcessEngineServices processEngine, ProcessInstance processInstance,
+			Object... waggonData) {
+		for (int index = 0; index <= waggonData.length / 2; index += 2) {
+			assertWaggonState(processEngine, processInstance, (String) waggonData[index],
+					(WaggonState) waggonData[index + 1]);
+		}
+	}
+
+	private void assertWaggonState(ProcessEngineServices processEngine, ProcessInstance processInstance, String waggonNumber,
+			WaggonState waggonState) {
+		logger.debug("asserting waggon state [" + waggonNumber + "]: " + waggonState);
+		assertEquals(waggonState, getProcessData(processEngine, processInstance).getWaggonRepairInfoHash()
+				.get(waggonNumber).getWaggonState());
 	}
 
 	protected Object getProcessVariableByName(String variableName) {

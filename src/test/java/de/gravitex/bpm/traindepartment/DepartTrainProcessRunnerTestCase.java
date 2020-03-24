@@ -174,16 +174,31 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 		ProcessInstance processInstance = processRunner.startDepartureProcess(LocalDateTime.now(),
 				new String[] { "W1", "W2", "W3", "W4", "W5", "W6", "W7", "W8" });
 		
+		assertWaggonStates(processEngine, processInstance, "W1", WaggonState.NOMINAL, "W2", WaggonState.TO_BE_ASSUMED,
+				"W3", WaggonState.TO_BE_ASSUMED, "W4", WaggonState.TO_BE_ASSUMED, "W5", WaggonState.NOMINAL, "W6",
+				WaggonState.TO_BE_ASSUMED, "W7", WaggonState.TO_BE_ASSUMED, "W8", WaggonState.TO_BE_ASSUMED);
+		
 		// 6 waggons to be assumed...
 		assertEquals(6, processEngine.getTaskService().createTaskQuery()
 				.taskDefinitionKey(DtpConstants.Facility.TASK.TASK_ASSUME_REPAIR_TIME).list().size());
 		
 		processRunner.assumeWaggonRepairs(processInstance, 12, "W2", "W3", "W4", "W6", "W7", "W8");
 		
+		// all waggones were assumed now...
+		assertWaggonStates(processEngine, processInstance, "W1", WaggonState.NOMINAL, "W2", WaggonState.ASSUMED,
+				"W3", WaggonState.ASSUMED, "W4", WaggonState.ASSUMED, "W5", WaggonState.NOMINAL, "W6",
+				WaggonState.ASSUMED, "W7", WaggonState.ASSUMED, "W8", WaggonState.ASSUMED);
+		
 		// 6 waggons to be evaluated...
 		assertEquals(6,
 				processEngine.getTaskService().createTaskQuery()
 						.taskDefinitionKey(DtpConstants.Main.TASK.TASK_EVALUATE_WAGGON)
 						.processInstanceId(processInstance.getId()).list().size());
+		
+		processRunner.evaluateWaggonRepairs(processInstance, WaggonState.REPAIR_WAGGON, "W2", "W3", "W4", "W6", "W7", "W8");
+		
+		assertWaggonStates(processEngine, processInstance, "W1", WaggonState.NOMINAL, "W2", WaggonState.REPAIR_WAGGON,
+				"W3", WaggonState.REPAIR_WAGGON, "W4", WaggonState.REPAIR_WAGGON, "W5", WaggonState.NOMINAL, "W6",
+				WaggonState.REPAIR_WAGGON, "W7", WaggonState.REPAIR_WAGGON, "W8", WaggonState.REPAIR_WAGGON);
 	}
 }
