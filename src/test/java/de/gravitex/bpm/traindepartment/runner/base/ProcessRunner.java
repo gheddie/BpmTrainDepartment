@@ -16,9 +16,10 @@ public abstract class ProcessRunner {
 	public ProcessRunner(ProcessEngineServices aProcessEngine) {
 		super();
 		this.processEngine = aProcessEngine;
+		clear();
 	}
 
-	public ProcessRunner clear() {
+	private ProcessRunner clear() {
 		RailwayStationBusinessLogic.getInstance().reset();
 		return this;
 	}

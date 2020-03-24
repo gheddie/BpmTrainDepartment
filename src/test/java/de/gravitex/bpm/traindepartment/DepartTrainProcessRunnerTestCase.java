@@ -29,8 +29,6 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 
 		DepartmentProcessRunner processRunner = new DepartmentProcessRunner(processEngine);
 
-		processRunner.clear();
-
 		processRunner.withTracks("Track1@true", "TrackExit@true", "TrackReplacement").withWaggons("Track1", "W1@C1#N1", "W2@C1",
 				"W3@C1", "W4@C1", "W5");
 
@@ -81,8 +79,6 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 	public void testSingleProcessWithMultipleRepairTimeouts() {
 
 		DepartmentProcessRunner processRunner = new DepartmentProcessRunner(processEngine);
-
-		processRunner.clear();
 
 		processRunner.withTracks("Track1@true", "TrackExit@true", "TrackReplacement").withWaggons("Track1", "W1@C1#N1", "W2@C1",
 				"W3@C1", "W4@C1", "W5");
@@ -143,5 +139,27 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 				.taskDefinitionKey(DepartTrainProcessConstants.TASK_PROMPT_REPAIR_WAGGON_REPLACEMENT).taskAssignee(DepartTrainProcessConstants.ROLE_DISPONENT).list();
 		assertEquals(2, promptRepairWaggonReplacementTaskList.size());
 		*/
+	}
+	
+	/**
+	 * W1-W7
+	 * 
+	 * W1 [Track1]				--> OK throughout the whole process
+	 * W2 [Track1]				--> critical, evaluted to be replaced by W2000 
+	 * W3 [Track1]				--> critical, evaluted to be replaced by W3000
+	 * W4 [Track2]				--> critical, evaluted to be repaired (repair finishes on time)
+	 * W5 [Track2]				--> OK throughout the whole process
+	 * W6 [Track3]				--> critical, evaluted to be repaired (exceeds repair time, replaced by W6000)
+	 * W7 [Track3]				--> critical, evaluted to be repaired (exceeds repair time, replaced by W7000)
+	 * W8 [Track4]				--> critical, evaluted to be repaired (repair finishes on time)
+	 * 
+	 * TrackExit		--> exit track
+	 * TrackReplacment	--> target for delivered waggon replacements
+	 */
+	@Test
+	@Deployment(resources = { "departTrainProcess.bpmn" })
+	public void testComplete() {
+		
+		DepartmentProcessRunner processRunner = new DepartmentProcessRunner(processEngine);
 	}
 }
