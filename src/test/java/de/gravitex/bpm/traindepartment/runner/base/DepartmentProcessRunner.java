@@ -41,11 +41,12 @@ public class DepartmentProcessRunner extends ProcessRunner {
 				DtpConstants.NotQualified.DEFINITION.PROCESS_DEPART_TRAIN, HashMapBuilder.create().build(), null);
 		DepartmentProcessData departmentProcessData = DepartmentProcessData.fromWaggonNumbers(extractedWaggonNumbers);
 		ProcessInstance instance = getProcessEngine().getRuntimeService().startProcessInstanceByMessage(
-				DtpConstants.NotQualified.MESSAGE.MSG_DEPARTURE_PLANNED, generatedBusinessKey,
+				DtpConstants.Main.MESSAGE.MSG_DEPARTURE_PLANNED, generatedBusinessKey,
 				HashMapBuilder.create()
 						.withValuePair(DtpConstants.NotQualified.VAR.VAR_DEPARTMENT_PROCESS_DATA, departmentProcessData)
 						.withValuePair(DtpConstants.NotQualified.VAR.VAR_PLANNED_DEPARTMENT_DATE, plannedDepartureTime)
 						.build());
+		logger.info("started departure process...");
 		return instance;
 	}
 
@@ -63,7 +64,7 @@ public class DepartmentProcessRunner extends ProcessRunner {
 	public void assumeWaggonRepairs(ProcessInstance processInstance, int hours, String... waggonNumbers) {
 		for (String waggonNumber : waggonNumbers) {
 			Task assumeRepairTimeTask = getRepairFacilityProcessTask(waggonNumber,
-					DtpConstants.NotQualified.TASK.TASK_ASSUME_REPAIR_TIME, processInstance);
+					DtpConstants.Facility.TASK.TASK_ASSUME_REPAIR_TIME, processInstance);
 			getProcessEngine().getTaskService().complete(assumeRepairTimeTask.getId(), HashMapBuilder.create()
 					.withValuePair(DtpConstants.NotQualified.VAR.VAR_ASSUMED_TIME, hours).build());
 		}

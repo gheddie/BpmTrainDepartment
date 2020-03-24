@@ -1,5 +1,6 @@
 package de.gravitex.bpm.traindepartment.delegate;
 
+import org.apache.log4j.Logger;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 
 import de.gravitex.bpm.traindepartment.delegate.base.TrainDepartmentJavaDelegate;
@@ -10,6 +11,8 @@ import de.gravitex.bpm.traindepartment.logic.businesskey.RepairFacilityBusinessK
 import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
 
 public class ProcessCriticalErrorsDelegate extends TrainDepartmentJavaDelegate {
+	
+	public static final Logger logger = Logger.getLogger(ProcessCriticalErrorsDelegate.class);
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -29,6 +32,7 @@ public class ProcessCriticalErrorsDelegate extends TrainDepartmentJavaDelegate {
 								.withValuePair(DtpConstants.NotQualified.VAR.VAR_DEP_PROC_BK, execution.getBusinessKey())
 								.withValuePair(DtpConstants.Facility.VAR.VAR_SINGLE_FACILITY_PROCESS_WAGGON, plannedWaggon)
 								.build());
+				logger.info("started facility process for waggon: " + plannedWaggon.getWaggonNumber());
 			}
 		}
 	}

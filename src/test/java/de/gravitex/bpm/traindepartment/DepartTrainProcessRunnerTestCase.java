@@ -3,7 +3,9 @@ package de.gravitex.bpm.traindepartment;
 import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import org.camunda.bpm.engine.runtime.Execution;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
@@ -12,6 +14,7 @@ import org.junit.Test;
 
 import de.gravitex.bpm.traindepartment.enumeration.WaggonState;
 import de.gravitex.bpm.traindepartment.logic.DtpConstants;
+import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
 import de.gravitex.bpm.traindepartment.logic.facade.FacilityFacade;
 import de.gravitex.bpm.traindepartment.logic.facade.IFacilityFacade;
 import de.gravitex.bpm.traindepartment.runner.base.DepartmentProcessRunner;
@@ -161,5 +164,17 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 	public void testComplete() {
 		
 		DepartmentProcessRunner processRunner = new DepartmentProcessRunner(processEngine);
+
+		processRunner.withTracks("Track1", "Track2", "Track3", "Track4", "TrackExit", "TrackReplacement")
+				.withWaggons("Track1", "W1", "W2@C1", "W3@C1").withWaggons("Track2", "W4@C1", "W5")
+				.withWaggons("Track3", "W6@C1", "W7@C1").withWaggons("Track4", "W8@C1");
+
+		RailwayStationBusinessLogic.getInstance().print("initial", true);
+
+		ProcessInstance processInstance = processRunner.startDepartureProcess(LocalDateTime.now(),
+				new String[] { "W1", "W2", "W3", "W4", "W5", "W6", "W7", "W8" });
+		
+		assertEquals(6, processEngine.getTaskService().createTaskQuery()
+				.taskDefinitionKey(DtpConstants.Facility.TASK.TASK_ASSUME_REPAIR_TIME).list().size());
 	}
 }

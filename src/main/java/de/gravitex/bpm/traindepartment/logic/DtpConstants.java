@@ -69,7 +69,6 @@ public class DtpConstants {
 		}
 
 		public class MESSAGE {
-			public static final String MSG_DEPARTURE_PLANNED = "MSG_DEPARTURE_PLANNED";
 			public static final String MSG_REPAIR_ASSUMED = "MSG_REPAIR_ASSUMED";
 			public static final String MSG_SH_ORD = "MSG_SH_ORD";
 			public static final String MSG_REPL_WAGG_ARRIVED = "MSG_REPL_WAGG_ARRIVED";
@@ -111,7 +110,6 @@ public class DtpConstants {
 			public static final String TASK_CHOOSE_EXIT_TRACK = "TASK_CHOOSE_EXIT_TRACK";
 			public static final String TASK_CHECK_WAGGONS = "TASK_CHECK_WAGGONS";
 			public static final String TASK_CONFIRM_ROLLOUT = "TASK_CONFIRM_ROLLOUT";
-			public static final String TASK_ASSUME_REPAIR_TIME = "TASK_ASSUME_REPAIR_TIME";
 			public static final String TASK_SHUNT_WAGGONS = "TASK_SHUNT_WAGGONS";
 			public static final String TASK_REPAIR_WAGGON = "TASK_REPAIR_WAGGON";
 			public static final String TASK_EVALUATE_WAGGON = "TASK_EVALUATE_WAGGON";
@@ -146,6 +144,7 @@ public class DtpConstants {
 		public class MESSAGE {
 			public static final String MSG_REPAIR_DONE = "MSG_REPAIR_DONE";
 			public static final String MSG_REPAIR_TIME_EXCEEDED = "MSG_REPAIR_TIME_EXCEEDED";
+			public static final String MSG_DEPARTURE_PLANNED = "MSG_DEPARTURE_PLANNED";
 		}
 
 		public class CATCH {
@@ -191,7 +190,9 @@ public class DtpConstants {
 		public class MESSAGE {
 			// starts a facility process
 			public static final String MSG_INVOKE_WAG_ASSUMEMENT = "MSG_INVOKE_WAG_ASSUMEMENT";
+			// orders a facility process to start reapiring the given waggon
 			public static final String MSG_START_REPAIR = "MSG_START_REPAIR";
+			// aborts a facility process
 			public static final String MSG_ABORT_REPAIR = "MSG_ABORT_REPAIR";
 		}
 
@@ -212,7 +213,7 @@ public class DtpConstants {
 		}
 
 		public class TASK {
-
+			public static final String TASK_ASSUME_REPAIR_TIME = "TASK_ASSUME_REPAIR_TIME";
 		}
 
 		public class LINK {

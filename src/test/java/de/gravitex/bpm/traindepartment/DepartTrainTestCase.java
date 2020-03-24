@@ -71,7 +71,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		// we have 4 facility processes, so 4 assumement tasks..
 		assertEquals(4, ensureProcessInstanceCount(DtpConstants.NotQualified.DEFINITION.PROCESS_REPAIR_FACILITY));
 		
-		ensureTaskCountPresent(null, DtpConstants.NotQualified.TASK.TASK_ASSUME_REPAIR_TIME,
+		ensureTaskCountPresent(null, DtpConstants.Facility.TASK.TASK_ASSUME_REPAIR_TIME,
 				DtpConstants.NotQualified.ROLE.ROLE_REPAIR_DUDE, 4);
 
 		// assume a waggon (for all 4 waggons)
@@ -271,7 +271,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 		// 3 tasks 'TASK_ASSUME_REPAIR_TIME'...
 		List<Task> repairTasks = processEngine.getTaskService().createTaskQuery()
-				.taskDefinitionKey(DtpConstants.NotQualified.TASK.TASK_ASSUME_REPAIR_TIME).list();
+				.taskDefinitionKey(DtpConstants.Facility.TASK.TASK_ASSUME_REPAIR_TIME).list();
 		assertEquals(3, repairTasks.size());
 
 		// assume waggon 1 of 3 --> not done (back to message catch)
@@ -340,7 +340,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 		// process repair assume for instance A
 		List<Task> assumeListA = processEngine.getTaskService().createTaskQuery()
-				.taskDefinitionKey(DtpConstants.NotQualified.TASK.TASK_ASSUME_REPAIR_TIME).list();
+				.taskDefinitionKey(DtpConstants.Facility.TASK.TASK_ASSUME_REPAIR_TIME).list();
 		assertEquals(1, assumeListA.size());
 
 		assumeWaggonRepair(instanceA, "W1", 12);
@@ -392,7 +392,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 	@SuppressWarnings("unchecked")
 	private void assumeWaggonRepair(ProcessInstance processInstance, String waggonNumber, int hours) {
 		Task assumeRepairTimeTask = getRepairFacilityProcessTask(waggonNumber,
-				DtpConstants.NotQualified.TASK.TASK_ASSUME_REPAIR_TIME, processInstance);
+				DtpConstants.Facility.TASK.TASK_ASSUME_REPAIR_TIME, processInstance);
 		processEngine.getTaskService().complete(assumeRepairTimeTask.getId(),
 				HashMapBuilder.create().withValuePair(DtpConstants.NotQualified.VAR.VAR_ASSUMED_TIME, hours).build());
 
@@ -469,7 +469,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 				.generateBusinessKey(DtpConstants.NotQualified.DEFINITION.PROCESS_DEPART_TRAIN, HashMapBuilder.create().build(), null);
 		DepartmentProcessData departmentProcessData = DepartmentProcessData.fromWaggonNumbers(extractedWaggonNumbers);
 		ProcessInstance instance = processEngine.getRuntimeService().startProcessInstanceByMessage(
-				DtpConstants.NotQualified.MESSAGE.MSG_DEPARTURE_PLANNED, generatedBusinessKey,
+				DtpConstants.Main.MESSAGE.MSG_DEPARTURE_PLANNED, generatedBusinessKey,
 				HashMapBuilder.create()
 						.withValuePair(DtpConstants.NotQualified.VAR.VAR_DEPARTMENT_PROCESS_DATA, departmentProcessData)
 						.withValuePair(DtpConstants.NotQualified.VAR.VAR_PLANNED_DEPARTMENT_DATE, plannedDepartureTime).build());

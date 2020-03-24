@@ -95,8 +95,7 @@ public class RailwayStationBusinessLogic implements IRailwayStationBusinessLogic
 
 	@Override
 	public boolean isWaggonCritical(String waggonNumber) {
-		boolean critical = stationData.isWaggonCritical(waggonNumber);
-		return critical;
+		return stationData.isWaggonCritical(waggonNumber);
 	}
 
 	public boolean isExitTrack(String trackNumber) {
