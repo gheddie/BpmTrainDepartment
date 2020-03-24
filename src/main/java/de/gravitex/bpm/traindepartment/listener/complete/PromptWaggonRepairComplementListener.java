@@ -5,8 +5,7 @@ import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.delegate.DelegateTask;
 import org.camunda.bpm.engine.delegate.TaskListener;
 
-import de.gravitex.bpm.traindepartment.delegate.AllAssumementsDoneDelegate;
-import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
+import de.gravitex.bpm.traindepartment.logic.DtpConstants;
 import de.gravitex.bpm.traindepartment.logic.WaggonProcessInfo;
 
 public class PromptWaggonRepairComplementListener implements TaskListener {
@@ -18,9 +17,9 @@ public class PromptWaggonRepairComplementListener implements TaskListener {
 		RuntimeService runtimeService = delegateTask.getProcessEngine().getRuntimeService();
 		// single info stored in 'VAR_PROMPT_REPAIR_WAGGON'...
 		WaggonProcessInfo info = (WaggonProcessInfo) runtimeService.getVariable(delegateTask.getExecution().getId(),
-				DepartTrainProcessConstants.VAR_PROMPT_REPAIR_WAGGON);
+				DtpConstants.NotQualified.VAR.VAR_PROMPT_REPAIR_WAGGON);
 		String facilityProcessBusinessKey = info.getFacilityProcessBusinessKey();
-		runtimeService.correlateMessage(DepartTrainProcessConstants.MSG_START_REPAIR, facilityProcessBusinessKey);
+		runtimeService.correlateMessage(DtpConstants.Facility.MESSAGE.MSG_START_REPAIR, facilityProcessBusinessKey);
 		logger.info("successfully correlated 'MSG_START_REPAIR' message for waggon " + info.getWaggonNumber());
 	}
 }

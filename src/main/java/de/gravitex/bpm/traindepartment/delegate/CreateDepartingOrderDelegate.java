@@ -7,7 +7,7 @@ import org.camunda.bpm.engine.delegate.DelegateExecution;
 
 import de.gravitex.bpm.traindepartment.delegate.base.TrainDepartmentJavaDelegate;
 import de.gravitex.bpm.traindepartment.exception.RailWayException;
-import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
+import de.gravitex.bpm.traindepartment.logic.DtpConstants;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
 
 public class CreateDepartingOrderDelegate extends TrainDepartmentJavaDelegate {
@@ -16,14 +16,14 @@ public class CreateDepartingOrderDelegate extends TrainDepartmentJavaDelegate {
 	public void execute(DelegateExecution execution) {
 		
 		// initialize 'VAR_SUMMED_UP_ASSUMED_HOURS' here...
-		execution.setVariable(DepartTrainProcessConstants.VAR_SUMMED_UP_ASSUMED_HOURS, 0);
+		execution.setVariable(DtpConstants.NotQualified.VAR.VAR_SUMMED_UP_ASSUMED_HOURS, 0);
 		
 		List<String> plannedWaggons = null;
 		try {
 			plannedWaggons = getWaggonNumbers(execution);
 			RailwayStationBusinessLogic.getInstance().createDepartureOrder(plannedWaggons, execution.getBusinessKey());
 		} catch (RailWayException e) {
-			throw new BpmnError(DepartTrainProcessConstants.ERR_CREATE_DO);
+			throw new BpmnError(DtpConstants.NotQualified.ERROR.ERR_CREATE_DO);
 		}
 	}
 }

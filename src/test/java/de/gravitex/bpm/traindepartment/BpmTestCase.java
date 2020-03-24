@@ -23,7 +23,7 @@ import org.camunda.bpm.engine.runtime.VariableInstance;
 import org.camunda.bpm.engine.task.Task;
 import org.camunda.bpm.engine.task.TaskQuery;
 
-import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
+import de.gravitex.bpm.traindepartment.logic.DtpConstants;
 import de.gravitex.bpm.traindepartment.logic.DepartmentProcessData;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
 import de.gravitex.bpm.traindepartment.logic.WaggonProcessInfo;
@@ -216,7 +216,7 @@ public class BpmTestCase {
 
 	protected DepartmentProcessData getProcessData(ProcessEngineServices processEngine, ProcessInstance processInstance) {
 		return (DepartmentProcessData) processEngine.getRuntimeService().getVariable(processInstance.getId(),
-				DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA);
+				DtpConstants.NotQualified.VAR.VAR_DEPARTMENT_PROCESS_DATA);
 	}
 
 	protected void assertTrackOccupancies(boolean checkWaggonCompleteness, String... trackOccupancies) {

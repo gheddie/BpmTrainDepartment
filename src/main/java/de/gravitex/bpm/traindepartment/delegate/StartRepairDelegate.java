@@ -5,7 +5,6 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 
 public class StartRepairDelegate implements JavaDelegate {
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
 		// List<EventSubscription> events = execution.getProcessEngine().getRuntimeService().createEventSubscriptionQuery().list();

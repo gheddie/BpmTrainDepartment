@@ -2,7 +2,6 @@ package de.gravitex.bpm.traindepartment.runner.taskmapping;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.camunda.bpm.engine.ProcessEngineServices;
 import org.camunda.bpm.engine.TaskService;

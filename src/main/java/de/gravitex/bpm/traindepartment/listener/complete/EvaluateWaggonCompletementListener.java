@@ -5,7 +5,7 @@ import org.camunda.bpm.engine.delegate.DelegateTask;
 import org.camunda.bpm.engine.delegate.TaskListener;
 
 import de.gravitex.bpm.traindepartment.enumeration.WaggonState;
-import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
+import de.gravitex.bpm.traindepartment.logic.DtpConstants;
 import de.gravitex.bpm.traindepartment.logic.DepartmentProcessData;
 import de.gravitex.bpm.traindepartment.logic.WaggonProcessInfo;
 
@@ -18,14 +18,14 @@ public class EvaluateWaggonCompletementListener implements TaskListener {
 
 		// get assumed waggon
 		WaggonProcessInfo info = (WaggonProcessInfo) runtimeService.getVariable(delegateTask.getExecution().getId(),
-				DepartTrainProcessConstants.VAR_ASSUMED_WAGGON);
+				DtpConstants.NotQualified.VAR.VAR_ASSUMED_WAGGON);
 
 		// set evaluation result in waggon list
 		WaggonState evaluationResult = (WaggonState) runtimeService.getVariable(delegateTask.getExecution().getId(),
-				DepartTrainProcessConstants.VAR_WAGGON_EVALUATION_RESULT);
+				DtpConstants.NotQualified.VAR.VAR_WAGGON_EVALUATION_RESULT);
 		info.setWaggonState(evaluationResult);
 		((DepartmentProcessData) delegateTask.getProcessEngine().getRuntimeService()
-				.getVariable(delegateTask.getExecution().getId(), DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA))
+				.getVariable(delegateTask.getExecution().getId(), DtpConstants.NotQualified.VAR.VAR_DEPARTMENT_PROCESS_DATA))
 						.processWaggonEvaluation(info.getWaggonNumber(), evaluationResult);
 	}
 }

@@ -25,12 +25,12 @@ public class RailwayStationBusinessLogic implements IRailwayStationBusinessLogic
 
 	private static final HashMap<String, BusinessKeyCreator> businessKeyCreators = new HashMap<String, BusinessKeyCreator>();
 	static {
-		businessKeyCreators.put(DepartTrainProcessConstants.PROCESS_DEPART_TRAIN,
-				new DepartTrainBusinessKeyCreator(DepartTrainProcessConstants.PROCESS_DEPART_TRAIN));
-		businessKeyCreators.put(DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY,
-				new RepairFacilityBusinessKeyCreator(DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY));
-		businessKeyCreators.put(DepartTrainProcessConstants.PROCESS_SHUNTER,
-				new ShunterBusinessKeyCreator(DepartTrainProcessConstants.PROCESS_SHUNTER));
+		businessKeyCreators.put(DtpConstants.NotQualified.DEFINITION.PROCESS_DEPART_TRAIN,
+				new DepartTrainBusinessKeyCreator(DtpConstants.NotQualified.DEFINITION.PROCESS_DEPART_TRAIN));
+		businessKeyCreators.put(DtpConstants.NotQualified.DEFINITION.PROCESS_REPAIR_FACILITY,
+				new RepairFacilityBusinessKeyCreator(DtpConstants.NotQualified.DEFINITION.PROCESS_REPAIR_FACILITY));
+		businessKeyCreators.put(DtpConstants.NotQualified.DEFINITION.PROCESS_SHUNTER,
+				new ShunterBusinessKeyCreator(DtpConstants.NotQualified.DEFINITION.PROCESS_SHUNTER));
 	}
 
 	private RailwayStationBusinessLogic() {
@@ -160,7 +160,7 @@ public class RailwayStationBusinessLogic implements IRailwayStationBusinessLogic
 	
 	public static DepartmentProcessData getDepartmentProcessData(DelegateExecution execution) {
 		return (DepartmentProcessData) execution.getProcessEngine().getRuntimeService().getVariable(execution.getId(),
-				DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA);
+				DtpConstants.NotQualified.VAR.VAR_DEPARTMENT_PROCESS_DATA);
 	}
 
 	public List<String> getAllWaggonNumbers() {

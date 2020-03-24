@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import de.gravitex.bpm.traindepartment.entity.Waggon;
 import de.gravitex.bpm.traindepartment.enumeration.WaggonState;
-import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
+import de.gravitex.bpm.traindepartment.logic.DtpConstants;
 import de.gravitex.bpm.traindepartment.logic.DepartmentProcessData;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogicException;
@@ -58,8 +58,9 @@ public class DepartTrainTestCase extends BpmTestCase {
 		// prepare test data...
 		RailwayStationBusinessLogic.getInstance().withTracks("Track1@true", "TrackExit@true", "TrackReplacement")
 				.withWaggons("Track1", "W1@C1#N1", "W2@C1", "W3@C1", "W4@C1", "W5")
-				.withRoles(DepartTrainProcessConstants.ROLE_DISPONENT, DepartTrainProcessConstants.ROLE_SHUNTER,
-						DepartTrainProcessConstants.ROLE_REPAIR_DUDE, DepartTrainProcessConstants.ROLE_WAGGON_MASTER);
+				.withRoles(DtpConstants.NotQualified.ROLE.ROLE_DISPONENT, DtpConstants.NotQualified.ROLE.ROLE_SHUNTER,
+						DtpConstants.NotQualified.ROLE.ROLE_REPAIR_DUDE,
+						DtpConstants.NotQualified.ROLE.ROLE_WAGGON_MASTER);
 
 		RailwayStationBusinessLogic.getInstance().print("In the beginning", false);
 
@@ -68,10 +69,10 @@ public class DepartTrainTestCase extends BpmTestCase {
 		ProcessInstance processInstance = startDepartureProcess(getDefaultPlannedDepartureTime(), "W1", "W2", "W3", "W4");
 
 		// we have 4 facility processes, so 4 assumement tasks..
-		assertEquals(4, ensureProcessInstanceCount(DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY));
+		assertEquals(4, ensureProcessInstanceCount(DtpConstants.NotQualified.DEFINITION.PROCESS_REPAIR_FACILITY));
 		
-		ensureTaskCountPresent(null, DepartTrainProcessConstants.TASK_ASSUME_REPAIR_TIME,
-				DepartTrainProcessConstants.ROLE_REPAIR_DUDE, 4);
+		ensureTaskCountPresent(null, DtpConstants.NotQualified.TASK.TASK_ASSUME_REPAIR_TIME,
+				DtpConstants.NotQualified.ROLE.ROLE_REPAIR_DUDE, 4);
 
 		// assume a waggon (for all 4 waggons)
 		assumeWaggonRepair(processInstance, "W1", 11);
@@ -81,19 +82,19 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 		// 4 evaluations to be done...
 		List<Task> evaluationTasks = ensureTaskCountPresent(processInstance,
-				DepartTrainProcessConstants.TASK_EVALUATE_WAGGON, DepartTrainProcessConstants.ROLE_SUPERVISOR, 4);
+				DtpConstants.NotQualified.TASK.TASK_EVALUATE_WAGGON, DtpConstants.NotQualified.ROLE.ROLE_SUPERVISOR, 4);
 
 		// 4 facility processes are waiting at 'CATCH_MSG_START_REPAIR'...
 		List<ProcessInstance> facilityProcessesInstances = getProcessesInstances(
-				DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY);
+				DtpConstants.NotQualified.DEFINITION.PROCESS_REPAIR_FACILITY);
 		assertEquals(4, facilityProcessesInstances.size());
-		assertThat(facilityProcessesInstances.get(0)).isWaitingAt(DepartTrainProcessConstants.GW_START_OR_ABORT_REPAIR);
-		assertThat(facilityProcessesInstances.get(1)).isWaitingAt(DepartTrainProcessConstants.GW_START_OR_ABORT_REPAIR);
-		assertThat(facilityProcessesInstances.get(2)).isWaitingAt(DepartTrainProcessConstants.GW_START_OR_ABORT_REPAIR);
-		assertThat(facilityProcessesInstances.get(3)).isWaitingAt(DepartTrainProcessConstants.GW_START_OR_ABORT_REPAIR);
+		assertThat(facilityProcessesInstances.get(0)).isWaitingAt(DtpConstants.NotQualified.GATEWAY.GW_START_OR_ABORT_REPAIR);
+		assertThat(facilityProcessesInstances.get(1)).isWaitingAt(DtpConstants.NotQualified.GATEWAY.GW_START_OR_ABORT_REPAIR);
+		assertThat(facilityProcessesInstances.get(2)).isWaitingAt(DtpConstants.NotQualified.GATEWAY.GW_START_OR_ABORT_REPAIR);
+		assertThat(facilityProcessesInstances.get(3)).isWaitingAt(DtpConstants.NotQualified.GATEWAY.GW_START_OR_ABORT_REPAIR);
 
 		HashMap<String, String> evaluationTaskMapppings = getWaggonNumberToTaskIdMapping(evaluationTasks,
-				DepartTrainProcessConstants.VAR_ASSUMED_WAGGON, processEngine);
+				DtpConstants.NotQualified.VAR.VAR_ASSUMED_WAGGON, processEngine);
 
 		evaluateWaggonRepair("W1", evaluationTaskMapppings, WaggonState.REPAIR_WAGGON);
 		evaluateWaggonRepair("W2", evaluationTaskMapppings, WaggonState.REPAIR_WAGGON);
@@ -104,59 +105,59 @@ public class DepartTrainTestCase extends BpmTestCase {
 		assertEquals(Arrays.asList(new String[] { "W1", "W2" }),
 				getProcessData(processEngine, processInstance).getUsableWaggonNumbers());
 
-		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPAIR,
-				DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPLACEMENT);
+		assertThat(processInstance).isWaitingAt(DtpConstants.NotQualified.TASK.TASK_PROMPT_WAGGON_REPAIR,
+				DtpConstants.NotQualified.TASK.TASK_PROMPT_WAGGON_REPLACEMENT);
 
 		// we have 2 prompt repair task...
 		List<Task> promptRepairTasks = ensureTaskCountPresent(processInstance,
-				DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPAIR, DepartTrainProcessConstants.ROLE_DISPONENT, 2);
+				DtpConstants.NotQualified.TASK.TASK_PROMPT_WAGGON_REPAIR, DtpConstants.NotQualified.ROLE.ROLE_DISPONENT, 2);
 
 		// ...and 2 prompt replacement task
-		ensureTaskCountPresent(processInstance, DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPLACEMENT,
-				DepartTrainProcessConstants.ROLE_DISPONENT, 2);
+		ensureTaskCountPresent(processInstance, DtpConstants.NotQualified.TASK.TASK_PROMPT_WAGGON_REPLACEMENT,
+				DtpConstants.NotQualified.ROLE.ROLE_DISPONENT, 2);
 
 		// only 2 facility processes are waiting at 'CATCH_MSG_START_REPAIR' (those of
 		// waggons
 		// to be replaced have been canceled)
 		List<ProcessInstance> facilityProcessList = processEngine.getRuntimeService().createProcessInstanceQuery()
-				.processDefinitionKey(DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY).list();
+				.processDefinitionKey(DtpConstants.NotQualified.DEFINITION.PROCESS_REPAIR_FACILITY).list();
 		assertEquals(2, facilityProcessList.size());
 		for (ProcessInstance facilityProcessInstance : facilityProcessList) {
-			assertThat(facilityProcessInstance).isWaitingAt(DepartTrainProcessConstants.GW_START_OR_ABORT_REPAIR);
+			assertThat(facilityProcessInstance).isWaitingAt(DtpConstants.NotQualified.GATEWAY.GW_START_OR_ABORT_REPAIR);
 		}
 
 		// prompt repair (correlates message 'MSG_START_REPAIR') --> before, facility
 		// process is waiting at 'CATCH_MSG_START_REPAIR'...
 
 		HashMap<String, String> promptRepairMappings = getWaggonNumberToTaskIdMapping(promptRepairTasks,
-				DepartTrainProcessConstants.VAR_PROMPT_REPAIR_WAGGON, processEngine);
+				DtpConstants.NotQualified.VAR.VAR_PROMPT_REPAIR_WAGGON, processEngine);
 
 		promptWaggonRepair("W1", promptRepairMappings);
 		promptWaggonRepair("W2", promptRepairMappings);
 
 		// we have 2 task of 'TASK_REPAIR_WAGGON' (NOT of this process instance, as we
 		// are the 'master')...
-		ensureTaskCountPresent(null, DepartTrainProcessConstants.TASK_REPAIR_WAGGON, DepartTrainProcessConstants.ROLE_REPAIR_DUDE,
+		ensureTaskCountPresent(null, DtpConstants.NotQualified.TASK.TASK_REPAIR_WAGGON, DtpConstants.NotQualified.ROLE.ROLE_REPAIR_DUDE,
 				2);
 
 		// we prompt replacement for 2 new waggons (W3+W4)..
 		List<Task> promptReplacementTasks = ensureTaskCountPresent(processInstance,
-				DepartTrainProcessConstants.TASK_PROMPT_WAGGON_REPLACEMENT, DepartTrainProcessConstants.ROLE_DISPONENT, 2);
+				DtpConstants.NotQualified.TASK.TASK_PROMPT_WAGGON_REPLACEMENT, DtpConstants.NotQualified.ROLE.ROLE_DISPONENT, 2);
 
 		HashMap<String, String> promptReplacementMappings = getWaggonNumberToTaskIdMapping(promptReplacementTasks,
-				DepartTrainProcessConstants.VAR_PROMPT_REPLACE_WAGGON, processEngine);
+				DtpConstants.NotQualified.VAR.VAR_PROMPT_REPLACE_WAGGON, processEngine);
 
 		promptWaggonReplacement("W3", promptReplacementMappings);
 		promptWaggonReplacement("W4", promptReplacementMappings);
 
 		// waiting for replacement
-		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_REP_WAGG_ARRIVED);
+		assertThat(processInstance).isWaitingAt(DtpConstants.NotQualified.CATCH.CATCH_MSG_REP_WAGG_ARRIVED);
 
 		// 2 replacements to be be processed...
 		processDeliverReplacement(processInstance.getBusinessKey(), "W888", "W999");
 
-		Task chooseReplacementTrackTask = ensureSingleTaskPresent(DepartTrainProcessConstants.TASK_CHOOSE_REPLACEMENT_TRACK,
-				DepartTrainProcessConstants.ROLE_DISPONENT, false, null);
+		Task chooseReplacementTrackTask = ensureSingleTaskPresent(DtpConstants.NotQualified.TASK.TASK_CHOOSE_REPLACEMENT_TRACK,
+				DtpConstants.NotQualified.ROLE.ROLE_DISPONENT, false, null);
 		processChooseReplacementTrack(chooseReplacementTrackTask, "TrackReplacement");
 		
 		// we must have the replaced waggons as usable waggons...
@@ -178,12 +179,12 @@ public class DepartTrainTestCase extends BpmTestCase {
 		assertTrue(RailwayStationBusinessLogic.getInstance().checkTrackWaggons("TrackReplacement", "W888", "W999"));
 
 		// all prompted --> wait for repairs (or exceedements)...
-		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.GW_AWAIT_REPAIR_OUTCOME);
+		assertThat(processInstance).isWaitingAt(DtpConstants.NotQualified.GATEWAY.GW_AWAIT_REPAIR_OUTCOME);
 
 		// assertEquals(2, repairInfos.size());
 		assertEquals(2,
 				((DepartmentProcessData) processEngine.getRuntimeService().getVariable(processInstance.getId(),
-						DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA))
+						DtpConstants.NotQualified.VAR.VAR_DEPARTMENT_PROCESS_DATA))
 								.getWaggonsByEvaluationResult(WaggonState.REPAIR_WAGGON).size());
 
 		finishWaggonRepair("W1", processInstance);
@@ -199,19 +200,19 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 		// we have waggon runnabilities to check...
 		List<Task> checkRunnabilityTasks = processEngine.getTaskService().createTaskQuery()
-				.taskDefinitionKey(DepartTrainProcessConstants.TASK_CHECK_WAGGON_RUNNABILITY).list();
+				.taskDefinitionKey(DtpConstants.NotQualified.TASK.TASK_CHECK_WAGGON_RUNNABILITY).list();
 		assertEquals(4, checkRunnabilityTasks.size());
 
 		// TODO
 		HashMap<String, String> checkRunnabilityTaskMapppings = getWaggonNumberToTaskIdMapping(checkRunnabilityTasks,
-				DepartTrainProcessConstants.VAR_PLANNED_WAGGON, processEngine);
+				DtpConstants.NotQualified.VAR.VAR_PLANNED_WAGGON, processEngine);
 
 		processRunnabilityCheck("W1", checkRunnabilityTaskMapppings, true);
 		processRunnabilityCheck("W2", checkRunnabilityTaskMapppings, true);
 		processRunnabilityCheck("W888", checkRunnabilityTaskMapppings, true);
 		processRunnabilityCheck("W999", checkRunnabilityTaskMapppings, true);
 
-		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.TASK_CONFIRM_ROLLOUT);
+		assertThat(processInstance).isWaitingAt(DtpConstants.NotQualified.TASK.TASK_CONFIRM_ROLLOUT);
 
 		RailwayStationBusinessLogic.getInstance().print("Before rollout", false);
 
@@ -241,7 +242,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		// start process A
 		startDepartureProcess(getDefaultPlannedDepartureTime(), "W1", "W2", "W3", "W4", "W5");
 
-		assertEquals(2, ensureProcessInstanceCount(DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY));
+		assertEquals(2, ensureProcessInstanceCount(DtpConstants.NotQualified.DEFINITION.PROCESS_REPAIR_FACILITY));
 	}
 
 	@Test
@@ -263,31 +264,31 @@ public class DepartTrainTestCase extends BpmTestCase {
 				"W4");
 
 		// we must have 3 repair processes...
-		assertEquals(3, ensureProcessInstanceCount(DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY));
+		assertEquals(3, ensureProcessInstanceCount(DtpConstants.NotQualified.DEFINITION.PROCESS_REPAIR_FACILITY));
 
 		// master process is waiting at message catch...
-		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_WG_ASSUMED);
+		assertThat(processInstance).isWaitingAt(DtpConstants.NotQualified.CATCH.CATCH_MSG_WG_ASSUMED);
 
 		// 3 tasks 'TASK_ASSUME_REPAIR_TIME'...
 		List<Task> repairTasks = processEngine.getTaskService().createTaskQuery()
-				.taskDefinitionKey(DepartTrainProcessConstants.TASK_ASSUME_REPAIR_TIME).list();
+				.taskDefinitionKey(DtpConstants.NotQualified.TASK.TASK_ASSUME_REPAIR_TIME).list();
 		assertEquals(3, repairTasks.size());
 
 		// assume waggon 1 of 3 --> not done (back to message catch)
 		assertEquals(1, processEngine.getRuntimeService().createEventSubscriptionQuery()
-				.eventName(DepartTrainProcessConstants.MSG_REPAIR_ASSUMED).list().size());
+				.eventName(DtpConstants.NotQualified.MESSAGE.MSG_REPAIR_ASSUMED).list().size());
 		assumeWaggonRepair(processInstance, "W1", 2);
-		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_WG_ASSUMED);
+		assertThat(processInstance).isWaitingAt(DtpConstants.NotQualified.CATCH.CATCH_MSG_WG_ASSUMED);
 
 		// assume waggon 2 of 3 --> not done (back to message catch)
 		assertEquals(1, processEngine.getRuntimeService().createEventSubscriptionQuery()
-				.eventName(DepartTrainProcessConstants.MSG_REPAIR_ASSUMED).list().size());
+				.eventName(DtpConstants.NotQualified.MESSAGE.MSG_REPAIR_ASSUMED).list().size());
 		assumeWaggonRepair(processInstance, "W2", 2);
-		assertThat(processInstance).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_WG_ASSUMED);
+		assertThat(processInstance).isWaitingAt(DtpConstants.NotQualified.CATCH.CATCH_MSG_WG_ASSUMED);
 
 		// assume waggon 3 of 3 --> done!!!
 		assertEquals(1, processEngine.getRuntimeService().createEventSubscriptionQuery()
-				.eventName(DepartTrainProcessConstants.MSG_REPAIR_ASSUMED).list().size());
+				.eventName(DtpConstants.NotQualified.MESSAGE.MSG_REPAIR_ASSUMED).list().size());
 		assumeWaggonRepair(processInstance, "W3", 2);
 
 		// ...
@@ -332,14 +333,14 @@ public class DepartTrainTestCase extends BpmTestCase {
 		ProcessInstance instanceB = startDepartureProcess(getDefaultPlannedDepartureTime(), "W1", "W2");
 
 		// process B
-		assertThat(instanceB).isWaitingAt(DepartTrainProcessConstants.SIG_RO_CANC);
+		assertThat(instanceB).isWaitingAt(DtpConstants.NotQualified.SIGNAL.SIG_RO_CANC);
 
 		// process A
-		assertThat(instanceA).isWaitingAt(DepartTrainProcessConstants.CATCH_MSG_WG_ASSUMED);
+		assertThat(instanceA).isWaitingAt(DtpConstants.NotQualified.CATCH.CATCH_MSG_WG_ASSUMED);
 
 		// process repair assume for instance A
 		List<Task> assumeListA = processEngine.getTaskService().createTaskQuery()
-				.taskDefinitionKey(DepartTrainProcessConstants.TASK_ASSUME_REPAIR_TIME).list();
+				.taskDefinitionKey(DtpConstants.NotQualified.TASK.TASK_ASSUME_REPAIR_TIME).list();
 		assertEquals(1, assumeListA.size());
 
 		assumeWaggonRepair(instanceA, "W1", 12);
@@ -383,7 +384,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 	}
 	
 	private void finishWaggonRepair(String waggonNumber, ProcessInstance parentInstance) {
-		Task processRepairTask = getRepairFacilityProcessTask(waggonNumber, DepartTrainProcessConstants.TASK_REPAIR_WAGGON,
+		Task processRepairTask = getRepairFacilityProcessTask(waggonNumber, DtpConstants.NotQualified.TASK.TASK_REPAIR_WAGGON,
 				parentInstance);
 		processEngine.getTaskService().complete(processRepairTask.getId());
 	}
@@ -391,9 +392,9 @@ public class DepartTrainTestCase extends BpmTestCase {
 	@SuppressWarnings("unchecked")
 	private void assumeWaggonRepair(ProcessInstance processInstance, String waggonNumber, int hours) {
 		Task assumeRepairTimeTask = getRepairFacilityProcessTask(waggonNumber,
-				DepartTrainProcessConstants.TASK_ASSUME_REPAIR_TIME, processInstance);
+				DtpConstants.NotQualified.TASK.TASK_ASSUME_REPAIR_TIME, processInstance);
 		processEngine.getTaskService().complete(assumeRepairTimeTask.getId(),
-				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_ASSUMED_TIME, hours).build());
+				HashMapBuilder.create().withValuePair(DtpConstants.NotQualified.VAR.VAR_ASSUMED_TIME, hours).build());
 
 	}
 
@@ -401,20 +402,16 @@ public class DepartTrainTestCase extends BpmTestCase {
 	private void processChooseExitTrack(ProcessInstance processInstance, String trackNumber) {
 		processEngine.getTaskService().complete(
 				processEngine.getTaskService().createTaskQuery().processInstanceBusinessKey(processInstance.getBusinessKey())
-						.taskDefinitionKey(DepartTrainProcessConstants.TASK_CHOOSE_EXIT_TRACK).list().get(0).getId(),
-				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_EXIT_TRACK, trackNumber).build());
-	}
-
-	private void processShunting(ProcessInstance processInstance) {
-		ensureSingleTaskPresent(DepartTrainProcessConstants.TASK_SHUNT_WAGGONS, null, true, null);
+						.taskDefinitionKey(DtpConstants.NotQualified.TASK.TASK_CHOOSE_EXIT_TRACK).list().get(0).getId(),
+				HashMapBuilder.create().withValuePair(DtpConstants.NotQualified.VAR.VAR_EXIT_TRACK, trackNumber).build());
 	}
 
 	@SuppressWarnings("unchecked")
 	private void processRollout(ProcessInstance processInstance, boolean doRollOut) {
 		processEngine.getTaskService().complete(
-				ensureSingleTaskPresent(DepartTrainProcessConstants.TASK_CONFIRM_ROLLOUT,
-						DepartTrainProcessConstants.ROLE_DISPONENT, false, null).getId(),
-				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_ROLLOUT_CONFIRMED, doRollOut).build());
+				ensureSingleTaskPresent(DtpConstants.NotQualified.TASK.TASK_CONFIRM_ROLLOUT,
+						DtpConstants.NotQualified.ROLE.ROLE_DISPONENT, false, null).getId(),
+				HashMapBuilder.create().withValuePair(DtpConstants.NotQualified.VAR.VAR_ROLLOUT_CONFIRMED, doRollOut).build());
 	}
 
 	private void promptWaggonReplacement(String waggonNumber, HashMap<String, String> promptReplacementMappings) {
@@ -427,22 +424,22 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 	@SuppressWarnings("unchecked")
 	private void processDeliverReplacement(String businessKey, String... waggonNumbers) {
-		processEngine.getRuntimeService().correlateMessage(DepartTrainProcessConstants.MSG_REPL_WAGG_ARRIVED, businessKey,
-				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_DELIVERED_REPLACMENT_WAGGONS, waggonNumbers)
+		processEngine.getRuntimeService().correlateMessage(DtpConstants.NotQualified.MESSAGE.MSG_REPL_WAGG_ARRIVED, businessKey,
+				HashMapBuilder.create().withValuePair(DtpConstants.NotQualified.VAR.VAR_DELIVERED_REPLACMENT_WAGGONS, waggonNumbers)
 						.build());
 	}
 
 	@SuppressWarnings("unchecked")
 	private void processChooseReplacementTrack(Task task, String replacementTrack) {
 		processEngine.getTaskService().complete(task.getId(), HashMapBuilder.create()
-				.withValuePair(DepartTrainProcessConstants.VAR_REPLACE_WAGGON_TARGET_TRACK, replacementTrack).build());
+				.withValuePair(DtpConstants.NotQualified.VAR.VAR_REPLACE_WAGGON_TARGET_TRACK, replacementTrack).build());
 	}
 
 	@SuppressWarnings("unchecked")
 	private void processRunnabilityCheck(String waggonNumber, HashMap<String, String> waggonNumberToTaskIdmapping,
 			boolean runnable) {
 		processEngine.getTaskService().complete(waggonNumberToTaskIdmapping.get(waggonNumber),
-				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_SINGLE_WAGGON_RUNNABLE, runnable).build());
+				HashMapBuilder.create().withValuePair(DtpConstants.NotQualified.VAR.VAR_SINGLE_WAGGON_RUNNABLE, runnable).build());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -451,13 +448,13 @@ public class DepartTrainTestCase extends BpmTestCase {
 		TaskService taskService = processEngine.getTaskService();
 		String taskId = waggonNumberToTaskIdmapping.get(waggonNumber);
 		taskService.complete(taskId, HashMapBuilder.create()
-				.withValuePair(DepartTrainProcessConstants.VAR_WAGGON_EVALUATION_RESULT, waggonState).build());
+				.withValuePair(DtpConstants.NotQualified.VAR.VAR_WAGGON_EVALUATION_RESULT, waggonState).build());
 	}
 
 	@JsonIgnore
 	private int getRepairedWaggonCount(ProcessInstance processInstance) {
 		DepartmentProcessData departmentProcessData = (DepartmentProcessData) processEngine.getRuntimeService()
-				.getVariable(processInstance.getId(), DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA);
+				.getVariable(processInstance.getId(), DtpConstants.NotQualified.VAR.VAR_DEPARTMENT_PROCESS_DATA);
 		return departmentProcessData.getRepairedWaggonCount();
 	}
 
@@ -469,13 +466,13 @@ public class DepartTrainTestCase extends BpmTestCase {
 	private ProcessInstance startDepartureProcess(LocalDateTime plannedDepartureTime, String... waggonNumbers) {
 		List<String> extractedWaggonNumbers = Waggon.getWaggonNumbers(waggonNumbers);
 		String generatedBusinessKey = RailwayStationBusinessLogic.getInstance()
-				.generateBusinessKey(DepartTrainProcessConstants.PROCESS_DEPART_TRAIN, HashMapBuilder.create().build(), null);
+				.generateBusinessKey(DtpConstants.NotQualified.DEFINITION.PROCESS_DEPART_TRAIN, HashMapBuilder.create().build(), null);
 		DepartmentProcessData departmentProcessData = DepartmentProcessData.fromWaggonNumbers(extractedWaggonNumbers);
 		ProcessInstance instance = processEngine.getRuntimeService().startProcessInstanceByMessage(
-				DepartTrainProcessConstants.MSG_DEPARTURE_PLANNED, generatedBusinessKey,
+				DtpConstants.NotQualified.MESSAGE.MSG_DEPARTURE_PLANNED, generatedBusinessKey,
 				HashMapBuilder.create()
-						.withValuePair(DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA, departmentProcessData)
-						.withValuePair(DepartTrainProcessConstants.VAR_PLANNED_DEPARTMENT_DATE, plannedDepartureTime).build());
+						.withValuePair(DtpConstants.NotQualified.VAR.VAR_DEPARTMENT_PROCESS_DATA, departmentProcessData)
+						.withValuePair(DtpConstants.NotQualified.VAR.VAR_PLANNED_DEPARTMENT_DATE, plannedDepartureTime).build());
 		return instance;
 	}
 
@@ -489,7 +486,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 	private ProcessInstance resolveRepairFacilityProcessForWaggonNumber(String waggonNumber, ProcessInstance parentInstance) {
 		ProcessInstance instance = RailwayStationBusinessLogic.getInstance().resolveProcessInstance(getProcessInstances(),
-				DepartTrainProcessConstants.PROCESS_REPAIR_FACILITY, waggonNumber, parentInstance);
+				DtpConstants.NotQualified.DEFINITION.PROCESS_REPAIR_FACILITY, waggonNumber, parentInstance);
 		return instance;
 	}
 

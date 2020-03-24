@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import de.gravitex.bpm.traindepartment.delegate.AllAssumementsDoneDelegate;
 import de.gravitex.bpm.traindepartment.enumeration.WaggonState;
 import lombok.Data;
 

@@ -10,6 +10,7 @@ public class HashMapBuilder<X, Y> {
 		// ...
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static HashMapBuilder create() {
 		return new HashMapBuilder<Object, Object>();
 	}

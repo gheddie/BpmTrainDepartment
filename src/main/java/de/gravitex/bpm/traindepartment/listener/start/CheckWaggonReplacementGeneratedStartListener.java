@@ -7,7 +7,7 @@ import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.ExecutionListener;
 
 import de.gravitex.bpm.traindepartment.enumeration.WaggonState;
-import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
+import de.gravitex.bpm.traindepartment.logic.DtpConstants;
 import de.gravitex.bpm.traindepartment.logic.DepartmentProcessData;
 import de.gravitex.bpm.traindepartment.logic.WaggonProcessInfo;
 
@@ -17,11 +17,11 @@ public class CheckWaggonReplacementGeneratedStartListener implements ExecutionLi
 	public void notify(DelegateExecution execution) throws Exception {
 		RuntimeService runtimeService = execution.getProcessEngine().getRuntimeService();
 		List<WaggonProcessInfo> waggonReplacements = ((DepartmentProcessData) execution.getProcessEngine().getRuntimeService()
-				.getVariable(execution.getId(), DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA))
+				.getVariable(execution.getId(), DtpConstants.NotQualified.VAR.VAR_DEPARTMENT_PROCESS_DATA))
 						.getWaggonsByEvaluationResult(WaggonState.REPLACE_WAGGON);
 		if (!(waggonReplacements.isEmpty())) {
 			((DepartmentProcessData) runtimeService.getVariable(execution.getId(),
-					DepartTrainProcessConstants.VAR_DEPARTMENT_PROCESS_DATA)).markReplacementWaggonsRequested();
+					DtpConstants.NotQualified.VAR.VAR_DEPARTMENT_PROCESS_DATA)).markReplacementWaggonsRequested();
 		}
 	}
 }

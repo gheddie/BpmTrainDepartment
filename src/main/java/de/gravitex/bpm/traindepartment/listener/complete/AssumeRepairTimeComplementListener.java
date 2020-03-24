@@ -1,20 +1,15 @@
 package de.gravitex.bpm.traindepartment.listener.complete;
 
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalField;
-import java.time.temporal.TemporalUnit;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.delegate.DelegateTask;
-import org.camunda.bpm.engine.delegate.TaskListener;
 
-import de.gravitex.bpm.traindepartment.delegate.AllRepairsDoneDelegate;
 import de.gravitex.bpm.traindepartment.listener.base.TrainDepartmentTaskListener;
-import de.gravitex.bpm.traindepartment.logic.DepartTrainProcessConstants;
+import de.gravitex.bpm.traindepartment.logic.DtpConstants;
 import de.gravitex.bpm.traindepartment.logic.WaggonProcessInfo;
 import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
 
@@ -27,22 +22,22 @@ public class AssumeRepairTimeComplementListener extends TrainDepartmentTaskListe
 	public void notify(DelegateTask delegateTask) {
 		RuntimeService runtimeService = delegateTask.getProcessEngine().getRuntimeService();
 		WaggonProcessInfo assumedWaggon = (WaggonProcessInfo) runtimeService
-				.getVariable(delegateTask.getExecutionId(), DepartTrainProcessConstants.VAR_SINGLE_FACILITY_PROCESS_WAGGON);
+				.getVariable(delegateTask.getExecutionId(), DtpConstants.Facility.VAR.VAR_SINGLE_FACILITY_PROCESS_WAGGON);
 		logger.info("calling back waggon assumement: " + assumedWaggon);
 		int singleAssumedTime = (int) runtimeService
-				.getVariable(delegateTask.getExecutionId(), DepartTrainProcessConstants.VAR_ASSUMED_TIME);
+				.getVariable(delegateTask.getExecutionId(), DtpConstants.NotQualified.VAR.VAR_ASSUMED_TIME);
 		assumedWaggon.setAssumedRepairDuration(singleAssumedTime);
-		runtimeService.correlateMessage(DepartTrainProcessConstants.MSG_REPAIR_ASSUMED,
+		runtimeService.correlateMessage(DtpConstants.NotQualified.MESSAGE.MSG_REPAIR_ASSUMED,
 				(String) runtimeService.getVariable(delegateTask.getExecutionId(),
-						DepartTrainProcessConstants.VAR_DEP_PROC_BK),
-				HashMapBuilder.create().withValuePair(DepartTrainProcessConstants.VAR_SINGLE_FACILITY_PROCESS_WAGGON, assumedWaggon)
+						DtpConstants.NotQualified.VAR.VAR_DEP_PROC_BK),
+				HashMapBuilder.create().withValuePair(DtpConstants.Facility.VAR.VAR_SINGLE_FACILITY_PROCESS_WAGGON, assumedWaggon)
 						.build());
 
 		// set repair dead line timer (variable)
 		new Date(Timestamp.valueOf(LocalDateTime.now().plusHours(singleAssumedTime)).getTime());
 		Date repairDeadline = new Date(Timestamp.valueOf(LocalDateTime.now().plusHours(singleAssumedTime)).getTime());
 		runtimeService.setVariable(delegateTask.getExecution().getId(),
-				DepartTrainProcessConstants.VAR_TIMER_EXCEEDED_REPAIR_TIME,
+				DtpConstants.NotQualified.VAR.VAR_TIMER_EXCEEDED_REPAIR_TIME,
 				repairDeadline);
 	}
 }
