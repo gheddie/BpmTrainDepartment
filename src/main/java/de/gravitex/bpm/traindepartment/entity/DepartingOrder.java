@@ -8,11 +8,15 @@ import de.gravitex.bpm.traindepartment.util.RailUtil;
 import lombok.Data;
 
 @Data
-public class DepartmentOrder {
+public class DepartingOrder {
 	
 	private DepartmentOrderState departmentOrderState = DepartmentOrderState.ACTIVE;
+	
+	private String orderId;
 
-	private Track targetTrack;
+	private String exitTrack;
+	
+	private String replacementTrack;
 	
 	private List<Waggon> waggons;
 

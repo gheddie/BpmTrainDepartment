@@ -7,7 +7,7 @@ import java.util.List;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 
-import de.gravitex.bpm.traindepartment.entity.DepartmentOrder;
+import de.gravitex.bpm.traindepartment.entity.DepartingOrder;
 import de.gravitex.bpm.traindepartment.entity.Track;
 import de.gravitex.bpm.traindepartment.entity.Waggon;
 import de.gravitex.bpm.traindepartment.enumeration.DepartmentOrderState;
@@ -38,10 +38,10 @@ public class RailwayStationBusinessLogic implements IRailwayStationBusinessLogic
 	}
 
 	@Override
-	public void createDepartureOrder(List<String> waggonNumbers, String businessKey) throws RailWayException {
+	public DepartingOrder createDepartingOrder(List<String> waggonNumbers, String businessKey) throws RailWayException {
 
 		// no active order --> OK
-		List<DepartmentOrder> activeDepartureOrders = findActiveDepartureOrders();
+		List<DepartingOrder> activeDepartureOrders = findActiveDepartureOrders();
 		if ((activeDepartureOrders != null) && (activeDepartureOrders.size() > 0)) {
 			throw new RailWayException("");
 		}
@@ -52,21 +52,21 @@ public class RailwayStationBusinessLogic implements IRailwayStationBusinessLogic
 		}
 
 		// none of the waggons must be planned in active departure order!!
-		for (DepartmentOrder activeDepartureOrder : activeDepartureOrders) {
+		for (DepartingOrder activeDepartureOrder : activeDepartureOrders) {
 			if (activeDepartureOrder.containsAnyWaggon(waggonNumbers)) {
 				throw new RailWayException("");
 			}
 		}
 
 		// now, create a department order of state 'ACTIVE'...
-		stationData.createDepartmentOrder(businessKey);
+		return stationData.createDepartmentOrder(businessKey);
 	}
 
-	private List<DepartmentOrder> findActiveDepartureOrders() {
-		List<DepartmentOrder> activeOrders = new ArrayList<DepartmentOrder>();
-		for (DepartmentOrder departmentOrder : stationData.getDepartmentOrders().values()) {
-			if (departmentOrder.getDepartmentOrderState().equals(DepartmentOrderState.ACTIVE)) {
-				activeOrders.add(departmentOrder);
+	private List<DepartingOrder> findActiveDepartureOrders() {
+		List<DepartingOrder> activeOrders = new ArrayList<DepartingOrder>();
+		for (DepartingOrder departingOrder : stationData.getDepartingOrders().values()) {
+			if (departingOrder.getDepartmentOrderState().equals(DepartmentOrderState.ACTIVE)) {
+				activeOrders.add(departingOrder);
 			}
 		}
 		return activeOrders;
@@ -79,7 +79,7 @@ public class RailwayStationBusinessLogic implements IRailwayStationBusinessLogic
 
 	@Override
 	public void cancelDepartureOrder(String businessKey) {
-		stationData.getDepartmentOrders().get(businessKey).setDepartmentOrderState(DepartmentOrderState.CANCELLED);
+		stationData.getDepartingOrders().get(businessKey).setDepartmentOrderState(DepartmentOrderState.CANCELLED);
 	}
 
 	public int countWaggons() {
@@ -168,5 +168,9 @@ public class RailwayStationBusinessLogic implements IRailwayStationBusinessLogic
 
 	public String getAdditionalValueForProcessInstance(ProcessInstance processInstance) {
 		return BusinessKeyCreator.getAdditionalKey(processInstance.getBusinessKey());
+	}
+
+	public DepartingOrder getDepartingOrder(String businessKey) {
+		return stationData.getDepartingOrder(businessKey);
 	}
 }

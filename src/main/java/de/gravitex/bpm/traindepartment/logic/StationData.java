@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import de.gravitex.bpm.traindepartment.entity.DepartmentOrder;
+import de.gravitex.bpm.traindepartment.entity.DepartingOrder;
 import de.gravitex.bpm.traindepartment.entity.Track;
 import de.gravitex.bpm.traindepartment.entity.Waggon;
 import de.gravitex.bpm.traindepartment.util.RailUtil;
@@ -15,7 +15,7 @@ import lombok.Data;
 public class StationData {
 
 	// key --> business key (also from referring business process)
-	private HashMap<String, DepartmentOrder> departmentOrders = new HashMap<String, DepartmentOrder>();
+	private HashMap<String, DepartingOrder> departingOrders = new HashMap<String, DepartingOrder>();
 
 	private List<Track> tracks = new ArrayList<Track>();
 
@@ -83,7 +83,7 @@ public class StationData {
 
 	public void reset() {
 		tracks = new ArrayList<Track>();
-		departmentOrders = new HashMap<String, DepartmentOrder>();
+		departingOrders = new HashMap<String, DepartingOrder>();
 	}
 
 	public void print(String header, boolean showWaggonDefects) {
@@ -92,10 +92,10 @@ public class StationData {
 		System.out.println("--------- " + header);
 		System.out.println("---------------------------------------------");
 		
-		if (departmentOrders != null) {
-			System.out.println(departmentOrders.size() + " department orders:");
-			for (DepartmentOrder departmentOrder : departmentOrders.values()) {
-				System.out.println(departmentOrder + " (" + departmentOrder.getDepartmentOrderState() + ")");
+		if (departingOrders != null) {
+			System.out.println(departingOrders.size() + " department orders:");
+			for (DepartingOrder departingOrder : departingOrders.values()) {
+				System.out.println(departingOrder + " (" + departingOrder.getDepartmentOrderState() + ")");
 			}
 		} else {
 			System.out.println("NO department orders.");
@@ -108,8 +108,10 @@ public class StationData {
 		System.out.println("---------------------------------------------");
 	}
 
-	public void createDepartmentOrder(String businessKey) {
-		departmentOrders.put(businessKey, new DepartmentOrder());
+	public DepartingOrder createDepartmentOrder(String businessKey) {
+		DepartingOrder departingOrder = new DepartingOrder();
+		departingOrders.put(businessKey, departingOrder);
+		return departingOrder;
 	}
 
 	public void addWaggonsToTrack(String trackNumber, List<String> waggonNumbers) {
@@ -135,5 +137,9 @@ public class StationData {
 			result.add(waggon.getWaggonNumber());
 		}
 		return result;
+	}
+
+	public DepartingOrder getDepartingOrder(String businessKey) {
+		return departingOrders.get(businessKey);
 	}
 }

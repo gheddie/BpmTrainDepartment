@@ -22,7 +22,7 @@ public class CreateDepartingOrderDelegate extends TrainDepartmentJavaDelegate {
 		List<String> plannedWaggons = null;
 		try {
 			plannedWaggons = getWaggonNumbers(execution);
-			RailwayStationBusinessLogic.getInstance().createDepartureOrder(plannedWaggons, execution.getBusinessKey());
+			getProcessData(execution).setDepartingOrder(RailwayStationBusinessLogic.getInstance().createDepartingOrder(plannedWaggons, execution.getBusinessKey()));
 			logger.info("succesfully created a departing order...");
 		} catch (RailWayException e) {
 			logger.error("error creating a departing order: " + e.getMessage());

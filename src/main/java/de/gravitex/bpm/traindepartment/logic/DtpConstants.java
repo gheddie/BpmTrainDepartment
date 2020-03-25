@@ -17,8 +17,6 @@ public class DtpConstants {
 			// planned departure time
 			public static final String VAR_PLANNED_DEPARTMENT_DATE = "VAR_PLANNED_DEPARTMENT_DATE";
 
-			public static final String VAR_ROLLOUT_CONFIRMED = "VAR_ROLLOUT_CONFIRMED";
-
 			public static final String VAR_EXIT_TRACK = "VAR_EXIT_TRACK";
 
 			// a single assumed waggon
@@ -38,12 +36,6 @@ public class DtpConstants {
 
 			// single waggon to prompt a replacement...
 			public static final String VAR_PROMPT_REPLACE_WAGGON = "VAR_PROMPT_REPLACE_WAGGON";
-
-			// target track for replaced waggons
-			public static final String VAR_REPLACE_WAGGON_TARGET_TRACK = "VAR_REPLACE_WAGGON_TARGET_TRACK";
-
-			// Die Wagen, die als Ersatz geliefert wurden
-			public static final String VAR_DELIVERED_REPLACMENT_WAGGONS = "VAR_DELIVERED_REPLACMENT_WAGGONS";
 
 			public static final String VAR_SINGLE_WAGGON_RUNNABLE = "VAR_SINGLE_WAGGON_RUNNABLE";
 
@@ -79,7 +71,6 @@ public class DtpConstants {
 		public class CATCH {
 			public static final String CATCH_MSG_SH_DONE = "CATCH_MSG_SH_DONE";
 			public static final String CATCH_MSG_START_REPAIR = "CATCH_MSG_START_REPAIR";
-			public static final String CATCH_MSG_REP_WAGG_ARRIVED = "CATCH_MSG_REP_WAGG_ARRIVED";
 			public static final String CATCH_MSG_WG_ASSUMED = "CATCH_MSG_WG_ASSUMED";
 			public static final String CATCH_MSG_REP_REPLACE_ARR = "CATCH_MSG_REP_REPLACE_ARR";
 			public static final String CATCH_MSG_REPAIR_TIME_EXCEEDED = "CATCH_MSG_REPAIR_TIME_EXCEEDED";
@@ -106,14 +97,10 @@ public class DtpConstants {
 		}
 
 		public class TASK {
-			public static final String TASK_CHOOSE_EXIT_TRACK = "TASK_CHOOSE_EXIT_TRACK";
 			public static final String TASK_CHECK_WAGGONS = "TASK_CHECK_WAGGONS";
 			public static final String TASK_CONFIRM_ROLLOUT = "TASK_CONFIRM_ROLLOUT";
 			public static final String TASK_SHUNT_WAGGONS = "TASK_SHUNT_WAGGONS";
 			public static final String TASK_REPAIR_WAGGON = "TASK_REPAIR_WAGGON";
-			public static final String TASK_PROMPT_WAGGON_REPLACEMENT = "TASK_PROMPT_WAGGON_REPLACEMENT";
-			public static final String TASK_PROMPT_WAGGON_REPAIR = "TASK_PROMPT_WAGGON_REPAIR";
-			public static final String TASK_CHOOSE_REPLACEMENT_TRACK = "TASK_CHOOSE_REPLACEMENT_TRACK";
 			public static final String TASK_CHECK_WAGGON_RUNNABILITY = "TASK_CHECK_WAGGON_RUNNABILITY";
 			public static final String TASK_PROMPT_REPAIR_WAGGON_REPLACEMENT = "TASK_PROMPT_REPAIR_WAGGON_REPLACEMENT";
 		}
@@ -134,17 +121,21 @@ public class DtpConstants {
 	public class DepartTrain {
 
 		public class VAR {
-
+			// Die Wagen, die als Ersatz geliefert wurden (nach Evaluation)
+			public static final String VAR_DELIVERED_EVALUATION_REPLACMENT_WAGGONS = "VAR_DELIVERED_EVALUATION_REPLACMENT_WAGGONS";
+			// Die Wagen, die als Ersatz geliefert wurden (nach time out von Reparaturen)
+			public static final String VAR_DELIVERED_REP_TIMEOUT_REPLACMENT_WAGGONS = "VAR_DELIVERED_REP_TIMEOUT_REPLACMENT_WAGGONS";
 		}
 
 		public class MESSAGE {
 			public static final String MSG_REPAIR_DONE = "MSG_REPAIR_DONE";
 			public static final String MSG_REPAIR_TIME_EXCEEDED = "MSG_REPAIR_TIME_EXCEEDED";
 			public static final String MSG_DEPARTURE_PLANNED = "MSG_DEPARTURE_PLANNED";
+			public static final String MSG_REP_WAGG_ARRIVED = "MSG_REP_WAGG_ARRIVED";
 		}
 
 		public class CATCH {
-
+			public static final String CATCH_MSG_REP_WAGG_ARRIVED = "CATCH_MSG_REP_WAGG_ARRIVED";
 		}
 
 		public class ERROR {
@@ -161,6 +152,10 @@ public class DtpConstants {
 
 		public class TASK {
 			public static final String TASK_EVALUATE_WAGGON = "TASK_EVALUATE_WAGGON";
+			public static final String TASK_PROMPT_WAGGON_REPLACEMENT = "TASK_PROMPT_WAGGON_REPLACEMENT";
+			public static final String TASK_PROMPT_WAGGON_REPAIR = "TASK_PROMPT_WAGGON_REPAIR";
+			public static final String TASK_CHOOSE_EXIT_TRACK = "TASK_CHOOSE_EXIT_TRACK";
+			public static final String TASK_CHOOSE_EVALUATION_REPLACEMENT_TRACK = "TASK_CHOOSE_EVALUATION_REPLACEMENT_TRACK";
 		}
 
 		public class LINK {

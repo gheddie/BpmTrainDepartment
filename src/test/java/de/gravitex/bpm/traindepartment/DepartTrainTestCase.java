@@ -107,15 +107,15 @@ public class DepartTrainTestCase extends BpmTestCase {
 				getProcessData(processEngine, processInstance).getUsableWaggonNumbers());
 				*/
 
-		assertThat(processInstance).isWaitingAt(DtpConstants.NotQualified.TASK.TASK_PROMPT_WAGGON_REPAIR,
-				DtpConstants.NotQualified.TASK.TASK_PROMPT_WAGGON_REPLACEMENT);
+		assertThat(processInstance).isWaitingAt(DtpConstants.DepartTrain.TASK.TASK_PROMPT_WAGGON_REPAIR,
+				DtpConstants.DepartTrain.TASK.TASK_PROMPT_WAGGON_REPLACEMENT);
 
 		// we have 2 prompt repair task...
 		List<Task> promptRepairTasks = ensureTaskCountPresent(processInstance,
-				DtpConstants.NotQualified.TASK.TASK_PROMPT_WAGGON_REPAIR, DtpConstants.NotQualified.ROLE.ROLE_DISPONENT, 2);
+				DtpConstants.DepartTrain.TASK.TASK_PROMPT_WAGGON_REPAIR, DtpConstants.NotQualified.ROLE.ROLE_DISPONENT, 2);
 
 		// ...and 2 prompt replacement task
-		ensureTaskCountPresent(processInstance, DtpConstants.NotQualified.TASK.TASK_PROMPT_WAGGON_REPLACEMENT,
+		ensureTaskCountPresent(processInstance, DtpConstants.DepartTrain.TASK.TASK_PROMPT_WAGGON_REPLACEMENT,
 				DtpConstants.NotQualified.ROLE.ROLE_DISPONENT, 2);
 
 		// only 2 facility processes are waiting at 'CATCH_MSG_START_REPAIR' (those of
@@ -144,7 +144,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 		// we prompt replacement for 2 new waggons (W3+W4)..
 		List<Task> promptReplacementTasks = ensureTaskCountPresent(processInstance,
-				DtpConstants.NotQualified.TASK.TASK_PROMPT_WAGGON_REPLACEMENT, DtpConstants.NotQualified.ROLE.ROLE_DISPONENT, 2);
+				DtpConstants.DepartTrain.TASK.TASK_PROMPT_WAGGON_REPLACEMENT, DtpConstants.NotQualified.ROLE.ROLE_DISPONENT, 2);
 
 		HashMap<String, String> promptReplacementMappings = getWaggonNumberToTaskIdMapping(promptReplacementTasks,
 				DtpConstants.NotQualified.VAR.VAR_PROMPT_REPLACE_WAGGON, processEngine);
@@ -153,12 +153,12 @@ public class DepartTrainTestCase extends BpmTestCase {
 		promptWaggonReplacement("W4", promptReplacementMappings);
 
 		// waiting for replacement
-		assertThat(processInstance).isWaitingAt(DtpConstants.NotQualified.CATCH.CATCH_MSG_REP_WAGG_ARRIVED);
+		assertThat(processInstance).isWaitingAt(DtpConstants.DepartTrain.CATCH.CATCH_MSG_REP_WAGG_ARRIVED);
 
 		// 2 replacements to be be processed...
 		processDeliverReplacement(processInstance.getBusinessKey(), "W888", "W999");
 
-		Task chooseReplacementTrackTask = ensureSingleTaskPresent(DtpConstants.NotQualified.TASK.TASK_CHOOSE_REPLACEMENT_TRACK,
+		Task chooseReplacementTrackTask = ensureSingleTaskPresent(DtpConstants.DepartTrain.TASK.TASK_CHOOSE_EVALUATION_REPLACEMENT_TRACK,
 				DtpConstants.NotQualified.ROLE.ROLE_DISPONENT, false, null);
 		processChooseReplacementTrack(chooseReplacementTrackTask, "TrackReplacement");
 		
@@ -406,16 +406,18 @@ public class DepartTrainTestCase extends BpmTestCase {
 	private void processChooseExitTrack(ProcessInstance processInstance, String trackNumber) {
 		processEngine.getTaskService().complete(
 				processEngine.getTaskService().createTaskQuery().processInstanceBusinessKey(processInstance.getBusinessKey())
-						.taskDefinitionKey(DtpConstants.NotQualified.TASK.TASK_CHOOSE_EXIT_TRACK).list().get(0).getId(),
+						.taskDefinitionKey(DtpConstants.DepartTrain.TASK.TASK_CHOOSE_EXIT_TRACK).list().get(0).getId(),
 				HashMapBuilder.create().withValuePair(DtpConstants.NotQualified.VAR.VAR_EXIT_TRACK, trackNumber).build());
 	}
 
 	@SuppressWarnings("unchecked")
 	private void processRollout(ProcessInstance processInstance, boolean doRollOut) {
+		/*
 		processEngine.getTaskService().complete(
 				ensureSingleTaskPresent(DtpConstants.NotQualified.TASK.TASK_CONFIRM_ROLLOUT,
 						DtpConstants.NotQualified.ROLE.ROLE_DISPONENT, false, null).getId(),
 				HashMapBuilder.create().withValuePair(DtpConstants.NotQualified.VAR.VAR_ROLLOUT_CONFIRMED, doRollOut).build());
+				*/
 	}
 
 	private void promptWaggonReplacement(String waggonNumber, HashMap<String, String> promptReplacementMappings) {
@@ -428,15 +430,19 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 	@SuppressWarnings("unchecked")
 	private void processDeliverReplacement(String businessKey, String... waggonNumbers) {
+		/*
 		processEngine.getRuntimeService().correlateMessage(DtpConstants.NotQualified.MESSAGE.MSG_REPL_WAGG_ARRIVED, businessKey,
 				HashMapBuilder.create().withValuePair(DtpConstants.NotQualified.VAR.VAR_DELIVERED_REPLACMENT_WAGGONS, waggonNumbers)
 						.build());
+						*/
 	}
 
 	@SuppressWarnings("unchecked")
 	private void processChooseReplacementTrack(Task task, String replacementTrack) {
+		/*
 		processEngine.getTaskService().complete(task.getId(), HashMapBuilder.create()
 				.withValuePair(DtpConstants.NotQualified.VAR.VAR_REPLACE_WAGGON_TARGET_TRACK, replacementTrack).build());
+				*/
 	}
 
 	@SuppressWarnings("unchecked")

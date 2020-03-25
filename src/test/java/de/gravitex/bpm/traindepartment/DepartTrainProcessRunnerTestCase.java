@@ -1,6 +1,8 @@
 package de.gravitex.bpm.traindepartment;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertThat;
 
 import java.time.LocalDateTime;
@@ -48,7 +50,7 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 		// evaluate repairs
 		processRunner.evaluateWaggonRepairs(processInstance, WaggonState.REPAIR_WAGGON, "W1", "W2");
 
-		assertWaitStates(processInstance, DtpConstants.NotQualified.TASK.TASK_PROMPT_WAGGON_REPAIR);
+		assertWaitStates(processInstance, DtpConstants.DepartTrain.TASK.TASK_PROMPT_WAGGON_REPAIR);
 
 		// prompt repairs
 		processRunner.promptWaggonRepairs(processInstance, "W1", "W2");
@@ -95,7 +97,7 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 		
 		// we have 3 prompt waggon repair tasks...
 		assertEquals(3, processEngine.getTaskService().createTaskQuery().processInstanceId(processInstance.getId())
-				.taskDefinitionKey(DtpConstants.NotQualified.TASK.TASK_PROMPT_WAGGON_REPAIR).list().size());
+				.taskDefinitionKey(DtpConstants.DepartTrain.TASK.TASK_PROMPT_WAGGON_REPAIR).list().size());
 
 		// prompt all to repair...
 		processRunner.promptWaggonRepairs(processInstance, "W1", "W2", "W3");
@@ -147,13 +149,13 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 	 * W1-W7
 	 * 
 	 * W1 [Track1]				--> OK throughout the whole process
-	 * W2 [Track1]				--> critical, evaluted to be replaced by W2000 
-	 * W3 [Track1]				--> critical, evaluted to be replaced by W3000
-	 * W4 [Track2]				--> critical, evaluted to be repaired (repair finishes on time)
+	 * W2 [Track1]				--> critical, evaluated to be replaced by W2000 
+	 * W3 [Track1]				--> critical, evaluated to be replaced by W3000
+	 * W4 [Track2]				--> critical, evaluated to be repaired (repair finishes on time)
 	 * W5 [Track2]				--> OK throughout the whole process
-	 * W6 [Track3]				--> critical, evaluted to be repaired (exceeds repair time, replaced by W6000)
-	 * W7 [Track3]				--> critical, evaluted to be repaired (exceeds repair time, replaced by W7000)
-	 * W8 [Track4]				--> critical, evaluted to be repaired (repair finishes on time)
+	 * W6 [Track3]				--> critical, evaluated to be repaired (exceeds repair time, replaced by W6000)
+	 * W7 [Track3]				--> critical, evaluated to be repaired (exceeds repair time, replaced by W7000)
+	 * W8 [Track4]				--> critical, evaluated to be repaired (repair finishes on time)
 	 * 
 	 * TrackExit		--> exit track
 	 * TrackReplacment	--> target for delivered waggon replacements
@@ -172,6 +174,9 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 
 		ProcessInstance processInstance = processRunner.startDepartureProcess(LocalDateTime.now(),
 				new String[] { "W1", "W2", "W3", "W4", "W5", "W6", "W7", "W8" });
+		
+		// we have a department order
+		assertNotNull(RailwayStationBusinessLogic.getInstance().getDepartingOrder(processInstance.getBusinessKey()));
 		
 		assertWaggonStates(processEngine, processInstance, "W1", WaggonState.NOMINAL, "W2", WaggonState.TO_BE_ASSUMED,
 				"W3", WaggonState.TO_BE_ASSUMED, "W4", WaggonState.TO_BE_ASSUMED, "W5", WaggonState.NOMINAL, "W6",
@@ -194,22 +199,33 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 						.taskDefinitionKey(DtpConstants.DepartTrain.TASK.TASK_EVALUATE_WAGGON)
 						.processInstanceId(processInstance.getId()).list().size());
 		
-		processRunner.evaluateWaggonRepairs(processInstance, WaggonState.REPAIR_WAGGON, "W2", "W6", "W7", "W8");
-		processRunner.evaluateWaggonRepairs(processInstance, WaggonState.REPLACE_WAGGON, "W3", "W4");
+		processRunner.evaluateWaggonRepairs(processInstance, WaggonState.REPAIR_WAGGON, "W4", "W6", "W7", "W8");
+		processRunner.evaluateWaggonRepairs(processInstance, WaggonState.REPLACE_WAGGON, "W2", "W3");
 		
 		// all relevant waggons evaluated...
-		assertWaggonStates(processEngine, processInstance, "W1", WaggonState.NOMINAL, "W2", WaggonState.REPAIR_WAGGON,
-				"W3", WaggonState.REPLACE_WAGGON, "W4", WaggonState.REPLACE_WAGGON, "W5", WaggonState.NOMINAL, "W6",
+		assertWaggonStates(processEngine, processInstance, "W1", WaggonState.NOMINAL, "W2", WaggonState.REPLACE_WAGGON,
+				"W3", WaggonState.REPLACE_WAGGON, "W4", WaggonState.REPAIR_WAGGON, "W5", WaggonState.NOMINAL, "W6",
 				WaggonState.REPAIR_WAGGON, "W7", WaggonState.REPAIR_WAGGON, "W8", WaggonState.REPAIR_WAGGON);
 		
 		// 4 facility processes left (W2, W6, W7, W8)
 		assertEquals(4, ensureProcessInstanceCount(DtpConstants.Facility.DEFINITION.PROCESS_REPAIR_FACILITY));
 		
-		// TODO prompt repairs
+		// prompt repairs (W2, W6, W7, W8)
+		processRunner.promptWaggonRepairs(processInstance, "W4", "W6", "W7", "W8");
 		
-		// TODO prompt replacements
+		// prompt replacements (W3, W4)
+		processRunner.promptWaggonReplacements(processInstance, "W2", "W3");
+		
+		assertThat(processInstance).isWaitingAt(DtpConstants.DepartTrain.CATCH.CATCH_MSG_REP_WAGG_ARRIVED);
+		
+		processRunner.deliverEvaluationReplacementWaggons(processInstance, "W2000", "W3000");
+		
+		processRunner.chooseEvaluationReplacementTrack(processInstance, "T123");
+		
+		assertThat(processInstance).isWaitingAt(DtpConstants.DepartTrain.TASK.TASK_CHOOSE_EXIT_TRACK);
 		
 		// TODO check replacement track
+		assertTrue(RailwayStationBusinessLogic.getInstance().checkTrackWaggons("TrackReplacement", "W2000", "W3000"));
 		
 		assertThat(processInstance).isWaitingAt(DtpConstants.DepartTrain.GATEWAY.GW_AWAIT_REPAIR_OUTCOME);
 	}

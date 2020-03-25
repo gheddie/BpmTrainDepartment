@@ -11,6 +11,7 @@ import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.runtime.Job;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
+import org.h2.util.HashBase;
 
 import de.gravitex.bpm.traindepartment.entity.Waggon;
 import de.gravitex.bpm.traindepartment.enumeration.WaggonState;
@@ -91,6 +92,15 @@ public class DepartmentProcessRunner extends ProcessRunner {
 					processInstance, waggonNumber, getProcessEngine()));
 		}
 	}
+	
+	public void promptWaggonReplacements(ProcessInstance processInstance, String... waggonNumbers) {
+		TaskService taskService = getProcessEngine().getTaskService();
+		for (String waggonNumber : waggonNumbers) {
+			taskService.complete(
+					TaskMapperFactory.mapWaggonNumberToTaskId(TaskMappingType.PROMPT_WAGGON_EVALUATION_REPLACEMENT,
+							processInstance, waggonNumber, getProcessEngine()));
+		}
+	}
 
 	public void finishWaggonRepair(ProcessInstance processInstance, String waggonNumber) {
 		logger.info("finishing waggon repair for waggon: " + waggonNumber);
@@ -117,12 +127,26 @@ public class DepartmentProcessRunner extends ProcessRunner {
 
 	public void promptRepairWaggonReplacement(ProcessInstance processInstance, String waggonNumber) {
 		getProcessEngine().getTaskService().complete(TaskMapperFactory.mapWaggonNumberToTaskId(
-				TaskMappingType.PROMPT_REPAIR_REPLACEMENT, processInstance, waggonNumber, getProcessEngine()));
+				TaskMappingType.PROMPT_WAGGON_REPAIR_REPLACEMENT, processInstance, waggonNumber, getProcessEngine()));
 	}
 
-	public void deliverRepairReplacementWaggon(ProcessInstance processInstance, String WaggonNumber) {
+	public void deliverRepairReplacementWaggon(ProcessInstance processInstance, String... waggonNumbers) {
 		getProcessEngine().getRuntimeService().correlateMessage(DtpConstants.NotQualified.MESSAGE.MSG_REP_REPLACE_ARR,
 				processInstance.getBusinessKey());
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void deliverEvaluationReplacementWaggons(ProcessInstance processInstance, String... waggonNumbers) {
+		getProcessEngine().getRuntimeService().correlateMessage(DtpConstants.DepartTrain.MESSAGE.MSG_REP_WAGG_ARRIVED,
+				processInstance.getBusinessKey(), HashMapBuilder.create().withValuePair(DtpConstants.DepartTrain.VAR.VAR_DELIVERED_EVALUATION_REPLACMENT_WAGGONS, waggonNumbers).build());
+	}
+	
+	public void chooseEvaluationReplacementTrack(ProcessInstance processInstance, String trackNumber) {
+		TaskService taskService = getProcessEngine().getTaskService();
+		List<Task> taskList = taskService.createTaskQuery()
+				.taskDefinitionKey(DtpConstants.DepartTrain.TASK.TASK_CHOOSE_EVALUATION_REPLACEMENT_TRACK).processInstanceId(processInstance.getId()).list();
+		assertEquals(1, taskList.size());
+		taskService.complete(taskList.get(0).getId());
 	}
 
 	private Task getRepairFacilityProcessTask(String waggonNumber, String taskDefinitionKey,

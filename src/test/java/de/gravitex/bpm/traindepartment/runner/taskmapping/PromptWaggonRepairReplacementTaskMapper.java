@@ -2,7 +2,7 @@ package de.gravitex.bpm.traindepartment.runner.taskmapping;
 
 import de.gravitex.bpm.traindepartment.logic.DtpConstants;
 
-public class PromptRepairReplacementTaskMapper implements TaskMapper {
+public class PromptWaggonRepairReplacementTaskMapper implements TaskMapper {
 
 	@Override
 	public String getTaskName() {

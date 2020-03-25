@@ -2,11 +2,11 @@ package de.gravitex.bpm.traindepartment.runner.taskmapping;
 
 import de.gravitex.bpm.traindepartment.logic.DtpConstants;
 
-public class PromptWaggonRepairTaskMapper implements TaskMapper {
+public class PromptWaggonEvaluationReplacementTaskMapper implements TaskMapper {
 
 	@Override
 	public String getTaskName() {
-		return DtpConstants.DepartTrain.TASK.TASK_PROMPT_WAGGON_REPAIR;
+		return DtpConstants.DepartTrain.TASK.TASK_PROMPT_WAGGON_REPLACEMENT;
 	}
 
 	@Override
@@ -16,6 +16,6 @@ public class PromptWaggonRepairTaskMapper implements TaskMapper {
 
 	@Override
 	public String getListVariableName() {
-		return DtpConstants.NotQualified.VAR.VAR_PROMPT_REPAIR_WAGGON;
+		return DtpConstants.NotQualified.VAR.VAR_PROMPT_REPLACE_WAGGON;
 	}
 }

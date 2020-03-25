@@ -24,10 +24,9 @@ import org.camunda.bpm.engine.runtime.VariableInstance;
 import org.camunda.bpm.engine.task.Task;
 import org.camunda.bpm.engine.task.TaskQuery;
 
-import de.gravitex.bpm.traindepartment.logic.DtpConstants;
-import de.gravitex.bpm.traindepartment.delegate.AllAssumementsDoneDelegate;
 import de.gravitex.bpm.traindepartment.enumeration.WaggonState;
 import de.gravitex.bpm.traindepartment.logic.DepartmentProcessData;
+import de.gravitex.bpm.traindepartment.logic.DtpConstants;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
 import de.gravitex.bpm.traindepartment.logic.WaggonProcessInfo;
 import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
@@ -149,7 +148,7 @@ public class BpmTestCase {
 	private void assertWaggonState(ProcessEngineServices processEngine, ProcessInstance processInstance, String waggonNumber,
 			WaggonState waggonState) {
 		logger.debug("asserting waggon state [" + waggonNumber + "]: " + waggonState);
-		assertEquals(waggonState, getProcessData(processEngine, processInstance).getWaggonRepairInfoHash()
+		assertEquals(waggonState, getProcessData(processEngine, processInstance).getWaggons()
 				.get(waggonNumber).getWaggonState());
 	}
 

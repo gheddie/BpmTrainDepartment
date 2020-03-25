@@ -17,7 +17,8 @@ public class TaskMapperFactory {
 	static {
 		taskMappers.put(TaskMappingType.EVAULATE_WAGGON, new EvaluateWaggonTaskMapper());
 		taskMappers.put(TaskMappingType.PROMPT_WAGGON_REPAIR, new PromptWaggonRepairTaskMapper());
-		taskMappers.put(TaskMappingType.PROMPT_REPAIR_REPLACEMENT, new PromptRepairReplacementTaskMapper());
+		taskMappers.put(TaskMappingType.PROMPT_WAGGON_EVALUATION_REPLACEMENT, new PromptWaggonEvaluationReplacementTaskMapper());
+		taskMappers.put(TaskMappingType.PROMPT_WAGGON_REPAIR_REPLACEMENT, new PromptWaggonRepairReplacementTaskMapper());
 	}
 	
 	public static String mapWaggonNumberToTaskId(TaskMappingType taskMappingType, ProcessInstance processInstance, String waggonNumber,

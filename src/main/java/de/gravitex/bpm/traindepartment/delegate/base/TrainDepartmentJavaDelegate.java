@@ -6,6 +6,7 @@ import java.util.List;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 
+import de.gravitex.bpm.traindepartment.entity.DepartingOrder;
 import de.gravitex.bpm.traindepartment.logic.DepartmentProcessData;
 import de.gravitex.bpm.traindepartment.logic.DtpConstants;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
@@ -19,10 +20,14 @@ public abstract class TrainDepartmentJavaDelegate implements JavaDelegate {
 	}
 
 	protected List<WaggonProcessInfo> getWaggons(DelegateExecution execution) {
-		return new ArrayList<WaggonProcessInfo>(((DepartmentProcessData) getProcessData(execution)).getWaggons());
+		return new ArrayList<WaggonProcessInfo>(((DepartmentProcessData) getProcessData(execution)).getWaggonList());
 	}
 
 	protected DepartmentProcessData getProcessData(DelegateExecution execution) {
 		return RailwayStationBusinessLogic.getDepartmentProcessData(execution);
+	}
+	
+	protected DepartingOrder getDepartingOrder(DelegateExecution execution) {
+		return getProcessData(execution).getDepartingOrder();
 	}
 }
