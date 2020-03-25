@@ -558,6 +558,9 @@
       <bpmn:terminateEventDefinition />
     </bpmn:endEvent>
     <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_0ipfz9z" name="MSG_ABORT_REPAIR">
+      <bpmn:extensionElements>
+        <camunda:executionListener class="de.gravitex.bpm.traindepartment.listener.start.MsgAbortRepairStartistener" event="start" />
+      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1s4bptw</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0lxd2yu</bpmn:outgoing>
       <bpmn:messageEventDefinition messageRef="Message_0huiaxk" />

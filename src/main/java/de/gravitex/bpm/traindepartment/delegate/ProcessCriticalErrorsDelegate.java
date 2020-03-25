@@ -22,7 +22,7 @@ public class ProcessCriticalErrorsDelegate extends TrainDepartmentJavaDelegate {
 		for (WaggonProcessInfo plannedWaggon : getWaggons(execution)) {
 			if (RailwayStationBusinessLogic.getInstance().isWaggonCritical(plannedWaggon.getWaggonNumber())) {
 				facilityProcessBusinessKey = RailwayStationBusinessLogic.getInstance()
-						.generateBusinessKey(DtpConstants.NotQualified.DEFINITION.PROCESS_REPAIR_FACILITY, HashMapBuilder.create()
+						.generateBusinessKey(DtpConstants.Facility.DEFINITION.PROCESS_REPAIR_FACILITY, HashMapBuilder.create()
 								.withValuePair(RepairFacilityBusinessKeyCreator.AV_WAGGON_NUMBER, plannedWaggon.getWaggonNumber())
 								.build(), execution.getBusinessKey());
 				plannedWaggon.setFacilityProcessBusinessKey(facilityProcessBusinessKey);

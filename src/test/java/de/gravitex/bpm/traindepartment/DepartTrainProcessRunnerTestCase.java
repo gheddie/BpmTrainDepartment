@@ -195,10 +195,15 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 						.taskDefinitionKey(DtpConstants.Main.TASK.TASK_EVALUATE_WAGGON)
 						.processInstanceId(processInstance.getId()).list().size());
 		
-		processRunner.evaluateWaggonRepairs(processInstance, WaggonState.REPAIR_WAGGON, "W2", "W3", "W4", "W6", "W7", "W8");
+		processRunner.evaluateWaggonRepairs(processInstance, WaggonState.REPAIR_WAGGON, "W2", "W6", "W7", "W8");
+		processRunner.evaluateWaggonRepairs(processInstance, WaggonState.REPLACE_WAGGON, "W3", "W4");
 		
+		// all relevant waggons evaluated...
 		assertWaggonStates(processEngine, processInstance, "W1", WaggonState.NOMINAL, "W2", WaggonState.REPAIR_WAGGON,
-				"W3", WaggonState.REPAIR_WAGGON, "W4", WaggonState.REPAIR_WAGGON, "W5", WaggonState.NOMINAL, "W6",
+				"W3", WaggonState.REPLACE_WAGGON, "W4", WaggonState.REPLACE_WAGGON, "W5", WaggonState.NOMINAL, "W6",
 				WaggonState.REPAIR_WAGGON, "W7", WaggonState.REPAIR_WAGGON, "W8", WaggonState.REPAIR_WAGGON);
+		
+		// 4 facility processes left (W2, W6, W7, W8)
+		assertEquals(4, ensureProcessInstanceCount(DtpConstants.Facility.DEFINITION.PROCESS_REPAIR_FACILITY));
 	}
 }

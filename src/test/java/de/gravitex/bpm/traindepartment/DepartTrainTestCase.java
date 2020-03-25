@@ -69,7 +69,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		ProcessInstance processInstance = startDepartureProcess(getDefaultPlannedDepartureTime(), "W1", "W2", "W3", "W4");
 
 		// we have 4 facility processes, so 4 assumement tasks..
-		assertEquals(4, ensureProcessInstanceCount(DtpConstants.NotQualified.DEFINITION.PROCESS_REPAIR_FACILITY));
+		assertEquals(4, ensureProcessInstanceCount(DtpConstants.Facility.DEFINITION.PROCESS_REPAIR_FACILITY));
 		
 		ensureTaskCountPresent(null, DtpConstants.Facility.TASK.TASK_ASSUME_REPAIR_TIME,
 				DtpConstants.NotQualified.ROLE.ROLE_REPAIR_DUDE, 4);
@@ -86,7 +86,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 		// 4 facility processes are waiting at 'CATCH_MSG_START_REPAIR'...
 		List<ProcessInstance> facilityProcessesInstances = getProcessesInstances(
-				DtpConstants.NotQualified.DEFINITION.PROCESS_REPAIR_FACILITY);
+				DtpConstants.Facility.DEFINITION.PROCESS_REPAIR_FACILITY);
 		assertEquals(4, facilityProcessesInstances.size());
 		assertThat(facilityProcessesInstances.get(0)).isWaitingAt(DtpConstants.NotQualified.GATEWAY.GW_START_OR_ABORT_REPAIR);
 		assertThat(facilityProcessesInstances.get(1)).isWaitingAt(DtpConstants.NotQualified.GATEWAY.GW_START_OR_ABORT_REPAIR);
@@ -122,7 +122,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		// waggons
 		// to be replaced have been canceled)
 		List<ProcessInstance> facilityProcessList = processEngine.getRuntimeService().createProcessInstanceQuery()
-				.processDefinitionKey(DtpConstants.NotQualified.DEFINITION.PROCESS_REPAIR_FACILITY).list();
+				.processDefinitionKey(DtpConstants.Facility.DEFINITION.PROCESS_REPAIR_FACILITY).list();
 		assertEquals(2, facilityProcessList.size());
 		for (ProcessInstance facilityProcessInstance : facilityProcessList) {
 			assertThat(facilityProcessInstance).isWaitingAt(DtpConstants.NotQualified.GATEWAY.GW_START_OR_ABORT_REPAIR);
@@ -246,7 +246,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		// start process A
 		startDepartureProcess(getDefaultPlannedDepartureTime(), "W1", "W2", "W3", "W4", "W5");
 
-		assertEquals(2, ensureProcessInstanceCount(DtpConstants.NotQualified.DEFINITION.PROCESS_REPAIR_FACILITY));
+		assertEquals(2, ensureProcessInstanceCount(DtpConstants.Facility.DEFINITION.PROCESS_REPAIR_FACILITY));
 	}
 
 	@Test
@@ -268,7 +268,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 				"W4");
 
 		// we must have 3 repair processes...
-		assertEquals(3, ensureProcessInstanceCount(DtpConstants.NotQualified.DEFINITION.PROCESS_REPAIR_FACILITY));
+		assertEquals(3, ensureProcessInstanceCount(DtpConstants.Facility.DEFINITION.PROCESS_REPAIR_FACILITY));
 
 		// master process is waiting at message catch...
 		assertThat(processInstance).isWaitingAt(DtpConstants.NotQualified.CATCH.CATCH_MSG_WG_ASSUMED);
@@ -470,7 +470,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 	private ProcessInstance startDepartureProcess(LocalDateTime plannedDepartureTime, String... waggonNumbers) {
 		List<String> extractedWaggonNumbers = Waggon.getWaggonNumbers(waggonNumbers);
 		String generatedBusinessKey = RailwayStationBusinessLogic.getInstance()
-				.generateBusinessKey(DtpConstants.NotQualified.DEFINITION.PROCESS_DEPART_TRAIN, HashMapBuilder.create().build(), null);
+				.generateBusinessKey(DtpConstants.Main.DEFINITION.PROCESS_DEPART_TRAIN, HashMapBuilder.create().build(), null);
 		DepartmentProcessData departmentProcessData = DepartmentProcessData.fromWaggonNumbers(extractedWaggonNumbers);
 		ProcessInstance instance = processEngine.getRuntimeService().startProcessInstanceByMessage(
 				DtpConstants.Main.MESSAGE.MSG_DEPARTURE_PLANNED, generatedBusinessKey,
@@ -490,7 +490,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 	private ProcessInstance resolveRepairFacilityProcessForWaggonNumber(String waggonNumber, ProcessInstance parentInstance) {
 		ProcessInstance instance = RailwayStationBusinessLogic.getInstance().resolveProcessInstance(getProcessInstances(),
-				DtpConstants.NotQualified.DEFINITION.PROCESS_REPAIR_FACILITY, waggonNumber, parentInstance);
+				DtpConstants.Facility.DEFINITION.PROCESS_REPAIR_FACILITY, waggonNumber, parentInstance);
 		return instance;
 	}
 

@@ -38,7 +38,7 @@ public class DepartmentProcessRunner extends ProcessRunner {
 	public ProcessInstance startDepartureProcess(LocalDateTime plannedDepartureTime, String... waggonNumbers) {
 		List<String> extractedWaggonNumbers = Waggon.getWaggonNumbers(waggonNumbers);
 		String generatedBusinessKey = RailwayStationBusinessLogic.getInstance().generateBusinessKey(
-				DtpConstants.NotQualified.DEFINITION.PROCESS_DEPART_TRAIN, HashMapBuilder.create().build(), null);
+				DtpConstants.Main.DEFINITION.PROCESS_DEPART_TRAIN, HashMapBuilder.create().build(), null);
 		DepartmentProcessData departmentProcessData = DepartmentProcessData.fromWaggonNumbers(extractedWaggonNumbers);
 		ProcessInstance instance = getProcessEngine().getRuntimeService().startProcessInstanceByMessage(
 				DtpConstants.Main.MESSAGE.MSG_DEPARTURE_PLANNED, generatedBusinessKey,
@@ -137,7 +137,7 @@ public class DepartmentProcessRunner extends ProcessRunner {
 	private ProcessInstance resolveRepairFacilityProcessForWaggonNumber(String waggonNumber,
 			ProcessInstance parentInstance) {
 		ProcessInstance instance = RailwayStationBusinessLogic.getInstance().resolveProcessInstance(
-				getProcessInstances(), DtpConstants.NotQualified.DEFINITION.PROCESS_REPAIR_FACILITY, waggonNumber,
+				getProcessInstances(), DtpConstants.Facility.DEFINITION.PROCESS_REPAIR_FACILITY, waggonNumber,
 				parentInstance);
 		// backwards check
 		assertEquals(waggonNumber,

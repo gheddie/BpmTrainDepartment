@@ -124,9 +124,7 @@ public class DtpConstants {
 		}
 
 		public class DEFINITION {
-			public static final String PROCESS_DEPART_TRAIN = "PROCESS_DEPART_TRAIN";
-			public static final String PROCESS_REPAIR_FACILITY = "PROCESS_REPAIR_FACILITY";
-			public static final String PROCESS_SHUNTER = "PROCESS_SHUNTER";
+			
 		}
 		
 		public class SIGNAL {
@@ -171,7 +169,7 @@ public class DtpConstants {
 		}
 
 		public class DEFINITION {
-
+			public static final String PROCESS_DEPART_TRAIN = "PROCESS_DEPART_TRAIN";
 		}
 		
 		public class SIGNAL {
@@ -220,7 +218,7 @@ public class DtpConstants {
 		}
 
 		public class DEFINITION {
-
+			public static final String PROCESS_REPAIR_FACILITY = "PROCESS_REPAIR_FACILITY";
 		}
 		
 		public class SIGNAL {
@@ -263,7 +261,7 @@ public class DtpConstants {
 		}
 
 		public class DEFINITION {
-
+			public static final String PROCESS_SHUNTER = "PROCESS_SHUNTER";
 		}
 		
 		public class SIGNAL {

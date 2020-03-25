@@ -21,9 +21,6 @@ public class EvaluationCleanupDelegate extends TrainDepartmentJavaDelegate {
 			execution.getProcessEngine().getRuntimeService().correlateMessage(
 					DtpConstants.Facility.MESSAGE.MSG_ABORT_REPAIR,
 					waggonProcessInfo.getFacilityProcessBusinessKey());
-			// remove from data model -> NO, still needed to prompt waggon replacements
-			// later!!
-			// getDepartmentProcessData(execution).removeWaggon(waggonProcessInfo.getWaggonNumber());
 		}
 	}
 }
