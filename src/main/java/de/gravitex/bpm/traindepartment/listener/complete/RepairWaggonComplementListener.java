@@ -21,7 +21,7 @@ public class RepairWaggonComplementListener implements TaskListener {
 						DtpConstants.Facility.VAR.VAR_SINGLE_FACILITY_PROCESS_WAGGON);
 		repairedWaggon.setWaggonState(WaggonState.REPAIRED);
 		delegateTask.getProcessEngine().getRuntimeService().correlateMessage(
-				DtpConstants.Main.MESSAGE.MSG_REPAIR_DONE, parentInstanceBusinessKey, HashMapBuilder.create()
+				DtpConstants.DepartTrain.MESSAGE.MSG_REPAIR_DONE, parentInstanceBusinessKey, HashMapBuilder.create()
 						.withValuePair(DtpConstants.NotQualified.VAR.VAR_REPAIRED_WAGGON, repairedWaggon).build());
 	}
 }

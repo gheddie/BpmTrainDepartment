@@ -25,8 +25,8 @@ public class RailwayStationBusinessLogic implements IRailwayStationBusinessLogic
 
 	private static final HashMap<String, BusinessKeyCreator> businessKeyCreators = new HashMap<String, BusinessKeyCreator>();
 	static {
-		businessKeyCreators.put(DtpConstants.Main.DEFINITION.PROCESS_DEPART_TRAIN,
-				new DepartTrainBusinessKeyCreator(DtpConstants.Main.DEFINITION.PROCESS_DEPART_TRAIN));
+		businessKeyCreators.put(DtpConstants.DepartTrain.DEFINITION.PROCESS_DEPART_TRAIN,
+				new DepartTrainBusinessKeyCreator(DtpConstants.DepartTrain.DEFINITION.PROCESS_DEPART_TRAIN));
 		businessKeyCreators.put(DtpConstants.Facility.DEFINITION.PROCESS_REPAIR_FACILITY,
 				new RepairFacilityBusinessKeyCreator(DtpConstants.Facility.DEFINITION.PROCESS_REPAIR_FACILITY));
 		businessKeyCreators.put(DtpConstants.Shunter.DEFINITION.PROCESS_SHUNTER,

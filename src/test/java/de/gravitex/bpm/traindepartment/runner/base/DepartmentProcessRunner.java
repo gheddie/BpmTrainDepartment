@@ -38,10 +38,10 @@ public class DepartmentProcessRunner extends ProcessRunner {
 	public ProcessInstance startDepartureProcess(LocalDateTime plannedDepartureTime, String... waggonNumbers) {
 		List<String> extractedWaggonNumbers = Waggon.getWaggonNumbers(waggonNumbers);
 		String generatedBusinessKey = RailwayStationBusinessLogic.getInstance().generateBusinessKey(
-				DtpConstants.Main.DEFINITION.PROCESS_DEPART_TRAIN, HashMapBuilder.create().build(), null);
+				DtpConstants.DepartTrain.DEFINITION.PROCESS_DEPART_TRAIN, HashMapBuilder.create().build(), null);
 		DepartmentProcessData departmentProcessData = DepartmentProcessData.fromWaggonNumbers(extractedWaggonNumbers);
 		ProcessInstance instance = getProcessEngine().getRuntimeService().startProcessInstanceByMessage(
-				DtpConstants.Main.MESSAGE.MSG_DEPARTURE_PLANNED, generatedBusinessKey,
+				DtpConstants.DepartTrain.MESSAGE.MSG_DEPARTURE_PLANNED, generatedBusinessKey,
 				HashMapBuilder.create()
 						.withValuePair(DtpConstants.NotQualified.VAR.VAR_DEPARTMENT_PROCESS_DATA, departmentProcessData)
 						.withValuePair(DtpConstants.NotQualified.VAR.VAR_PLANNED_DEPARTMENT_DATE, plannedDepartureTime)

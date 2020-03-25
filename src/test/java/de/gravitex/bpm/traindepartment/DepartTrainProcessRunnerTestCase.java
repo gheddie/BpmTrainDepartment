@@ -1,11 +1,10 @@
 package de.gravitex.bpm.traindepartment;
 
 import static org.junit.Assert.assertEquals;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertThat;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-import org.camunda.bpm.engine.runtime.Execution;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
@@ -43,7 +42,7 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 		processRunner.assumeWaggonRepairs(processInstance, 12, "W1");
 		processRunner.assumeWaggonRepairs(processInstance, 24, "W2");
 
-		ensureTaskCountPresent(processInstance, DtpConstants.Main.TASK.TASK_EVALUATE_WAGGON,
+		ensureTaskCountPresent(processInstance, DtpConstants.DepartTrain.TASK.TASK_EVALUATE_WAGGON,
 				DtpConstants.NotQualified.ROLE.ROLE_SUPERVISOR, 2);
 
 		// evaluate repairs
@@ -54,7 +53,7 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 		// prompt repairs
 		processRunner.promptWaggonRepairs(processInstance, "W1", "W2");
 
-		assertWaitStates(processInstance, DtpConstants.NotQualified.GATEWAY.GW_AWAIT_REPAIR_OUTCOME);
+		assertWaitStates(processInstance, DtpConstants.DepartTrain.GATEWAY.GW_AWAIT_REPAIR_OUTCOME);
 
 		// finish WaggonRepairs
 		processRunner.finishWaggonRepair(processInstance, "W1");
@@ -192,7 +191,7 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 		// 6 waggons to be evaluated...
 		assertEquals(6,
 				processEngine.getTaskService().createTaskQuery()
-						.taskDefinitionKey(DtpConstants.Main.TASK.TASK_EVALUATE_WAGGON)
+						.taskDefinitionKey(DtpConstants.DepartTrain.TASK.TASK_EVALUATE_WAGGON)
 						.processInstanceId(processInstance.getId()).list().size());
 		
 		processRunner.evaluateWaggonRepairs(processInstance, WaggonState.REPAIR_WAGGON, "W2", "W6", "W7", "W8");
@@ -205,5 +204,13 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 		
 		// 4 facility processes left (W2, W6, W7, W8)
 		assertEquals(4, ensureProcessInstanceCount(DtpConstants.Facility.DEFINITION.PROCESS_REPAIR_FACILITY));
+		
+		// TODO prompt repairs
+		
+		// TODO prompt replacements
+		
+		// TODO check replacement track
+		
+		assertThat(processInstance).isWaitingAt(DtpConstants.DepartTrain.GATEWAY.GW_AWAIT_REPAIR_OUTCOME);
 	}
 }

@@ -82,7 +82,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 
 		// 4 evaluations to be done...
 		List<Task> evaluationTasks = ensureTaskCountPresent(processInstance,
-				DtpConstants.Main.TASK.TASK_EVALUATE_WAGGON, DtpConstants.NotQualified.ROLE.ROLE_SUPERVISOR, 4);
+				DtpConstants.DepartTrain.TASK.TASK_EVALUATE_WAGGON, DtpConstants.NotQualified.ROLE.ROLE_SUPERVISOR, 4);
 
 		// 4 facility processes are waiting at 'CATCH_MSG_START_REPAIR'...
 		List<ProcessInstance> facilityProcessesInstances = getProcessesInstances(
@@ -183,7 +183,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		assertTrue(RailwayStationBusinessLogic.getInstance().checkTrackWaggons("TrackReplacement", "W888", "W999"));
 
 		// all prompted --> wait for repairs (or exceedements)...
-		assertThat(processInstance).isWaitingAt(DtpConstants.NotQualified.GATEWAY.GW_AWAIT_REPAIR_OUTCOME);
+		assertThat(processInstance).isWaitingAt(DtpConstants.DepartTrain.GATEWAY.GW_AWAIT_REPAIR_OUTCOME);
 
 		// assertEquals(2, repairInfos.size());
 		assertEquals(2,
@@ -470,10 +470,10 @@ public class DepartTrainTestCase extends BpmTestCase {
 	private ProcessInstance startDepartureProcess(LocalDateTime plannedDepartureTime, String... waggonNumbers) {
 		List<String> extractedWaggonNumbers = Waggon.getWaggonNumbers(waggonNumbers);
 		String generatedBusinessKey = RailwayStationBusinessLogic.getInstance()
-				.generateBusinessKey(DtpConstants.Main.DEFINITION.PROCESS_DEPART_TRAIN, HashMapBuilder.create().build(), null);
+				.generateBusinessKey(DtpConstants.DepartTrain.DEFINITION.PROCESS_DEPART_TRAIN, HashMapBuilder.create().build(), null);
 		DepartmentProcessData departmentProcessData = DepartmentProcessData.fromWaggonNumbers(extractedWaggonNumbers);
 		ProcessInstance instance = processEngine.getRuntimeService().startProcessInstanceByMessage(
-				DtpConstants.Main.MESSAGE.MSG_DEPARTURE_PLANNED, generatedBusinessKey,
+				DtpConstants.DepartTrain.MESSAGE.MSG_DEPARTURE_PLANNED, generatedBusinessKey,
 				HashMapBuilder.create()
 						.withValuePair(DtpConstants.NotQualified.VAR.VAR_DEPARTMENT_PROCESS_DATA, departmentProcessData)
 						.withValuePair(DtpConstants.NotQualified.VAR.VAR_PLANNED_DEPARTMENT_DATE, plannedDepartureTime).build());

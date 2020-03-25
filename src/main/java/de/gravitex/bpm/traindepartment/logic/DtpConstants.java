@@ -95,7 +95,6 @@ public class DtpConstants {
 			public static final String GW_REPAIR_CALLBACK = "MsGwRepairCallback";
 			public static final String GW_PLACE_REPLACEMENT_WAGGONS = "GW_PLACE_REPLACEMENT_WAGGONS";
 			public static final String GW_START_OR_ABORT_REPAIR = "ExGwStartOrAbortRepair";
-			public static final String GW_AWAIT_REPAIR_OUTCOME = "ExGwAwaitRepairOutcome";
 		}
 
 		public class ROLE {
@@ -132,7 +131,7 @@ public class DtpConstants {
 		}
 	}
 
-	public class Main {
+	public class DepartTrain {
 
 		public class VAR {
 
@@ -153,7 +152,7 @@ public class DtpConstants {
 		}
 
 		public class GATEWAY {
-
+			public static final String GW_AWAIT_REPAIR_OUTCOME = "ExGwAwaitRepairOutcome";
 		}
 
 		public class ROLE {

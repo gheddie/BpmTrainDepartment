@@ -20,10 +20,10 @@ public class RepairTimeExceededDelegate extends FacilityProcessDelegate {
 		WaggonProcessInfo facilityWaggon = getFacilityWaggon(execution);
 		facilityWaggon.setWaggonState(WaggonState.REPAIR_EXCEEDED);
 		RuntimeService runtimeService = execution.getProcessEngine().getRuntimeService();
-		runtimeService.correlateMessage(DtpConstants.Main.MESSAGE.MSG_REPAIR_TIME_EXCEEDED,
+		runtimeService.correlateMessage(DtpConstants.DepartTrain.MESSAGE.MSG_REPAIR_TIME_EXCEEDED,
 				(String) runtimeService.getVariable(execution.getId(), DtpConstants.NotQualified.VAR.VAR_DEP_PROC_BK),
 				HashMapBuilder.create().withValuePair(DtpConstants.NotQualified.VAR.VAR_WAGGON_REPAIR_TIMEOUT, facilityWaggon).build());
-		logger.info("correlated message '" + DtpConstants.Main.MESSAGE.MSG_REPAIR_TIME_EXCEEDED + "' for waggon: "
+		logger.info("correlated message '" + DtpConstants.DepartTrain.MESSAGE.MSG_REPAIR_TIME_EXCEEDED + "' for waggon: "
 				+ facilityWaggon.getWaggonNumber());
 	}
 }
