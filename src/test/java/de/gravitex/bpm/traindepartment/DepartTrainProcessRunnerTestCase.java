@@ -272,8 +272,8 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 		//  prompt repair waggon replacements (W6, W7)
 		processRunner.promptRepairWaggonReplacements(processInstance, "W6", "W7");
 		
-		processRunner.deliverRepairReplacementWaggons(processInstance, WaggonProcessInfo.fromValues("W2000", "W2"),
-				WaggonProcessInfo.fromValues("W3000", "W3"));
+		processRunner.deliverRepairReplacementWaggons(processInstance, WaggonProcessInfo.fromValues("W6000", "W6"),
+				WaggonProcessInfo.fromValues("W7000", "W7"));
 		
 		assertThat(processInstance).isWaitingAt(DtpConstants.DepartTrain.TASK.TASK_CHOOSE_EXIT_TRACK);
 	}

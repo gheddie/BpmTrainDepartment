@@ -5,13 +5,14 @@ import java.util.List;
 
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 
+import de.gravitex.bpm.traindepartment.delegate.base.ReplaceWaggonsJavaDelegate;
 import de.gravitex.bpm.traindepartment.delegate.base.TrainDepartmentJavaDelegate;
 import de.gravitex.bpm.traindepartment.logic.DepartmentProcessData;
 import de.gravitex.bpm.traindepartment.logic.DtpConstants;
 import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
 import de.gravitex.bpm.traindepartment.logic.WaggonProcessInfo;
 
-public class ProcessEvaluationReplacementWaggonsDelegate extends TrainDepartmentJavaDelegate {
+public class ProcessEvaluationReplacementWaggonsDelegate extends ReplaceWaggonsJavaDelegate {
 
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
@@ -31,14 +32,6 @@ public class ProcessEvaluationReplacementWaggonsDelegate extends TrainDepartment
 		RailwayStationBusinessLogic.getInstance()
 				.addWaggonsToTrack(processData.getDepartingOrder().getReplacementTrack(), waggonNumbersToAdd);
 		
-		// TODO remove on hashmap does not work?!?
-		for (WaggonProcessInfo deliveredWaggon : deliveredWaggons) {
-			// remove old
-			processData.removeWaggon(deliveredWaggon.getReplacementForWaggon());			
-			// add new
-			processData.addWaggon(deliveredWaggon);
-		}
-		
-		// processData.removeWaggons(waggonNumbersToRemove);
+		replaceWaggons(processData, deliveredWaggons);
 	}
 }
