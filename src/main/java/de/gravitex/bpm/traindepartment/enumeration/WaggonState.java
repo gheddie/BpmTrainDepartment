@@ -3,7 +3,7 @@ package de.gravitex.bpm.traindepartment.enumeration;
 public enum WaggonState {
 	
 	// on initialiazation
-	NOMINAL,
+	OK,
 	
 	// repair and use waggon for planned department
 	REPAIR_WAGGON,
@@ -11,13 +11,8 @@ public enum WaggonState {
 	// replace waggon (for a repair time assumed too long)
 	REPLACE_WAGGON,
 	
-	// delivered as a replacement (for replacement on 'REPLACE_WAGGON' or a timed out repair)
-	REPLACED,
-	
 	// repair time was exceeded
 	REPAIR_TIME_EXCEEDED,
-	
-	REPAIRED,
 	
 	ASSUMED,
 	

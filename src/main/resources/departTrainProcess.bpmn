@@ -454,7 +454,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_0jlyfnl" sourceRef="ExGwAllRepairsDone" targetRef="ExclusiveGateway_1qk7c3h" />
     <bpmn:sequenceFlow id="SequenceFlow_0kdplx5" sourceRef="ExclusiveGateway_1cjslvo" targetRef="ExGwAllRepairsDone" />
     <bpmn:sequenceFlow id="SequenceFlow_0zt6zu8" sourceRef="ExGwAllRepairsDone" targetRef="ExGwAwaitRepairOutcome">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!VAR_DEPARTMENT_PROCESS_DATA.allRepairsDone()}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!VAR_DEPARTMENT_PROCESS_DATA.allWaggonsReadyToGo()}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_0crpcnf" sourceRef="ExGwAwaitRepairOutcome" targetRef="CATCH_MSG_WAGGON_REPAIRED" />
     <bpmn:sequenceFlow id="SequenceFlow_126g6j1" sourceRef="CATCH_MSG_WAGGON_REPAIRED" targetRef="ExclusiveGateway_1cjslvo" />

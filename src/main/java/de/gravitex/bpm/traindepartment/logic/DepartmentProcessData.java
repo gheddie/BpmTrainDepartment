@@ -71,13 +71,14 @@ public class DepartmentProcessData implements IDepartmentProcessData {
 		return true;
 	}
 
-	public boolean allRepairsDone() {
+	public boolean allWaggonsReadyToGo() {
 		logger.info("checking all repairs done...");
 		debugWaggonStates();
 		for (WaggonProcessInfo waggonProcessInfo : waggons.values()) {
 			if (waggonProcessInfo.getWaggonState().equals(WaggonState.REPAIR_WAGGON)) {
-				if (!(waggonProcessInfo.repairDone())) {
-					logger.info("waggon " + waggonProcessInfo.getWaggonNumber() + " has not been repaired.");
+				if (!(waggonProcessInfo.getWaggonState().equals(WaggonState.OK))) {
+					logger.info("waggon " + waggonProcessInfo.getWaggonNumber() + " is not ready to go ["
+							+ waggonProcessInfo.getWaggonState() + "].");
 					return false;
 				}
 			}
@@ -91,17 +92,6 @@ public class DepartmentProcessData implements IDepartmentProcessData {
 			logger.debug("state of waggon ["+waggonProcessInfo.getWaggonNumber()+"]: " + waggonProcessInfo.getWaggonState());
 		}
 		logger.debug(" --------------------------------------- ");
-	}
-
-	@JsonIgnore
-	public int getRepairedWaggonCount() {
-		int count = 0;
-		for (WaggonProcessInfo waggonProcessInfo : waggons.values()) {
-			if (waggonProcessInfo.repairDone()) {
-				count++;
-			}
-		}
-		return count;
 	}
 
 	public void processWaggonCallback(WaggonProcessInfo waggonProcessInfo) {

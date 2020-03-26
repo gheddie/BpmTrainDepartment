@@ -185,8 +185,8 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 		// we have a department order
 		assertNotNull(RailwayStationBusinessLogic.getInstance().getDepartingOrder(processInstance.getBusinessKey()));
 
-		assertProcessWaggonStates(processEngine, processInstance, "W1", WaggonState.NOMINAL, "W2", WaggonState.TO_BE_ASSUMED,
-				"W3", WaggonState.TO_BE_ASSUMED, "W4", WaggonState.TO_BE_ASSUMED, "W5", WaggonState.NOMINAL, "W6",
+		assertProcessWaggonStates(processEngine, processInstance, "W1", WaggonState.OK, "W2", WaggonState.TO_BE_ASSUMED,
+				"W3", WaggonState.TO_BE_ASSUMED, "W4", WaggonState.TO_BE_ASSUMED, "W5", WaggonState.OK, "W6",
 				WaggonState.TO_BE_ASSUMED, "W7", WaggonState.TO_BE_ASSUMED, "W8", WaggonState.TO_BE_ASSUMED);
 
 		// 6 waggons to be assumed...
@@ -196,8 +196,8 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 		processRunner.assumeWaggonRepairs(processInstance, 12, "W2", "W3", "W4", "W6", "W7", "W8");
 
 		// all waggones were assumed now...
-		assertProcessWaggonStates(processEngine, processInstance, "W1", WaggonState.NOMINAL, "W2", WaggonState.ASSUMED, "W3",
-				WaggonState.ASSUMED, "W4", WaggonState.ASSUMED, "W5", WaggonState.NOMINAL, "W6", WaggonState.ASSUMED,
+		assertProcessWaggonStates(processEngine, processInstance, "W1", WaggonState.OK, "W2", WaggonState.ASSUMED, "W3",
+				WaggonState.ASSUMED, "W4", WaggonState.ASSUMED, "W5", WaggonState.OK, "W6", WaggonState.ASSUMED,
 				"W7", WaggonState.ASSUMED, "W8", WaggonState.ASSUMED);
 
 		// 6 waggons to be evaluated...
@@ -210,8 +210,8 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 		processRunner.evaluateWaggonRepairs(processInstance, WaggonState.REPLACE_WAGGON, "W2", "W3");
 
 		// all relevant waggons evaluated...
-		assertProcessWaggonStates(processEngine, processInstance, "W1", WaggonState.NOMINAL, "W2", WaggonState.REPLACE_WAGGON,
-				"W3", WaggonState.REPLACE_WAGGON, "W4", WaggonState.REPAIR_WAGGON, "W5", WaggonState.NOMINAL, "W6",
+		assertProcessWaggonStates(processEngine, processInstance, "W1", WaggonState.OK, "W2", WaggonState.REPLACE_WAGGON,
+				"W3", WaggonState.REPLACE_WAGGON, "W4", WaggonState.REPAIR_WAGGON, "W5", WaggonState.OK, "W6",
 				WaggonState.REPAIR_WAGGON, "W7", WaggonState.REPAIR_WAGGON, "W8", WaggonState.REPAIR_WAGGON);
 
 		// 4 facility processes left (W2, W6, W7, W8)
