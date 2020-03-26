@@ -25,7 +25,7 @@ public class EvaluateWaggonCompletementListener implements TaskListener {
 				DtpConstants.NotQualified.VAR.VAR_WAGGON_EVALUATION_RESULT);
 		info.setWaggonState(evaluationResult);
 		((DepartmentProcessData) delegateTask.getProcessEngine().getRuntimeService()
-				.getVariable(delegateTask.getExecution().getId(), DtpConstants.NotQualified.VAR.VAR_DEPARTMENT_PROCESS_DATA))
+				.getVariable(delegateTask.getExecution().getId(), DtpConstants.DepartTrain.VAR.VAR_DEPARTMENT_PROCESS_DATA))
 						.processWaggonEvaluation(info.getWaggonNumber(), evaluationResult);
 	}
 }

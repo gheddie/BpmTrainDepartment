@@ -188,7 +188,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 		// assertEquals(2, repairInfos.size());
 		assertEquals(2,
 				((DepartmentProcessData) processEngine.getRuntimeService().getVariable(processInstance.getId(),
-						DtpConstants.NotQualified.VAR.VAR_DEPARTMENT_PROCESS_DATA))
+						DtpConstants.DepartTrain.VAR.VAR_DEPARTMENT_PROCESS_DATA))
 								.getWaggonsByWaggonState(WaggonState.REPAIR_WAGGON).size());
 
 		finishWaggonRepair("W1", processInstance);
@@ -464,7 +464,7 @@ public class DepartTrainTestCase extends BpmTestCase {
 	@JsonIgnore
 	private int getRepairedWaggonCount(ProcessInstance processInstance) {
 		DepartmentProcessData departmentProcessData = (DepartmentProcessData) processEngine.getRuntimeService()
-				.getVariable(processInstance.getId(), DtpConstants.NotQualified.VAR.VAR_DEPARTMENT_PROCESS_DATA);
+				.getVariable(processInstance.getId(), DtpConstants.DepartTrain.VAR.VAR_DEPARTMENT_PROCESS_DATA);
 		return departmentProcessData.getRepairedWaggonCount();
 	}
 
@@ -481,8 +481,8 @@ public class DepartTrainTestCase extends BpmTestCase {
 		ProcessInstance instance = processEngine.getRuntimeService().startProcessInstanceByMessage(
 				DtpConstants.DepartTrain.MESSAGE.MSG_DEPARTURE_PLANNED, generatedBusinessKey,
 				HashMapBuilder.create()
-						.withValuePair(DtpConstants.NotQualified.VAR.VAR_DEPARTMENT_PROCESS_DATA, departmentProcessData)
-						.withValuePair(DtpConstants.NotQualified.VAR.VAR_PLANNED_DEPARTMENT_DATE, plannedDepartureTime).build());
+						.withValuePair(DtpConstants.DepartTrain.VAR.VAR_DEPARTMENT_PROCESS_DATA, departmentProcessData)
+						.withValuePair(DtpConstants.DepartTrain.VAR.VAR_PLANNED_DEPARTMENT_DATE, plannedDepartureTime).build());
 		return instance;
 	}
 

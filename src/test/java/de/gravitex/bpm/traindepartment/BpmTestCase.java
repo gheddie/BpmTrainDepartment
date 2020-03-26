@@ -157,7 +157,7 @@ public class BpmTestCase {
 		assertTrue(RailUtil.areListsEqual(waggonNumberList,
 				getProcessData(processEngine, processInstance).getWaggonNumbers()));
 	}
-
+	
 	private void assertWaggonState(ProcessEngineServices processEngine, ProcessInstance processInstance,
 			String waggonNumber, WaggonState waggonState) {
 		logger.debug("asserting waggon state [" + waggonNumber + "]: " + waggonState);
@@ -249,7 +249,7 @@ public class BpmTestCase {
 	protected DepartmentProcessData getProcessData(ProcessEngineServices processEngine,
 			ProcessInstance processInstance) {
 		return (DepartmentProcessData) processEngine.getRuntimeService().getVariable(processInstance.getId(),
-				DtpConstants.NotQualified.VAR.VAR_DEPARTMENT_PROCESS_DATA);
+				DtpConstants.DepartTrain.VAR.VAR_DEPARTMENT_PROCESS_DATA);
 	}
 
 	protected void assertTrackOccupancies(boolean checkWaggonCompleteness, String... trackOccupancies) {

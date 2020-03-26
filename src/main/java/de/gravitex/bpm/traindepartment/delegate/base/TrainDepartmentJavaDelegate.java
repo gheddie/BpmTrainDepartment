@@ -15,7 +15,7 @@ import de.gravitex.bpm.traindepartment.logic.WaggonProcessInfo;
 public abstract class TrainDepartmentJavaDelegate implements JavaDelegate {
 
 	protected List<String> getWaggonNumbers(DelegateExecution execution) {
-		return ((DepartmentProcessData) execution.getVariable(DtpConstants.NotQualified.VAR.VAR_DEPARTMENT_PROCESS_DATA))
+		return ((DepartmentProcessData) execution.getVariable(DtpConstants.DepartTrain.VAR.VAR_DEPARTMENT_PROCESS_DATA))
 				.getWaggonNumbers();
 	}
 

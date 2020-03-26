@@ -30,15 +30,15 @@ public class ProcessEvaluationReplacementWaggonsDelegate extends TrainDepartment
 		// add them to replacement track		
 		RailwayStationBusinessLogic.getInstance()
 				.addWaggonsToTrack(processData.getDepartingOrder().getReplacementTrack(), waggonNumbersToAdd);
+		
 		// TODO remove on hashmap does not work?!?
-		/*
 		for (WaggonProcessInfo deliveredWaggon : deliveredWaggons) {
 			// remove old
 			processData.removeWaggon(deliveredWaggon.getReplacementForWaggon());			
 			// add new
 			processData.addWaggon(deliveredWaggon);
 		}
-		*/
-		processData.removeWaggons(waggonNumbersToRemove);
+		
+		// processData.removeWaggons(waggonNumbersToRemove);
 	}
 }

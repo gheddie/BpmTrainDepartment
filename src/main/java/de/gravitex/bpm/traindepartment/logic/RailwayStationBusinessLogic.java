@@ -159,7 +159,7 @@ public class RailwayStationBusinessLogic implements IRailwayStationBusinessLogic
 	
 	public static DepartmentProcessData getProcessData(DelegateExecution execution) {
 		return (DepartmentProcessData) execution.getProcessEngine().getRuntimeService().getVariable(execution.getId(),
-				DtpConstants.NotQualified.VAR.VAR_DEPARTMENT_PROCESS_DATA);
+				DtpConstants.DepartTrain.VAR.VAR_DEPARTMENT_PROCESS_DATA);
 	}
 
 	public List<String> getAllWaggonNumbers() {

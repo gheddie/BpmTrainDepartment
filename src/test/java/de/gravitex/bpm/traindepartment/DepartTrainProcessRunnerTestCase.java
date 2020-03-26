@@ -61,12 +61,12 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 
 		// finish WaggonRepairs
 		processRunner.finishWaggonRepair(processInstance, "W1");
-		processRunner.timeoutWaggonRepair(processInstance, "W2");
+		processRunner.timeoutWaggonRepairs(processInstance, "W2");
 
 		assertWaitStates(processInstance, DtpConstants.NotQualified.TASK.TASK_PROMPT_REPAIR_WAGGON_REPLACEMENT);
 
 		// request a replacement waggon for 'W2' (for repair has timed out)...
-		processRunner.promptRepairWaggonReplacement(processInstance, "W2");
+		processRunner.promptRepairWaggonReplacements(processInstance, "W2");
 
 		assertWaitStates(processInstance, DtpConstants.NotQualified.CATCH.CATCH_MSG_REP_REPLACE_ARR);
 
@@ -114,13 +114,13 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 
 		processRunner.finishWaggonRepair(processInstance, "W3");
 
-		processRunner.timeoutWaggonRepair(processInstance, "W1");
+		processRunner.timeoutWaggonRepairs(processInstance, "W1");
 		assertEquals(1, processRunner.getWaggonsToBePromptedOnRepairTimeout(processInstance).size());
-		processRunner.timeoutWaggonRepair(processInstance, "W2");
+		processRunner.timeoutWaggonRepairs(processInstance, "W2");
 		assertEquals(2, processRunner.getWaggonsToBePromptedOnRepairTimeout(processInstance).size());
 
-		processRunner.promptRepairWaggonReplacement(processInstance, "W1");
-		processRunner.promptRepairWaggonReplacement(processInstance, "W2");
+		processRunner.promptRepairWaggonReplacements(processInstance, "W1");
+		processRunner.promptRepairWaggonReplacements(processInstance, "W2");
 
 		// ---------------------------------------------------------------------------------------------------
 
@@ -244,12 +244,34 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 		assertEquals(8, getProcessData(processEngine, processInstance).getWaggons().values().size());
 		assertProcessWaggonsPresent(processEngine, processInstance, "W1", "W2000", "W3000", "W4", "W5", "W6", "W7", "W8");
 		
-		assertThat(processInstance).isWaitingAt(DtpConstants.DepartTrain.TASK.TASK_CHOOSE_EXIT_TRACK);
-		
-		// ---
-
-		/*
 		assertThat(processInstance).isWaitingAt(DtpConstants.DepartTrain.GATEWAY.GW_AWAIT_REPAIR_OUTCOME);
-		*/
+		
+		// all facility still there (W6, W7, W4, W8)
+		assertEquals(4, processEngine.getRuntimeService().createProcessInstanceQuery()
+				.processDefinitionKey(DtpConstants.Facility.DEFINITION.PROCESS_REPAIR_FACILITY).list().size());
+		
+		// repairs (timeout [W6, W7] and nominal [W4, W8])
+		assertEquals(4,
+				processRunner.resolveRepairFacilityProcessesForWaggonNumber(processInstance, "W4", "W6", "W7", "W8").size());
+		
+		// time out repairs
+		processRunner.timeoutWaggonRepairs(processInstance, "W6");
+		assertEquals(3,
+				processRunner.resolveRepairFacilityProcessesForWaggonNumber(processInstance, "W4", "W7", "W8").size());
+		processRunner.timeoutWaggonRepairs(processInstance, "W7");
+		assertEquals(2, processRunner.resolveRepairFacilityProcessesForWaggonNumber(processInstance, "W4", "W8").size());
+		// repair nominal
+		processRunner.finishWaggonRepair(processInstance, "W4");
+		assertEquals(1, processRunner.resolveRepairFacilityProcessesForWaggonNumber(processInstance, "W8").size());
+		processRunner.finishWaggonRepair(processInstance, "W8");
+		
+		// all facility process gone
+		assertEquals(0, processEngine.getRuntimeService().createProcessInstanceQuery()
+				.processDefinitionKey(DtpConstants.Facility.DEFINITION.PROCESS_REPAIR_FACILITY).list().size());
+		
+		//  prompt repair waggon replacements (W6, W7)
+		processRunner.promptRepairWaggonReplacements(processInstance, "W6", "W7");
+		
+		assertThat(processInstance).isWaitingAt(DtpConstants.DepartTrain.TASK.TASK_CHOOSE_EXIT_TRACK);
 	}
 }

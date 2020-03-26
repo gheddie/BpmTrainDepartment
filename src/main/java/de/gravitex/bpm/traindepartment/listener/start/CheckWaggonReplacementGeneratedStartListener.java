@@ -17,11 +17,11 @@ public class CheckWaggonReplacementGeneratedStartListener implements ExecutionLi
 	public void notify(DelegateExecution execution) throws Exception {
 		RuntimeService runtimeService = execution.getProcessEngine().getRuntimeService();
 		List<WaggonProcessInfo> waggonReplacements = ((DepartmentProcessData) execution.getProcessEngine().getRuntimeService()
-				.getVariable(execution.getId(), DtpConstants.NotQualified.VAR.VAR_DEPARTMENT_PROCESS_DATA))
+				.getVariable(execution.getId(), DtpConstants.DepartTrain.VAR.VAR_DEPARTMENT_PROCESS_DATA))
 						.getWaggonsByWaggonState(WaggonState.REPLACE_WAGGON);
 		if (!(waggonReplacements.isEmpty())) {
 			((DepartmentProcessData) runtimeService.getVariable(execution.getId(),
-					DtpConstants.NotQualified.VAR.VAR_DEPARTMENT_PROCESS_DATA)).markReplacementWaggonsRequested();
+					DtpConstants.DepartTrain.VAR.VAR_DEPARTMENT_PROCESS_DATA)).markReplacementWaggonsRequested();
 		}
 	}
 }

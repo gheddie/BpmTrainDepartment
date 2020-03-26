@@ -11,12 +11,6 @@ public class DtpConstants {
 			// ####################################### variables
 			// ##############################################################################
 
-			// 'Backbone' - Objekt für den gesamten Prozess
-			public static final String VAR_DEPARTMENT_PROCESS_DATA = "VAR_DEPARTMENT_PROCESS_DATA";
-
-			// planned departure time
-			public static final String VAR_PLANNED_DEPARTMENT_DATE = "VAR_PLANNED_DEPARTMENT_DATE";
-
 			public static final String VAR_EXIT_TRACK = "VAR_EXIT_TRACK";
 
 			// a single assumed waggon
@@ -120,6 +114,10 @@ public class DtpConstants {
 	public class DepartTrain {
 
 		public class VAR {
+			// 'Backbone' - Objekt für den gesamten Prozess
+			public static final String VAR_DEPARTMENT_PROCESS_DATA = "VAR_DEPARTMENT_PROCESS_DATA";
+			// planned departure time
+			public static final String VAR_PLANNED_DEPARTMENT_DATE = "VAR_PLANNED_DEPARTMENT_DATE";
 			// Die Wagen, die als Ersatz geliefert wurden (nach Evaluation)
 			public static final String VAR_DELIVERED_EVALUATION_REPLACMENT_WAGGONS = "VAR_DELIVERED_EVALUATION_REPLACMENT_WAGGONS";
 			// Die Wagen, die als Ersatz geliefert wurden (nach time out von Reparaturen)

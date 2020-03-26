@@ -19,7 +19,7 @@ public class AllAssumementsDoneDelegate implements JavaDelegate {
 				.getVariable(DtpConstants.Facility.VAR.VAR_SINGLE_FACILITY_PROCESS_WAGGON);
 		logger.info("received repair assumement : " + actuallyAssumed);
 		DepartmentProcessData departmentProcessData = (DepartmentProcessData) execution
-				.getVariable(DtpConstants.NotQualified.VAR.VAR_DEPARTMENT_PROCESS_DATA);
+				.getVariable(DtpConstants.DepartTrain.VAR.VAR_DEPARTMENT_PROCESS_DATA);
 		departmentProcessData.processRepairAssumption(actuallyAssumed.getWaggonNumber(),
 				actuallyAssumed.getAssumedRepairDuration(), actuallyAssumed.getFacilityProcessBusinessKey());
 	}

@@ -15,7 +15,7 @@ public enum WaggonState {
 	REPLACED,
 	
 	// repair time was exceeded
-	REPAIR_EXCEEDED,
+	REPAIR_TIME_EXCEEDED,
 	
 	REPAIRED,
 	

@@ -6,6 +6,7 @@ import java.util.List;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.ExecutionListener;
 
+import de.gravitex.bpm.traindepartment.logic.DepartmentProcessData;
 import de.gravitex.bpm.traindepartment.logic.DtpConstants;
 import de.gravitex.bpm.traindepartment.logic.WaggonProcessInfo;
 
@@ -24,5 +25,8 @@ public class CatchMsgRepairTimeExceededStartListener implements ExecutionListene
 		}
 		((List<WaggonProcessInfo>) execution
 				.getVariable(DtpConstants.NotQualified.VAR.VAR_WAGGONS_REPAIR_TIME_EXCEEDED_LIST)).add(exceededWaggon);
+		// update process waggon
+		((DepartmentProcessData) execution.getVariable(DtpConstants.DepartTrain.VAR.VAR_DEPARTMENT_PROCESS_DATA))
+				.processRepairCallback(exceededWaggon);
 	}
 }

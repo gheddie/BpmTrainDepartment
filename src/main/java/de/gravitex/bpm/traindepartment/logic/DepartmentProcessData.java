@@ -10,7 +10,6 @@ import org.apache.log4j.Logger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import de.gravitex.bpm.traindepartment.entity.DepartingOrder;
-import de.gravitex.bpm.traindepartment.entity.Track;
 import de.gravitex.bpm.traindepartment.enumeration.WaggonState;
 import lombok.Data;
 
@@ -84,6 +83,7 @@ public class DepartmentProcessData implements IDepartmentProcessData {
 
 	public boolean allRepairsDone() {
 		logger.info("checking all repairs done...");
+		debugWaggonStates();
 		for (WaggonProcessInfo waggonProcessInfo : waggons.values()) {
 			if (waggonProcessInfo.getWaggonState().equals(WaggonState.REPAIR_WAGGON)) {
 				if (!(waggonProcessInfo.repairDone())) {
@@ -93,6 +93,14 @@ public class DepartmentProcessData implements IDepartmentProcessData {
 			}
 		}
 		return true;
+	}
+
+	private void debugWaggonStates() {
+		logger.debug(" ------------ WAGGON STATES ------------ ");
+		for (WaggonProcessInfo waggonProcessInfo : waggons.values()) {
+			logger.debug("state of waggon ["+waggonProcessInfo.getWaggonNumber()+"]: " + waggonProcessInfo.getWaggonState());
+		}
+		logger.debug(" --------------------------------------- ");
 	}
 
 	@JsonIgnore
@@ -152,21 +160,13 @@ public class DepartmentProcessData implements IDepartmentProcessData {
 	public void addWaggon(WaggonProcessInfo waggonProcessInfo) {
 		waggons.put(waggonProcessInfo.getWaggonNumber(), waggonProcessInfo);
 	}
+	
+	public void removeWaggon(String waggonNumber) {
+		waggons.remove(waggonNumber);
+	}
 
 	@JsonIgnore
 	public String getExitTrack() {
 		return departingOrder.getExitTrack();
-	}
-
-	public void removeWaggons(List<String> waggonNumbersToRemove) {
-		HashMap<String, WaggonProcessInfo> newWaggons = new HashMap<String, WaggonProcessInfo>();
-		WaggonProcessInfo waggonProcessInfo = null;
-		for (String waggonProcessInfoKey : waggons.keySet()) {
-			if (!(waggonNumbersToRemove.contains(waggonProcessInfoKey))) {
-				waggonProcessInfo = waggons.get(waggonProcessInfoKey);
-				newWaggons.put(waggonProcessInfo.getWaggonNumber(), waggonProcessInfo);
-			}
-		}
-		waggons = newWaggons;
 	}
 }

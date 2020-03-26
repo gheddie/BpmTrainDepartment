@@ -18,7 +18,7 @@ public class RepairTimeExceededDelegate extends FacilityProcessDelegate {
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
 		WaggonProcessInfo facilityWaggon = getFacilityWaggon(execution);
-		facilityWaggon.setWaggonState(WaggonState.REPAIR_EXCEEDED);
+		facilityWaggon.setWaggonState(WaggonState.REPAIR_TIME_EXCEEDED);
 		RuntimeService runtimeService = execution.getProcessEngine().getRuntimeService();
 		runtimeService.correlateMessage(DtpConstants.DepartTrain.MESSAGE.MSG_REPAIR_TIME_EXCEEDED,
 				(String) runtimeService.getVariable(execution.getId(), DtpConstants.NotQualified.VAR.VAR_DEP_PROC_BK),
