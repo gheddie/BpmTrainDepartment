@@ -71,7 +71,7 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 		assertWaitStates(processInstance, DtpConstants.NotQualified.CATCH.CATCH_MSG_REP_REPLACE_ARR);
 
 		// repair replacement waggon arrives...
-		processRunner.deliverRepairReplacementWaggon(processInstance, "W1000");
+		processRunner.deliverRepairReplacementWaggons(processInstance, WaggonProcessInfo.fromValues("W1000"));
 
 		// ready to choose an exit track...
 		// assertWaitStates(processInstance,
@@ -271,6 +271,9 @@ public class DepartTrainProcessRunnerTestCase extends BpmTestCase {
 		
 		//  prompt repair waggon replacements (W6, W7)
 		processRunner.promptRepairWaggonReplacements(processInstance, "W6", "W7");
+		
+		processRunner.deliverRepairReplacementWaggons(processInstance, WaggonProcessInfo.fromValues("W2000", "W2"),
+				WaggonProcessInfo.fromValues("W3000", "W3"));
 		
 		assertThat(processInstance).isWaitingAt(DtpConstants.DepartTrain.TASK.TASK_CHOOSE_EXIT_TRACK);
 	}

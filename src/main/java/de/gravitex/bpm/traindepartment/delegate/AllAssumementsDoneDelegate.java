@@ -15,12 +15,11 @@ public class AllAssumementsDoneDelegate implements JavaDelegate {
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
 
-		WaggonProcessInfo actuallyAssumed = (WaggonProcessInfo) execution
+		WaggonProcessInfo actuallyAssumedWaggon = (WaggonProcessInfo) execution
 				.getVariable(DtpConstants.Facility.VAR.VAR_SINGLE_FACILITY_PROCESS_WAGGON);
-		logger.info("received repair assumement : " + actuallyAssumed);
+		logger.info("received repair assumement : " + actuallyAssumedWaggon);
 		DepartmentProcessData departmentProcessData = (DepartmentProcessData) execution
 				.getVariable(DtpConstants.DepartTrain.VAR.VAR_DEPARTMENT_PROCESS_DATA);
-		departmentProcessData.processRepairAssumption(actuallyAssumed.getWaggonNumber(),
-				actuallyAssumed.getAssumedRepairDuration(), actuallyAssumed.getFacilityProcessBusinessKey());
+		departmentProcessData.processWaggonCallback(actuallyAssumedWaggon);
 	}
 }

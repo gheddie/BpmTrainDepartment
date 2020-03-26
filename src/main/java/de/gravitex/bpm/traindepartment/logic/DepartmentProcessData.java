@@ -60,16 +60,6 @@ public class DepartmentProcessData implements IDepartmentProcessData {
 		return result;
 	}
 
-	public void processRepairAssumption(String waggonNumber, Integer assumedRepairDuration, String masterProcessBusinessKey) {
-		WaggonProcessInfo waggonProcessInfo = waggons.get(waggonNumber);
-		waggonProcessInfo.setAssumedRepairDuration(assumedRepairDuration);
-		waggonProcessInfo.setWaggonState(WaggonState.ASSUMED);
-	}
-
-	public void processWaggonEvaluation(String waggonNumber, WaggonState waggonState) {
-		waggons.get(waggonNumber).setWaggonState(waggonState);
-	}
-
 	public boolean allWaggonsAssumed() {
 		for (WaggonProcessInfo waggonProcessInfo : waggons.values()) {
 			if (waggonProcessInfo.getWaggonState().equals(WaggonState.TO_BE_ASSUMED)) {
@@ -114,10 +104,8 @@ public class DepartmentProcessData implements IDepartmentProcessData {
 		return count;
 	}
 
-	public void processRepairCallback(WaggonProcessInfo waggonProcessInfo) {
-		logger.info("updating waggon state of waggon " + waggonProcessInfo.getWaggonNumber() + " to :"
-				+ waggonProcessInfo.getWaggonState());
-		waggons.get(waggonProcessInfo.getWaggonNumber()).setWaggonState(waggonProcessInfo.getWaggonState());
+	public void processWaggonCallback(WaggonProcessInfo waggonProcessInfo) {
+		waggons.put(waggonProcessInfo.getWaggonNumber(), waggonProcessInfo);
 	}
 
 	public List<WaggonProcessInfo> getWaggonsEvaluatedAsRepair() {

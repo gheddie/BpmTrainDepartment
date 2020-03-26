@@ -15,6 +15,6 @@ public class CatchMsgRepairDoneStartListener implements ExecutionListener {
 				.getVariable(DtpConstants.NotQualified.VAR.VAR_REPAIRED_WAGGON);
 		// update process waggon
 		((DepartmentProcessData) execution.getVariable(DtpConstants.DepartTrain.VAR.VAR_DEPARTMENT_PROCESS_DATA))
-				.processRepairCallback(repairedWaggon);
+				.processWaggonCallback(repairedWaggon);
 	}
 }

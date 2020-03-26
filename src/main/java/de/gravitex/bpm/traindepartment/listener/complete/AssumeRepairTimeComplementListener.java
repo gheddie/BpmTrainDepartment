@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.delegate.DelegateTask;
 
+import de.gravitex.bpm.traindepartment.enumeration.WaggonState;
 import de.gravitex.bpm.traindepartment.listener.base.TrainDepartmentTaskListener;
 import de.gravitex.bpm.traindepartment.logic.DtpConstants;
 import de.gravitex.bpm.traindepartment.logic.WaggonProcessInfo;
@@ -27,6 +28,7 @@ public class AssumeRepairTimeComplementListener extends TrainDepartmentTaskListe
 		int singleAssumedTime = (int) runtimeService
 				.getVariable(delegateTask.getExecutionId(), DtpConstants.NotQualified.VAR.VAR_ASSUMED_TIME);
 		assumedWaggon.setAssumedRepairDuration(singleAssumedTime);
+		assumedWaggon.setWaggonState(WaggonState.ASSUMED);
 		String masterProcessBusinessKey = (String) runtimeService.getVariable(delegateTask.getExecutionId(),
 				DtpConstants.NotQualified.VAR.VAR_DEP_PROC_BK);
 		runtimeService.correlateMessage(DtpConstants.NotQualified.MESSAGE.MSG_REPAIR_ASSUMED,

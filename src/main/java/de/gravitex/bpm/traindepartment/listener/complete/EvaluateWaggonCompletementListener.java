@@ -17,15 +17,15 @@ public class EvaluateWaggonCompletementListener implements TaskListener {
 		RuntimeService runtimeService = delegateTask.getProcessEngine().getRuntimeService();
 
 		// get assumed waggon
-		WaggonProcessInfo info = (WaggonProcessInfo) runtimeService.getVariable(delegateTask.getExecution().getId(),
+		WaggonProcessInfo waggonProcessInfo = (WaggonProcessInfo) runtimeService.getVariable(delegateTask.getExecution().getId(),
 				DtpConstants.NotQualified.VAR.VAR_ASSUMED_WAGGON);
 
 		// set evaluation result in waggon list
 		WaggonState evaluationResult = (WaggonState) runtimeService.getVariable(delegateTask.getExecution().getId(),
 				DtpConstants.NotQualified.VAR.VAR_WAGGON_EVALUATION_RESULT);
-		info.setWaggonState(evaluationResult);
+		waggonProcessInfo.setWaggonState(evaluationResult);
 		((DepartmentProcessData) delegateTask.getProcessEngine().getRuntimeService()
 				.getVariable(delegateTask.getExecution().getId(), DtpConstants.DepartTrain.VAR.VAR_DEPARTMENT_PROCESS_DATA))
-						.processWaggonEvaluation(info.getWaggonNumber(), evaluationResult);
+						.processWaggonCallback(waggonProcessInfo);
 	}
 }

@@ -27,6 +27,6 @@ public class CatchMsgRepairTimeExceededStartListener implements ExecutionListene
 				.getVariable(DtpConstants.NotQualified.VAR.VAR_WAGGONS_REPAIR_TIME_EXCEEDED_LIST)).add(exceededWaggon);
 		// update process waggon
 		((DepartmentProcessData) execution.getVariable(DtpConstants.DepartTrain.VAR.VAR_DEPARTMENT_PROCESS_DATA))
-				.processRepairCallback(exceededWaggon);
+				.processWaggonCallback(exceededWaggon);
 	}
 }
