@@ -138,10 +138,6 @@ public class DepartmentProcessData implements IDepartmentProcessData {
 		replacementWaggonsRequested = true;
 	}
 
-	public void setExitTrack(String exitTrack) {
-		departingOrder.setExitTrack(exitTrack);
-	}
-
 	public void checkWaggonPositions() {
 		// waggons must be 'alone' on the wxit track
 		// TODO
@@ -153,10 +149,6 @@ public class DepartmentProcessData implements IDepartmentProcessData {
 		 */
 	}
 
-	public void removeWaggon(String waggonNumber) {
-		waggons.remove(waggonNumber);
-	}
-
 	public void addWaggon(WaggonProcessInfo waggonProcessInfo) {
 		waggons.put(waggonProcessInfo.getWaggonNumber(), waggonProcessInfo);
 	}
@@ -164,5 +156,17 @@ public class DepartmentProcessData implements IDepartmentProcessData {
 	@JsonIgnore
 	public String getExitTrack() {
 		return departingOrder.getExitTrack();
+	}
+
+	public void removeWaggons(List<String> waggonNumbersToRemove) {
+		HashMap<String, WaggonProcessInfo> newWaggons = new HashMap<String, WaggonProcessInfo>();
+		WaggonProcessInfo waggonProcessInfo = null;
+		for (String waggonProcessInfoKey : waggons.keySet()) {
+			if (!(waggonNumbersToRemove.contains(waggonProcessInfoKey))) {
+				waggonProcessInfo = waggons.get(waggonProcessInfoKey);
+				newWaggons.put(waggonProcessInfo.getWaggonNumber(), waggonProcessInfo);
+			}
+		}
+		waggons = newWaggons;
 	}
 }

@@ -77,7 +77,6 @@ public class DtpConstants {
 		}
 
 		public class ERROR {
-			public static final String ERR_NO_EXIT_TR = "ERR_NO_EXIT_TR";
 			public static final String ERR_CREATE_DO = "ERR_CREATE_DO";
 			public static final String ERR_WG_NOT_RUNNABLE = "ERR_WG_NOT_RUNNABLE";
 		}
@@ -125,6 +124,8 @@ public class DtpConstants {
 			public static final String VAR_DELIVERED_EVALUATION_REPLACMENT_WAGGONS = "VAR_DELIVERED_EVALUATION_REPLACMENT_WAGGONS";
 			// Die Wagen, die als Ersatz geliefert wurden (nach time out von Reparaturen)
 			public static final String VAR_DELIVERED_REP_TIMEOUT_REPLACMENT_WAGGONS = "VAR_DELIVERED_REP_TIMEOUT_REPLACMENT_WAGGONS";
+			// Das gewählte Gleis für die nach Evaluation gelieferten Ersatzwagen
+			public static final String VAR_CHOSEN_REPLACEMENT_WAGGON_TRACK = "VAR_CHOSEN_REPLACEMENT_WAGGON_TRACK";
 		}
 
 		public class MESSAGE {
@@ -139,7 +140,10 @@ public class DtpConstants {
 		}
 
 		public class ERROR {
-
+			// Dieses Gleis ist kein Ausgangsgleis
+			public static final String ERR_NO_EXIT_TR = "ERR_NO_EXIT_TR";
+			// Gleis existiert nicht...
+			public static final String ERR_TRACK_NOT_PRESENT = "ERR_TRACK_NOT_PRESENT";
 		}
 
 		public class GATEWAY {

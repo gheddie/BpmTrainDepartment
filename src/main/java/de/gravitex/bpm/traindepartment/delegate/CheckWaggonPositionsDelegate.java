@@ -15,7 +15,7 @@ public class CheckWaggonPositionsDelegate extends TrainDepartmentJavaDelegate {
 		String exitTrack = (String) execution.getVariable(DtpConstants.NotQualified.VAR.VAR_EXIT_TRACK);
 		if (exitTrack == null || !(RailwayStationBusinessLogic.getInstance().isExitTrack(exitTrack))) {
 			System.out.println(exitTrack == null ? "no exit track set!!" : "track " + exitTrack + " is no ext track!!");
-			throw new BpmnError(DtpConstants.NotQualified.ERROR.ERR_NO_EXIT_TR);
+			throw new BpmnError(DtpConstants.DepartTrain.ERROR.ERR_NO_EXIT_TR);
 		}
 		getProcessData(execution).checkWaggonPositions();
 	}

@@ -157,7 +157,7 @@ public class RailwayStationBusinessLogic implements IRailwayStationBusinessLogic
 		return BusinessKeyCreator.resolveProcessInstance(processInstances, aProcessDefinitionKey, value, parentInstance);
 	}
 	
-	public static DepartmentProcessData getDepartmentProcessData(DelegateExecution execution) {
+	public static DepartmentProcessData getProcessData(DelegateExecution execution) {
 		return (DepartmentProcessData) execution.getProcessEngine().getRuntimeService().getVariable(execution.getId(),
 				DtpConstants.NotQualified.VAR.VAR_DEPARTMENT_PROCESS_DATA);
 	}
@@ -172,5 +172,9 @@ public class RailwayStationBusinessLogic implements IRailwayStationBusinessLogic
 
 	public DepartingOrder getDepartingOrder(String businessKey) {
 		return stationData.getDepartingOrder(businessKey);
+	}
+
+	public boolean isTrackPresent(String trackNumber) {
+		return stationData.findTrack(trackNumber) != null;
 	}
 }

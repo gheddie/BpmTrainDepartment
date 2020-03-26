@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.assertj.core.util.Arrays;
 import org.camunda.bpm.engine.ProcessEngineServices;
 import org.camunda.bpm.engine.impl.jobexecutor.JobExecutor;
 import org.camunda.bpm.engine.impl.util.ClockUtil;
@@ -33,10 +34,11 @@ import de.gravitex.bpm.traindepartment.util.HashMapBuilder;
 import de.gravitex.bpm.traindepartment.util.RailUtil;
 
 public class BpmTestCase {
-	
+
 	public static final Logger logger = Logger.getLogger(BpmTestCase.class);
 
-	protected Task ensureSingleTaskPresent(String taskName, String role, boolean executeTask, Map<String, Object> variables) {
+	protected Task ensureSingleTaskPresent(String taskName, String role, boolean executeTask,
+			Map<String, Object> variables) {
 		return ensureSingleTaskPresent(taskName, null, role, executeTask, variables);
 	}
 
@@ -67,8 +69,9 @@ public class BpmTestCase {
 		return task;
 	}
 
-	protected List<Task> ensureTaskCountPresent(ProcessInstance processInstance, String taskName, String role, int taskCount) {
-		
+	protected List<Task> ensureTaskCountPresent(ProcessInstance processInstance, String taskName, String role,
+			int taskCount) {
+
 		TaskQuery query = taskService().createTaskQuery().taskDefinitionKey(taskName);
 		if (role != null) {
 			query.taskAssignee(role);
@@ -111,8 +114,8 @@ public class BpmTestCase {
 		return runtimeService().createProcessInstanceQuery().processDefinitionKey(processDefinitionKey).list().size();
 	}
 
-	protected void ensureActiveEventSubscriptionsPresent(String processDefinitionKey, String activityId, EventType eventType,
-			String eventName, List<String> expectedBusinessKeys) {
+	protected void ensureActiveEventSubscriptionsPresent(String processDefinitionKey, String activityId,
+			EventType eventType, String eventName, List<String> expectedBusinessKeys) {
 
 		EventSubscriptionQuery query = runtimeService().createEventSubscriptionQuery().eventName(eventName);
 		if (eventType != null) {
@@ -136,8 +139,8 @@ public class BpmTestCase {
 	protected void assertWaitStates(ProcessInstance processInstance, String... waitStates) {
 		assertThat(processInstance).isWaitingAt(waitStates);
 	}
-	
-	protected void assertWaggonStates(ProcessEngineServices processEngine, ProcessInstance processInstance,
+
+	protected void assertProcessWaggonStates(ProcessEngineServices processEngine, ProcessInstance processInstance,
 			Object... waggonData) {
 		for (int index = 0; index <= waggonData.length / 2; index += 2) {
 			assertWaggonState(processEngine, processInstance, (String) waggonData[index],
@@ -145,16 +148,26 @@ public class BpmTestCase {
 		}
 	}
 
-	private void assertWaggonState(ProcessEngineServices processEngine, ProcessInstance processInstance, String waggonNumber,
-			WaggonState waggonState) {
+	protected void assertProcessWaggonsPresent(ProcessEngineServices processEngine, ProcessInstance processInstance,
+			String... waggonNumbers) {
+		List<String> waggonNumberList = new ArrayList<String>();
+		for (String waggonNumber : waggonNumbers) {
+			waggonNumberList.add(waggonNumber);
+		}
+		assertTrue(RailUtil.areListsEqual(waggonNumberList,
+				getProcessData(processEngine, processInstance).getWaggonNumbers()));
+	}
+
+	private void assertWaggonState(ProcessEngineServices processEngine, ProcessInstance processInstance,
+			String waggonNumber, WaggonState waggonState) {
 		logger.debug("asserting waggon state [" + waggonNumber + "]: " + waggonState);
-		assertEquals(waggonState, getProcessData(processEngine, processInstance).getWaggons()
-				.get(waggonNumber).getWaggonState());
+		assertEquals(waggonState,
+				getProcessData(processEngine, processInstance).getWaggons().get(waggonNumber).getWaggonState());
 	}
 
 	protected Object getProcessVariableByName(String variableName) {
-		List<VariableInstance> variableInstanceList = runtimeService().createVariableInstanceQuery().variableName(variableName)
-				.list();
+		List<VariableInstance> variableInstanceList = runtimeService().createVariableInstanceQuery()
+				.variableName(variableName).list();
 		// name is unique in process
 		assertEquals(1, variableInstanceList.size());
 		return variableInstanceList.get(0).getValue();
@@ -233,7 +246,8 @@ public class BpmTestCase {
 		return builder.build();
 	}
 
-	protected DepartmentProcessData getProcessData(ProcessEngineServices processEngine, ProcessInstance processInstance) {
+	protected DepartmentProcessData getProcessData(ProcessEngineServices processEngine,
+			ProcessInstance processInstance) {
 		return (DepartmentProcessData) processEngine.getRuntimeService().getVariable(processInstance.getId(),
 				DtpConstants.NotQualified.VAR.VAR_DEPARTMENT_PROCESS_DATA);
 	}
@@ -257,7 +271,8 @@ public class BpmTestCase {
 			}
 		}
 		// requested waggons must be equal to all waggons in the system...
-		assertTrue(RailUtil.areListsEqual(requestedWaggons, RailwayStationBusinessLogic.getInstance().getAllWaggonNumbers()));
+		assertTrue(RailUtil.areListsEqual(requestedWaggons,
+				RailwayStationBusinessLogic.getInstance().getAllWaggonNumbers()));
 	}
 
 	private void assertTrackOccupancy(String trackOccupancy) {

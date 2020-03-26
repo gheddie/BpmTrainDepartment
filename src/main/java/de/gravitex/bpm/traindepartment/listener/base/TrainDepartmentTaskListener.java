@@ -8,7 +8,7 @@ import de.gravitex.bpm.traindepartment.logic.RailwayStationBusinessLogic;
 
 public abstract class TrainDepartmentTaskListener implements TaskListener {
 
-	protected DepartmentProcessData getDepartmentProcessData(DelegateExecution execution) {
-		return RailwayStationBusinessLogic.getDepartmentProcessData(execution);
+	protected DepartmentProcessData getProcessData(DelegateExecution execution) {
+		return RailwayStationBusinessLogic.getProcessData(execution);
 	}
 }

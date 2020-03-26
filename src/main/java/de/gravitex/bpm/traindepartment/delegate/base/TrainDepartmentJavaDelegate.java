@@ -24,7 +24,7 @@ public abstract class TrainDepartmentJavaDelegate implements JavaDelegate {
 	}
 
 	protected DepartmentProcessData getProcessData(DelegateExecution execution) {
-		return RailwayStationBusinessLogic.getDepartmentProcessData(execution);
+		return RailwayStationBusinessLogic.getProcessData(execution);
 	}
 	
 	protected DepartingOrder getDepartingOrder(DelegateExecution execution) {

@@ -13,6 +13,8 @@ public class WaggonProcessInfo implements Serializable {
 	private WaggonProcessInfo() {
 		// ...
 	}
+	
+	private String replacementForWaggon;
 
 	private String waggonNumber;
 
@@ -47,5 +49,11 @@ public class WaggonProcessInfo implements Serializable {
 
 	public boolean repairDone() {
 		return (waggonState.equals(WaggonState.REPAIRED));
+	}
+
+	public static WaggonProcessInfo fromValues(String aWaggonNumber, String aReplacementForWaggon) {
+		WaggonProcessInfo waggon = fromValues(aWaggonNumber);
+		waggon.setReplacementForWaggon(aReplacementForWaggon);
+		return waggon;
 	}
 }

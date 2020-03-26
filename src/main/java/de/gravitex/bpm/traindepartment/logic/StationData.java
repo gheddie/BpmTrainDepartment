@@ -142,4 +142,8 @@ public class StationData {
 	public DepartingOrder getDepartingOrder(String businessKey) {
 		return departingOrders.get(businessKey);
 	}
+
+	public boolean isExitTrack(String trackNumber) {
+		return findTrack(trackNumber).isExitTrack();
+	}
 }

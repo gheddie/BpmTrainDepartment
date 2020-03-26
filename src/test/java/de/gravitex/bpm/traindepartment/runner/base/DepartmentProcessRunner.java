@@ -92,7 +92,7 @@ public class DepartmentProcessRunner extends ProcessRunner {
 					processInstance, waggonNumber, getProcessEngine()));
 		}
 	}
-	
+
 	public void promptWaggonReplacements(ProcessInstance processInstance, String... waggonNumbers) {
 		TaskService taskService = getProcessEngine().getTaskService();
 		for (String waggonNumber : waggonNumbers) {
@@ -134,19 +134,26 @@ public class DepartmentProcessRunner extends ProcessRunner {
 		getProcessEngine().getRuntimeService().correlateMessage(DtpConstants.NotQualified.MESSAGE.MSG_REP_REPLACE_ARR,
 				processInstance.getBusinessKey());
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public void deliverEvaluationReplacementWaggons(ProcessInstance processInstance, String... waggonNumbers) {
+	public void deliverEvaluationReplacementWaggons(ProcessInstance processInstance,
+			WaggonProcessInfo... replacements) {
 		getProcessEngine().getRuntimeService().correlateMessage(DtpConstants.DepartTrain.MESSAGE.MSG_REP_WAGG_ARRIVED,
-				processInstance.getBusinessKey(), HashMapBuilder.create().withValuePair(DtpConstants.DepartTrain.VAR.VAR_DELIVERED_EVALUATION_REPLACMENT_WAGGONS, waggonNumbers).build());
+				processInstance.getBusinessKey(),
+				HashMapBuilder.create()
+						.withValuePair(DtpConstants.DepartTrain.VAR.VAR_DELIVERED_EVALUATION_REPLACMENT_WAGGONS,
+								replacements)
+						.build());
 	}
-	
+
 	public void chooseEvaluationReplacementTrack(ProcessInstance processInstance, String trackNumber) {
 		TaskService taskService = getProcessEngine().getTaskService();
 		List<Task> taskList = taskService.createTaskQuery()
-				.taskDefinitionKey(DtpConstants.DepartTrain.TASK.TASK_CHOOSE_EVALUATION_REPLACEMENT_TRACK).processInstanceId(processInstance.getId()).list();
+				.taskDefinitionKey(DtpConstants.DepartTrain.TASK.TASK_CHOOSE_EVALUATION_REPLACEMENT_TRACK)
+				.processInstanceId(processInstance.getId()).list();
 		assertEquals(1, taskList.size());
-		taskService.complete(taskList.get(0).getId());
+		taskService.complete(taskList.get(0).getId(), HashMapBuilder.create()
+				.withValuePair(DtpConstants.DepartTrain.VAR.VAR_CHOSEN_REPLACEMENT_WAGGON_TRACK, trackNumber).build());
 	}
 
 	private Task getRepairFacilityProcessTask(String waggonNumber, String taskDefinitionKey,

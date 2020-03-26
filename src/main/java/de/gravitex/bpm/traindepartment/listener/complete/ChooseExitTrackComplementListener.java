@@ -9,7 +9,7 @@ public class ChooseExitTrackComplementListener extends TrainDepartmentTaskListen
 
 	@Override
 	public void notify(DelegateTask delegateTask) {
-		getDepartmentProcessData(delegateTask.getExecution()).setExitTrack((String) delegateTask.getProcessEngine().getRuntimeService()
+		getProcessData(delegateTask.getExecution()).getDepartingOrder().setExitTrack((String) delegateTask.getProcessEngine().getRuntimeService()
 				.getVariable(delegateTask.getExecution().getId(), DtpConstants.NotQualified.VAR.VAR_EXIT_TRACK));
 	}
 }
